@@ -49,6 +49,7 @@ const SignUpForm = () => {
     }),
     onSubmit: async (values, { resetForm }) => {
       try {
+        setLoading(true);
         const formData = new FormData();
         formData.append("fullName", values.name);
         formData.append("email", values.email);
@@ -82,6 +83,8 @@ const SignUpForm = () => {
       } catch (error) {
         console.error("Sign up error:", error.response?.data);
         alert(error.response?.data?.message);
+      } finally {
+        setLoading(false);
       }
     },
   });
@@ -199,7 +202,7 @@ const SignUpForm = () => {
         />
 
         <div className="pt-2">
-          <Button type="submit" title="Sign Up" />
+          <Button type="submit" title="Sign Up" isLoading={loading} />
         </div>
       </div>
 

@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import TextField from "../Common/TextField";
 import { useFormik } from "formik";
 import * as Yup from "yup";
@@ -12,6 +12,7 @@ import Cookies from "js-cookie";
 
 const LoginForm = () => {
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     document.title = `Login - ${PAGETITLE}`;
@@ -30,6 +31,7 @@ const LoginForm = () => {
     onSubmit: async (values, { resetForm }) => {
       resetForm();
       try {
+        setLoading(true);
         const res = await axios.post(`${BASE_URL}/auth/login`, values, {
           headers: {
             "Content-Type": "application/json",
@@ -47,6 +49,8 @@ const LoginForm = () => {
       } catch (error) {
         console.error("login error:", error);
         alert(error.response?.data?.message);
+      } finally {
+        setLoading(false);
       }
     },
   });
@@ -99,7 +103,7 @@ const LoginForm = () => {
         </div>
 
         <div className="pt-2 w-full">
-          <Button type={"submit"} title={`Login`} />
+          <Button type={"submit"} title={`Login`} isLoading={loading} />
         </div>
       </div>
 

@@ -4,7 +4,7 @@ import * as Yup from "yup";
 import Button from "../Common/Button";
 import { Link, useNavigate } from "react-router-dom";
 import { RiArrowLeftSLine } from "react-icons/ri";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
 import { BASE_URL } from "../../data/baseUrl";
 const PAGETITLE = import.meta.env.VITE_PAGE_TITLE;
@@ -12,6 +12,7 @@ import Cookies from "js-cookie";
 
 const VerifyEmail = () => {
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     document.title = `Verify Email - ${PAGETITLE}`;
@@ -25,7 +26,7 @@ const VerifyEmail = () => {
       email: Yup.string().email("Invalid email address").required("Required"),
     }),
     onSubmit: async (values, { resetForm }) => {
-      resetForm();
+      setLoading(true);
 
       try {
         const res = await axios.post(
@@ -51,7 +52,9 @@ const VerifyEmail = () => {
         }
       } catch (error) {
         console.error("verify email error:", error);
-        alert(error.response?.data?.message);
+        alert(error.response?.data?.message || error?.message);
+      } finally {
+        setLoading(false);
       }
     },
   });
@@ -89,7 +92,7 @@ const VerifyEmail = () => {
         />
 
         <div className="pt-2 w-full">
-          <Button type={"submit"} title={`Send`} />
+          <Button type={"submit"} title={`Send`} isLoading={loading} />
         </div>
       </div>
 

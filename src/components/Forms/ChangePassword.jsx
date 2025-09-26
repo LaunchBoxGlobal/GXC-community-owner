@@ -13,7 +13,7 @@ const ChangePassword = () => {
   const [showPopup, setShowPopup] = useState(false);
   const location = useLocation();
   const { email, otp } = location?.state || {};
-  console.log(email);
+  const [loading, setLoading] = useState(false);
 
   const formik = useFormik({
     initialValues: {
@@ -38,6 +38,7 @@ const ChangePassword = () => {
         return;
       }
       try {
+        setLoading(true);
         const res = await axios.post(`${BASE_URL}/auth/reset-password`, {
           email,
           code: otp,
@@ -54,6 +55,8 @@ const ChangePassword = () => {
       } catch (error) {
         console.log(`reset password error >>> `, error);
         alert(res?.message || res?.response?.data?.message);
+      } finally {
+        setLoading(false);
       }
     },
   });
@@ -110,7 +113,7 @@ const ChangePassword = () => {
           />
 
           <div className="pt-2">
-            <Button type={"submit"} title={`Save`} />
+            <Button type={"submit"} title={`Save`} isLoading={loading} />
           </div>
         </div>
       </form>

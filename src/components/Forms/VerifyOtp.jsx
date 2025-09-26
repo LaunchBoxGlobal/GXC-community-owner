@@ -2,7 +2,7 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 import Button from "../Common/Button";
 import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import axios from "axios";
 import { BASE_URL } from "../../data/baseUrl";
 const PAGETITLE = import.meta.env.VITE_PAGE_TITLE;
@@ -15,8 +15,7 @@ const VerifyOtp = () => {
   const location = useLocation();
   const { page, email } = location.state || {};
   const [searchParams] = useSearchParams();
-
-  console.log(email);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     document.title = `Verify OTP - ${PAGETITLE}`;
@@ -39,7 +38,7 @@ const VerifyOtp = () => {
       const otp = values.otp.join("");
 
       const body = page === "/signup" ? { code: otp } : { code: otp, email };
-
+      setLoading(true);
       try {
         const url =
           page === "/signup"
@@ -72,7 +71,9 @@ const VerifyOtp = () => {
         }
       } catch (error) {
         console.error("verify email error:", error);
-        alert(error.response?.data?.message);
+        alert(error.response?.data?.message || error?.message);
+      } finally {
+        setLoading(false);
       }
     },
   });
@@ -156,7 +157,7 @@ const VerifyOtp = () => {
         )} */}
 
         <div className="pt-3">
-          <Button type="submit" title="Verify" />
+          <Button type="submit" title="Verify" isLoading={loading} />
         </div>
       </div>
 

@@ -18,6 +18,7 @@ import SettingsPage from "../pages/Settings/SettingsPage";
 import UserProfilePage from "../pages/Profile/UserProfilePage";
 import SettingsLayout from "../components/Layout/SettingsLayout";
 import ChangePasswordPage from "../pages/Settings/ChangePasswordPage";
+import CompleteProfileForm from "../components/Forms/CompleteProfileForm";
 
 const isAuthenticated = () => !!Cookies.get("token");
 // const isAuthenticated = () => {
@@ -116,6 +117,20 @@ const AppRoutes = () => {
           // ) : (
           // <Navigate to="/" />
           // )
+        }
+      />
+
+      <Route
+        path="/complete-profile"
+        element={
+          <PrivateRoute
+            redirectTo={`/`}
+            element={
+              <AuthLayout>
+                <CompleteProfileForm />
+              </AuthLayout>
+            }
+          />
         }
       />
 
