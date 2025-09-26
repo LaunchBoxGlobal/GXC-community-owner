@@ -38,7 +38,8 @@ export const PrivateRoute = ({ element, redirectTo }) => {
     element
   ) : (
     <Navigate
-      to={`${redirectTo}?redirect=${encodeURIComponent(location.pathname)}`}
+      to={`${redirectTo}`}
+      // to={`${redirectTo}?redirect=${encodeURIComponent(location.pathname)}`}
       replace
     />
   );
