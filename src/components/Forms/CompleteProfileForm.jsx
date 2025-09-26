@@ -6,16 +6,15 @@ import TextField from "../Common/TextField";
 import AuthImageUpload from "../Common/AuthImageUpload";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { RiArrowLeftSLine } from "react-icons/ri";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 const PAGETITLE = import.meta.env.VITE_PAGE_TITLE;
 import axios from "axios";
 import { BASE_URL } from "../../data/baseUrl";
 import api from "../../services/axiosInstance";
 import Cookies from "js-cookie";
 
-const SignUpForm = () => {
+const CompleteProfileForm = () => {
   const navigate = useNavigate();
-  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     document.title = `Sign up - ${PAGETITLE}`;
@@ -235,4 +234,4 @@ const SignUpForm = () => {
   );
 };
 
-export default SignUpForm;
+export default CompleteProfileForm;

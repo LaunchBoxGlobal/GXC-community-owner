@@ -40,8 +40,6 @@ const VerifyEmail = () => {
 
         Cookies.set("email", values.email);
 
-        console.log("verify email response >>> ", res?.data);
-
         if (res?.data?.success) {
           resetForm();
           navigate("/verify-otp", {

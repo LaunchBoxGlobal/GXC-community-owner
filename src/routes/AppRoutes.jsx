@@ -109,13 +109,13 @@ const AppRoutes = () => {
       <Route
         path="/verify-otp"
         element={
-          isUnverified() ? (
-            <AuthLayout>
-              <VerifyOtp />
-            </AuthLayout>
-          ) : (
-            <Navigate to="/" />
-          )
+          // isUnverified() ? (
+          <AuthLayout>
+            <VerifyOtp />
+          </AuthLayout>
+          // ) : (
+          // <Navigate to="/" />
+          // )
         }
       />
 

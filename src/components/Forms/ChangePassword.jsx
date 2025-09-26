@@ -47,7 +47,7 @@ const ChangePassword = () => {
         console.log("reset password response >>> ", res?.data);
 
         if (res?.data?.success) {
-          alert(res?.data?.message);
+          // alert(res?.data?.message);
           resetForm();
           setShowPopup(true);
         }
