@@ -10,12 +10,18 @@ const PasswordField = ({
   onBlur,
   error,
   touched,
+  label,
 }) => {
   const [showPass, setShowPass] = useState(false);
   return (
     <div className="w-full">
+      {label && (
+        <label htmlFor="confirmPassword" className="text-sm font-medium">
+          {label}
+        </label>
+      )}
       <div
-        className={`w-full border h-[49px] px-[15px] py-[14px] rounded-[8px] flex items-center justify-between  ${
+        className={`w-full bg-white border h-[49px] px-[15px] py-[14px] rounded-[8px] flex items-center justify-between  ${
           error && touched ? "border-red-500" : "border-[#D9D9D9]"
         }`}
       >

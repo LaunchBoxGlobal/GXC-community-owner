@@ -96,6 +96,7 @@ const ChangePassword = () => {
             onBlur={formik.handleBlur}
             error={formik.errors.password}
             touched={formik.touched.password}
+            label={"New Password"}
           />
           <PasswordField
             name={`confirmPassword`}
@@ -105,6 +106,7 @@ const ChangePassword = () => {
             onBlur={formik.handleBlur}
             error={formik.errors.confirmPassword}
             touched={formik.touched.confirmPassword}
+            label={"Confirm Password"}
           />
 
           <div className="pt-2">

@@ -97,7 +97,7 @@ const SignUpForm = () => {
         </p>
       </div>
 
-      <div className="w-full h-[100px] flex flex-col items-center justify-center gap-2 my-3">
+      {/* <div className="w-full h-[100px] flex flex-col items-center justify-center gap-2 my-3">
         <AuthImageUpload
           name="profileImage"
           setFieldValue={formik.setFieldValue}
@@ -105,12 +105,9 @@ const SignUpForm = () => {
             formik.errors.profileImage ? formik.touched.profileImage : null
           }
         />
-        {/* {formik.errors.profileImage && formik.touched.profileImage && (
-          <p className="text-red-500 text-sm">{formik.errors.profileImage}</p>
-        )} */}
-      </div>
+      </div> */}
 
-      <div className="w-full space-y-3">
+      <div className="w-full space-y-3 mt-5">
         <TextField
           type="text"
           name="name"
@@ -120,6 +117,7 @@ const SignUpForm = () => {
           onBlur={formik.handleBlur}
           error={formik.errors.name}
           touched={formik.touched.name}
+          label={`Full Name`}
         />
         <TextField
           type="text"
@@ -130,9 +128,13 @@ const SignUpForm = () => {
           onBlur={formik.handleBlur}
           error={formik.errors.email}
           touched={formik.touched.email}
+          label={"Email Address"}
         />
 
         <div className="w-full flex flex-col gap-1">
+          <label htmlFor="description" className="text-sm font-medium">
+            Description
+          </label>
           <textarea
             name="description"
             id="description"
@@ -156,6 +158,7 @@ const SignUpForm = () => {
           onBlur={formik.handleBlur}
           error={formik.errors.password}
           touched={formik.touched.password}
+          label={`Password`}
         />
         <PasswordField
           name="confirmPassword"
@@ -165,6 +168,7 @@ const SignUpForm = () => {
           onBlur={formik.handleBlur}
           error={formik.errors.confirmPassword}
           touched={formik.touched.confirmPassword}
+          label={`Confirm Password`}
         />
 
         <div className="pt-2">

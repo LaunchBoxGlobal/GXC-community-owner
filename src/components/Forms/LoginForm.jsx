@@ -78,6 +78,7 @@ const LoginForm = () => {
           onBlur={formik.handleBlur}
           error={formik.errors.email}
           touched={formik.touched.email}
+          label={`Email Address`}
         />
 
         <PasswordField
@@ -88,6 +89,7 @@ const LoginForm = () => {
           onBlur={formik.handleBlur}
           error={formik.errors.password}
           touched={formik.touched.password}
+          label={`Password`}
         />
 
         <div className="w-full text-end">

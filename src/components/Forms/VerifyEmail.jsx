@@ -87,6 +87,7 @@ const VerifyEmail = () => {
           onBlur={formik.handleBlur}
           error={formik.errors.email}
           touched={formik.touched.email}
+          label={`Email Address`}
         />
 
         <div className="pt-2 w-full">
