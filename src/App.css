@@ -1,0 +1,12 @@
+:root {
+  --button-bg: #4e9d4b;
+  --primary-color: #4e9d4b;
+  --secondary-color: #565656;
+  --secondary-bg: #f5f5f5;
+  --primary-blue: #2f88ff;
+  --page-bg: #eaeaea;
+}
+
+.button {
+  @apply w-full bg-[var(--button-bg)] text-white h-[49px] rounded-[8px] text-center font-medium;
+}
