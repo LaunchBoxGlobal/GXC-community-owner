@@ -212,7 +212,9 @@ const CompleteProfileForm = () => {
               }`}
             ></textarea>
             {formik.touched.description && formik.errors.description ? (
-              <div>{formik.errors.description}</div>
+              <div className="text-red-500 text-xs">
+                {formik.errors.description}
+              </div>
             ) : null}
           </div>
 
