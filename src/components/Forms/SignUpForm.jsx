@@ -255,15 +255,6 @@ const SignUpForm = () => {
             Sign In
           </Link>
         </div>
-        <Link
-          to={`/login`}
-          className="text-sm font-medium flex items-center gap-1 text-[var(--primary-color)]"
-        >
-          <div className="w-[18px] h-[18px] bg-[var(--button-bg)] rounded-full flex items-center justify-center">
-            <RiArrowLeftSLine className="text-white text-base" />
-          </div>
-          Back
-        </Link>
       </div>
     </form>
   );

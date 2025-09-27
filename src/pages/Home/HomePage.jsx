@@ -1,7 +1,22 @@
+import { useEffect } from "react";
 import HomePageStats from "./HomePageStats";
 import RecentCommunitiesList from "./RecentCommunitiesList";
+import Cookies from "js-cookie";
 
 const HomePage = () => {
+  if (
+    Cookies.get("email") ||
+    Cookies.get("signupEmail") ||
+    Cookies.get("verifyEmail")
+  ) {
+    Cookies.remove("email");
+    Cookies.remove("signupEmail");
+    Cookies.remove("verifyEmail");
+  }
+
+  useEffect(() => {
+    document.title = "GiveXChange";
+  }, []);
   return (
     <main className="w-full p-5 rounded-[10px] bg-[var(--page-bg)]">
       <h1 className="text-base font-medium text-[var(--secondary-color)]">

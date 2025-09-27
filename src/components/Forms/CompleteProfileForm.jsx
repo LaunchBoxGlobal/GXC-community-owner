@@ -43,7 +43,12 @@ const CompleteProfileForm = () => {
     },
     validationSchema: Yup.object({
       name: Yup.string()
-        .max(25, "Name must be 25 characters or less")
+        .min(3, "Name must contain at least 3 characters")
+        .max(30, "Name must be 30 characters or less")
+        .matches(
+          /^[A-Z][a-zA-Z ]*$/,
+          "Name must start with a capital letter and contain only letters and spaces"
+        )
         .required("Name is required"),
       email: Yup.string()
         .email("Invalid email address")
@@ -52,7 +57,7 @@ const CompleteProfileForm = () => {
         .matches(/^[0-9]{11}$/, "Phone number must contain 11 digits")
         .required("Enter your phone number"),
       description: Yup.string()
-        .min(10, `Description can not be less than 50 characters`)
+        .min(30, `Description can not be less than 30 characters`)
         .max(500, `Description can not be more than 500 characters`)
         .required("Please enter description"),
       location: Yup.string()
