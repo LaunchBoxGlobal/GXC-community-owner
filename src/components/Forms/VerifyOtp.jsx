@@ -30,7 +30,7 @@ const VerifyOtp = () => {
   };
 
   useEffect(() => {
-    document.title = `Verify OTP - ${PAGETITLE}`;
+    document.title = `Verify OTP - GiveXChange`;
   }, []);
 
   const formik = useFormik({

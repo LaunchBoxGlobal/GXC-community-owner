@@ -15,7 +15,7 @@ const VerifyEmail = () => {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    document.title = `Verify Email - ${PAGETITLE}`;
+    document.title = `Verify Email - GiveXChange`;
   }, []);
 
   const formik = useFormik({

@@ -15,7 +15,7 @@ const LoginForm = () => {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    document.title = `Login - ${PAGETITLE}`;
+    document.title = `Login - GiveXChange`;
   }, []);
 
   const formik = useFormik({
