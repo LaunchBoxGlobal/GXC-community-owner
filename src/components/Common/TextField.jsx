@@ -20,6 +20,7 @@ const TextField = ({
       )}
       <input
         type={type}
+        autoComplete="off"
         name={name}
         placeholder={placeholder}
         value={value}

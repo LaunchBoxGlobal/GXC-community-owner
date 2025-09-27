@@ -134,7 +134,7 @@ const AppRoutes = () => {
         }
       />
 
-      <Route
+      {/* <Route
         path="/email-verification"
         element={
           <PrivateRoute
@@ -146,7 +146,7 @@ const AppRoutes = () => {
             }
           />
         }
-      />
+      /> */}
       <Route
         path="/add-payment-info"
         element={

@@ -27,12 +27,21 @@ const SignUpForm = () => {
       email: "",
       password: "",
       confirmPassword: "",
+      communityName: "",
+      description: "",
+      urlSlug: "",
       profileImage: null,
     },
     validationSchema: Yup.object({
       name: Yup.string()
         .max(25, "Name must be 25 characters or less")
         .required("Name is required"),
+      communityName: Yup.string()
+        .max(25, "Community name must be 25 characters or less")
+        .required("Community name is required"),
+      urlSlug: Yup.string()
+        .max(25, "Community name must be 25 characters or less")
+        .required("Community name is required"),
       description: Yup.string()
         .min(50, `Description can not be less than 50 characters`)
         .max(500, `Description can not be more than 500 characters`),
@@ -53,8 +62,10 @@ const SignUpForm = () => {
         const formData = new FormData();
         formData.append("fullName", values.name);
         formData.append("email", values.email);
-        formData.append("password", values.password);
+        formData.append("communityName", values.communityName);
+        formData.append("urlSlug", values.urlSlug);
         formData.append("description", values.description);
+        formData.append("password", values.password);
         formData.append("userType", "community_owner");
 
         if (values.profileImage) {
@@ -139,24 +150,24 @@ const SignUpForm = () => {
         <div className="w-full grid grid-cols-1 lg:grid-cols-2 gap-3">
           <TextField
             type="text"
-            name="name"
+            name="communityName"
             placeholder="Community Name"
-            value={formik.values.name}
+            value={formik.values.communityName}
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
-            error={formik.errors.name}
-            touched={formik.touched.name}
+            error={formik.errors.communityName}
+            touched={formik.touched.communityName}
             label={`Community Name`}
           />
           <TextField
             type="text"
-            name="name"
+            name="urlSlug"
             placeholder="Enter your Slug"
-            value={formik.values.name}
+            value={formik.values.urlSlug}
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
-            error={formik.errors.name}
-            touched={formik.touched.name}
+            error={formik.errors.urlSlug}
+            touched={formik.touched.urlSlug}
             label={`URL Slug`}
           />
         </div>
@@ -172,11 +183,16 @@ const SignUpForm = () => {
             onBlur={formik.handleBlur}
             value={formik.values.description}
             placeholder="Describe yourself"
-            className={`w-full border h-[84px] px-[15px] py-[14px] rounded-[8px] outline-none
-          'error' '&&' 'touched' ? "border-red-500" : "border-[#D9D9D9]"`}
-          ></textarea>
+            className={`w-full border h-[84px] px-[15px] py-[14px] rounded-[8px] outline-none ${
+              formik.touched.description && formik.errors.description
+                ? "border-red-500"
+                : "border-[#D9D9D9]"
+            }`}
+          />
           {formik.touched.description && formik.errors.description ? (
-            <div>{formik.errors.description}</div>
+            <div className="text-red-500 text-sm">
+              {formik.errors.description}
+            </div>
           ) : null}
         </div>
 
