@@ -1,12 +1,12 @@
 import { useEffect, useRef, useState } from "react";
 import Sidebar from "./Sidebar";
 import { HiOutlineMenuAlt2 } from "react-icons/hi";
-import { Link, useNavigate } from "react-router-dom";
-import { HiOutlineArrowLeft } from "react-icons/hi";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { BASE_URL } from "../../data/baseUrl";
 import { getToken } from "../../utils/getToken";
 import { useAppContext } from "../../context/AppContext";
+import Cookies from "js-cookie";
 
 const DashboardLayout = ({ pages }) => {
   const sidebarRef = useRef(null);
@@ -31,41 +31,18 @@ const DashboardLayout = ({ pages }) => {
         },
       });
 
-      console.log("profile >>>", res?.data?.data?.user);
+      // console.log("profile >>>", res?.data?.data?.user);
       setUser(res?.data?.data?.user);
-    } catch (error) {
-      if (axios.isAxiosError(error)) {
-        const status = error.response?.status;
-
-        switch (status) {
-          case 401:
-            console.error("Unauthorized: Token expired or invalid.");
-            localStorage.removeItem("token");
-            navigate("/login");
-            break;
-
-          case 403:
-            console.error("Forbidden: You do not have access.");
-            break;
-
-          case 404:
-            console.error("Profile not found.");
-            break;
-
-          case 500:
-            console.error("Server error. Please try again later.");
-            break;
-
-          default:
-            console.error(
-              `Unexpected error: ${status} - ${
-                error.response?.data?.message || error.message
-              }`
-            );
-        }
-      } else {
-        console.error("Network or unexpected error:", error);
+      if (!res?.data?.data?.user?.emailVerified) {
+        Cookies.remove(`token`);
+        Cookies.remove(`user`);
+        navigate("/login");
       }
+    } catch (error) {
+      console.error("Unauthorized: Token expired or invalid.");
+      localStorage.removeItem("token");
+      Cookies.remove("token");
+      navigate("/login");
     }
   };
 

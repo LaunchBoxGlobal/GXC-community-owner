@@ -39,7 +39,7 @@ const VerifyEmail = () => {
           }
         );
 
-        Cookies.set("email", values.email);
+        Cookies.set("verifyEmail", values.email);
 
         if (res?.data?.success) {
           resetForm();

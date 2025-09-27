@@ -38,8 +38,6 @@ const LoginForm = () => {
           },
         });
 
-        console.log("login response >>> ", res?.data);
-
         if (res?.data?.success) {
           Cookies.set("token", res?.data?.data?.token);
           Cookies.set("user", JSON.stringify(res?.data?.data?.user));
@@ -47,10 +45,47 @@ const LoginForm = () => {
           navigate("/");
         }
       } catch (error) {
-        console.error("login error:", error);
-        alert(error.response?.data?.message);
-      } finally {
-        setLoading(false);
+        console.error("login error:", error?.response);
+
+        const apiRes = error?.response?.data;
+
+        // check if it's email not verified case
+        if (
+          apiRes?.message === "Please verify your email before logging in" &&
+          apiRes?.data?.token
+        ) {
+          const newToken = apiRes.data.token;
+          Cookies.set("token", newToken);
+
+          try {
+            const resendRes = await axios.post(
+              `${BASE_URL}/auth/resend-verification`,
+              { email: values.email },
+              {
+                headers: {
+                  "Content-Type": "application/json",
+                  Authorization: `Bearer ${newToken}`,
+                },
+              }
+            );
+
+            if (resendRes?.data?.success) {
+              alert(resendRes.data.message);
+              navigate("/verify-otp", {
+                state: {
+                  email: values.email,
+                  page: "/login",
+                },
+              });
+            }
+          } catch (err) {
+            console.error("verify email error:", err);
+            alert(err.response?.data?.message || err.message);
+          }
+        } else {
+          // for all other errors show normal error
+          alert(apiRes?.message || error?.message);
+        }
       }
     },
   });
@@ -125,15 +160,6 @@ const LoginForm = () => {
             Sign Up
           </Link>
         </div>
-        {/* <Link
-          to={`/login`}
-          className="text-sm font-medium flex items-center gap-1"
-        >
-          <div className="w-[18px] h-[18px] bg-black rounded-full flex items-center justify-center">
-            <RiArrowLeftSLine className="text-white text-base" />
-          </div>
-          Back
-        </Link> */}
       </div>
     </form>
   );

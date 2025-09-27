@@ -34,22 +34,38 @@ const SignUpForm = () => {
     },
     validationSchema: Yup.object({
       name: Yup.string()
-        .max(25, "Name must be 25 characters or less")
+        .min(3, "Name must contain at least 3 characters")
+        .max(30, "Name must be 30 characters or less")
+        .matches(
+          /^[A-Z][a-zA-Z ]*$/,
+          "Name must start with a capital letter and contain only letters and spaces"
+        )
         .required("Name is required"),
       communityName: Yup.string()
+        .min(3, "Community name must contain atleast 3 characters")
         .max(25, "Community name must be 25 characters or less")
         .required("Community name is required"),
       urlSlug: Yup.string()
+        .min(3, "URL slug must contain atleast 3 characters")
         .max(25, "Community name must be 25 characters or less")
         .required("Community name is required"),
       description: Yup.string()
-        .min(50, `Description can not be less than 50 characters`)
-        .max(500, `Description can not be more than 500 characters`),
+        .min(30, `Description can not be less than 30 characters`)
+        .max(500, `Description can not be more than 500 characters`)
+        .required("Description is required"),
       email: Yup.string()
         .email("Invalid email address")
         .required("Email is required"),
       password: Yup.string()
         .min(8, "Password must be at least 8 characters")
+        .max(25, "Password cannot be more than 25 characters")
+        .matches(/[A-Z]/, "Password must contain at least one uppercase letter")
+        .matches(/[a-z]/, "Password must contain at least one lowercase letter")
+        .matches(/\d/, "Password must contain at least one number")
+        .matches(
+          /[@$!%*?&^#_.-]/,
+          "Password must contain at least one special character"
+        )
         .required("Password is required"),
       confirmPassword: Yup.string()
         .oneOf([Yup.ref("password"), null], "Passwords do not match")
@@ -78,11 +94,10 @@ const SignUpForm = () => {
           },
         });
 
-        console.log("Response:", res?.data?.data?.token);
-
         if (res?.data?.success) {
           Cookies.set("token", res?.data?.data?.token);
           Cookies.set("user", JSON.stringify(res?.data?.data?.user));
+          Cookies.set("signupEmail", values.email);
           resetForm();
 
           navigate("/verify-otp", {
@@ -126,7 +141,7 @@ const SignUpForm = () => {
         <TextField
           type="text"
           name="name"
-          placeholder="Full Name"
+          placeholder="Enter your full name"
           value={formik.values.name}
           onChange={formik.handleChange}
           onBlur={formik.handleBlur}
@@ -138,7 +153,7 @@ const SignUpForm = () => {
         <TextField
           type="text"
           name="email"
-          placeholder="Email Address"
+          placeholder="Enter your email address"
           value={formik.values.email}
           onChange={formik.handleChange}
           onBlur={formik.handleBlur}
@@ -151,7 +166,7 @@ const SignUpForm = () => {
           <TextField
             type="text"
             name="communityName"
-            placeholder="Community Name"
+            placeholder="Enter your name"
             value={formik.values.communityName}
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
@@ -182,8 +197,8 @@ const SignUpForm = () => {
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
             value={formik.values.description}
-            placeholder="Describe yourself"
-            className={`w-full border h-[84px] px-[15px] py-[14px] rounded-[8px] outline-none ${
+            placeholder="Enter description"
+            className={`w-full border min-h-[84px] max-h-[84px] px-[15px] py-[14px] rounded-[8px] outline-none ${
               formik.touched.description && formik.errors.description
                 ? "border-red-500"
                 : "border-[#D9D9D9]"
@@ -198,7 +213,7 @@ const SignUpForm = () => {
 
         <PasswordField
           name="password"
-          placeholder="Password"
+          placeholder="Enter your password"
           value={formik.values.password}
           onChange={formik.handleChange}
           onBlur={formik.handleBlur}

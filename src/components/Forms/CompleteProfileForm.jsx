@@ -48,13 +48,17 @@ const CompleteProfileForm = () => {
       email: Yup.string()
         .email("Invalid email address")
         .required("Email is required"),
-      phoneNumber: Yup.string().min(11, `Phone number must contain 11 digits`),
+      phoneNumber: Yup.string()
+        .matches(/^[0-9]{11}$/, "Phone number must contain 11 digits")
+        .required("Enter your phone number"),
       description: Yup.string()
-        .min(50, `Description can not be less than 50 characters`)
-        .max(500, `Description can not be more than 500 characters`),
+        .min(10, `Description can not be less than 50 characters`)
+        .max(500, `Description can not be more than 500 characters`)
+        .required("Please enter description"),
       location: Yup.string()
         .min(11, `Address cannot be less than 11 characters`)
-        .max(150, `Address can not be more than 150 characters`),
+        .max(150, `Address can not be more than 150 characters`)
+        .required("Please enter your location"),
 
       profileImage: Yup.mixed().nullable(),
     }),
@@ -102,7 +106,7 @@ const CompleteProfileForm = () => {
           togglePopup();
         }
       } catch (error) {
-        console.error("Sign up error:", error.response?.data);
+        console.error("complete profile error:", error);
         alert(error.response?.data?.message || error?.message);
         if (error?.response?.status === 401) {
           Cookies.remove("token");

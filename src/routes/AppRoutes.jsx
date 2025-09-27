@@ -38,11 +38,7 @@ export const PrivateRoute = ({ element, redirectTo }) => {
   return isAuthenticated() ? (
     element
   ) : (
-    <Navigate
-      to={`${redirectTo}`}
-      // to={`${redirectTo}?redirect=${encodeURIComponent(location.pathname)}`}
-      replace
-    />
+    <Navigate to={`${redirectTo}`} replace />
   );
 };
 

@@ -21,14 +21,11 @@ const VerifyOtp = () => {
   const [loading, setLoading] = useState(false);
   const [showPopup, setShowPopup] = useState(false);
   const [redirectParams, setRedirectParams] = useState(null);
-  const {
-    setShowEmailVerificationPopup,
-    setShowCommunityPopup,
-    showCommunityLinkPopup,
-  } = useAppContext();
+  const { setShowEmailVerificationPopup } = useAppContext();
+  const userEmail = Cookies.get(`signupEmail`);
+  const verifyEmail = Cookies.get("verifyEmail");
 
   const togglePopup = () => {
-    // setShowPopup((prev) => !prev);
     setShowEmailVerificationPopup(true);
   };
 
@@ -52,11 +49,17 @@ const VerifyOtp = () => {
     onSubmit: async (values, { resetForm }) => {
       const otp = values.otp.join("");
 
-      const body = page === "/signup" ? { code: otp } : { code: otp, email };
+      const body =
+        page === "/signup"
+          ? { code: otp }
+          : { code: otp, email: userEmail || verifyEmail || email };
       setLoading(true);
+      const token = page === "/login" ? "" : "";
       try {
         const url =
           page === "/signup"
+            ? `${BASE_URL}/auth/verify-email`
+            : page === "/login"
             ? `${BASE_URL}/auth/verify-email`
             : `${BASE_URL}/auth/verify-reset-code`;
         const res = await axios.post(url, body, {
@@ -71,6 +74,8 @@ const VerifyOtp = () => {
 
           if (page === "/signup") {
             setShowEmailVerificationPopup(true);
+            Cookies.remove(`userEmail`);
+            Cookies.remove(`verifyEmail`);
             // setRedirectParams(redirect);
 
             // navigate(
@@ -81,8 +86,10 @@ const VerifyOtp = () => {
             // );
           } else if (page === "/forgot-password") {
             navigate(`/change-password`, {
-              state: { otp, email },
+              state: { otp, email: userEmail },
             });
+          } else if (page === "/login") {
+            navigate("/");
           }
         }
       } catch (error) {
@@ -150,7 +157,9 @@ const VerifyOtp = () => {
           <h1 className="font-semibold text-[32px] leading-none">Verify OTP</h1>
           <p className="text-[var(--secondary-color)]">
             The code was sent to{" "}
-            <span className="text-black font-medium">{email}</span>
+            <span className="text-black font-medium">
+              {userEmail || verifyEmail || email}
+            </span>
           </p>
         </div>
 
@@ -185,7 +194,7 @@ const VerifyOtp = () => {
             <p className="text-[var(--secondary-color)]">
               Didn't receive the code yet?{" "}
             </p>
-            <ResentOtp />
+            <ResentOtp page={page} />
           </div>
         </div>
       </form>
