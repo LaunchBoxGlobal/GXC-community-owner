@@ -66,7 +66,7 @@ const ChangePassword = () => {
         }
       } catch (error) {
         console.log(`reset password error >>> `, error);
-        alert(error?.message || error?.response?.data?.message);
+        alert(error?.response?.data?.message || error?.message);
       } finally {
         setLoading(false);
       }
