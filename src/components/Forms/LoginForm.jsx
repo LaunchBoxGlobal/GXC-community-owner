@@ -85,6 +85,8 @@ const LoginForm = () => {
           // for all other errors show normal error
           alert(apiRes?.message || error?.message);
         }
+      } finally {
+        setLoading(false);
       }
     },
   });
