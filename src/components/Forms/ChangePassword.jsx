@@ -7,6 +7,7 @@ import PasswordUpdateSuccessModal from "../Popups/PasswordUpdateSuccessModal";
 import { useState } from "react";
 import axios from "axios";
 import { BASE_URL } from "../../data/baseUrl";
+import Cookies from "js-cookie";
 
 const ChangePassword = () => {
   const navigate = useNavigate();
@@ -53,12 +54,14 @@ const ChangePassword = () => {
           password: values?.password,
         });
 
-        console.log("reset password response >>> ", res?.data);
+        // console.log("reset password response >>> ", res?.data);
 
         if (res?.data?.success) {
           // alert(res?.data?.message);
           resetForm();
           setShowPopup(true);
+          Cookies.remove(`userEmail`);
+          Cookies.remove(`verifyEmail`);
         }
       } catch (error) {
         console.log(`reset password error >>> `, error);

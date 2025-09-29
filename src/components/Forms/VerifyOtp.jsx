@@ -86,7 +86,7 @@ const VerifyOtp = () => {
             // );
           } else if (page === "/forgot-password") {
             navigate(`/change-password`, {
-              state: { otp, email: userEmail },
+              state: { otp, email: userEmail || verifyEmail || email },
             });
           } else if (page === "/login") {
             navigate("/");
