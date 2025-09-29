@@ -30,7 +30,6 @@ const LoginForm = () => {
       password: Yup.string().required("Password is required"),
     }),
     onSubmit: async (values, { resetForm }) => {
-      resetForm();
       try {
         setLoading(true);
         const res = await axios.post(`${BASE_URL}/auth/login`, values, {
