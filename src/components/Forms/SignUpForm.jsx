@@ -43,12 +43,12 @@ const SignUpForm = () => {
         .required("Name is required"),
       communityName: Yup.string()
         .min(3, "Community name must contain atleast 3 characters")
-        .max(25, "Community name must be 25 characters or less")
+        .max(30, "Community name must be 30 characters or less")
         .required("Community name is required"),
       urlSlug: Yup.string()
         .min(3, "URL slug must contain atleast 3 characters")
-        .max(25, "Community name must be 25 characters or less")
-        .required("Community name is required"),
+        .max(30, "Community slug must be 35 characters or less")
+        .required("Community slug is required"),
       description: Yup.string()
         .min(30, `Description can not be less than 30 characters`)
         .max(500, `Description can not be more than 500 characters`)
@@ -223,7 +223,7 @@ const SignUpForm = () => {
         />
         <PasswordField
           name="confirmPassword"
-          placeholder="Confirm Password"
+          placeholder="Enter your password"
           value={formik.values.confirmPassword}
           onChange={formik.handleChange}
           onBlur={formik.handleBlur}

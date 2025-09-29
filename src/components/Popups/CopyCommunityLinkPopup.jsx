@@ -55,7 +55,7 @@ const CopyCommunityLinkPopup = ({ showPopup, togglePopup, redirectParams }) => {
 
             <div className="w-full h-[50px] p-1 bg-white rounded-[12px] flex items-center justify-between pl-4">
               <p className="text-[#565656] leading-none">
-                httpscommunity/xyz123
+                www.thegivexchange/community/dummy
               </p>
               <button
                 type="button"

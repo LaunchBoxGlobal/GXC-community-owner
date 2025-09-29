@@ -16,9 +16,6 @@ const ChangePasswordPage = () => {
       confirmPassword: "",
     },
     validationSchema: Yup.object({
-      currentPassword: Yup.string()
-        .min(8, "Password must be at least 8 characters")
-        .required("Password is required"),
       password: Yup.string()
         .min(8, "Password must be at least 8 characters")
         .max(25, "Password cannot be more than 25 characters")
@@ -47,10 +44,9 @@ const ChangePasswordPage = () => {
           }
         );
 
-        console.log("change password:", res?.data?.data?.token);
-
         if (res?.data?.success) {
           resetForm();
+          alert("Password changed");
         }
       } catch (error) {
         console.error("change password error:", error.response?.data);
@@ -69,18 +65,7 @@ const ChangePasswordPage = () => {
       <h1 className="font-semibold text-[24px]">Change Password</h1>
 
       <form onSubmit={formik.handleSubmit} className="w-full mt-5">
-        <div className="w-full grid grid-cols-1 lg:grid-cols-2 gap-5">
-          <div className="">
-            <PasswordField
-              name="currentPassword"
-              placeholder="Current Password"
-              value={formik.values.currentPassword}
-              onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
-              error={formik.errors.currentPassword}
-              touched={formik.touched.currentPassword}
-            />
-          </div>
+        <div className="w-full gap-5">
           <div className="">
             <PasswordField
               name="password"
@@ -93,8 +78,7 @@ const ChangePasswordPage = () => {
             />
           </div>
         </div>
-        <div className="w-full grid grid-cols-1 lg:grid-cols-2 gap-5 lg:mt-5">
-          <div className=""></div>
+        <div className="w-full gap-5 mt-5">
           <div className="">
             <PasswordField
               name="confirmPassword"

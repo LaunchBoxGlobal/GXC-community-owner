@@ -62,6 +62,7 @@ const ChangePassword = () => {
           setShowPopup(true);
           Cookies.remove(`userEmail`);
           Cookies.remove(`verifyEmail`);
+          Cookies.remove("signupEmail");
         }
       } catch (error) {
         console.log(`reset password error >>> `, error);

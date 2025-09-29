@@ -1,20 +1,18 @@
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import Button from "../Common/Button";
-import PasswordField from "../Common/PasswordField";
 import TextField from "../Common/TextField";
 import AuthImageUpload from "../Common/AuthImageUpload";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
-import { RiArrowLeftSLine } from "react-icons/ri";
 import { useEffect, useState } from "react";
-const PAGETITLE = import.meta.env.VITE_PAGE_TITLE;
 import axios from "axios";
 import { BASE_URL } from "../../data/baseUrl";
-import api from "../../services/axiosInstance";
 import Cookies from "js-cookie";
 import { useAppContext } from "../../context/AppContext";
 import { getToken } from "../../utils/getToken";
 import AccountSuccessPopup from "../Popups/AccountSuccessPopup";
+import PhoneInput from "react-phone-input-2";
+import PhoneNumberField from "../Common/PhoneNumberField";
 
 const CompleteProfileForm = () => {
   const navigate = useNavigate();
@@ -109,6 +107,9 @@ const CompleteProfileForm = () => {
           // alert("Profile Updated Successfully!");
           // navigate("/");
           togglePopup();
+          Cookies.remove(`userEmail`);
+          Cookies.remove(`verifyEmail`);
+          Cookies.remove("signupEmail");
         }
       } catch (error) {
         console.error("complete profile error:", error);
@@ -169,6 +170,7 @@ const CompleteProfileForm = () => {
             <TextField
               type="text"
               name="email"
+              disabled={true}
               placeholder="Email Address"
               value={formik.values.email}
               onChange={formik.handleChange}
@@ -178,7 +180,18 @@ const CompleteProfileForm = () => {
               label={"Email Address"}
             />
 
-            <TextField
+            {/* <TextField
+              type="text"
+              name="phoneNumber"
+              placeholder="+000 0000 00"
+              value={formik.values.phoneNumber}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              error={formik.errors.phoneNumber}
+              touched={formik.touched.phoneNumber}
+              label={"Phone Number"}
+            /> */}
+            <PhoneNumberField
               type="text"
               name="phoneNumber"
               placeholder="+000 0000 00"

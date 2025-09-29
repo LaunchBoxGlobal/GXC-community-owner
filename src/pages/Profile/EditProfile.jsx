@@ -170,6 +170,7 @@ const EditProfile = ({ togglePopup, showPopup, fetchUserProfile }) => {
             <TextField
               type="text"
               name="email"
+              disabled={true}
               placeholder="Email Address"
               value={formik.values.email}
               onChange={formik.handleChange}

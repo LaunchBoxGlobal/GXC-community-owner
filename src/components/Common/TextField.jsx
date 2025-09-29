@@ -10,6 +10,7 @@ const TextField = ({
   error,
   touched,
   label,
+  disabled,
 }) => {
   return (
     <div className="w-full flex flex-col gap-1">
@@ -25,9 +26,12 @@ const TextField = ({
         placeholder={placeholder}
         value={value}
         onChange={onChange}
+        disabled={disabled}
         onBlur={onBlur}
         className={`w-full border h-[49px] px-[15px] py-[14px] rounded-[8px] outline-none bg-white
-          ${error && touched ? "border-red-500" : "border-[#D9D9D9]"}`}
+          ${
+            error && touched ? "border-red-500" : "border-[#D9D9D9]"
+          } disabled:bg-gray-50 disabled:cursor-not-allowed`}
       />
       {error && touched && <p className="text-red-500 text-xs">{error}</p>}
     </div>

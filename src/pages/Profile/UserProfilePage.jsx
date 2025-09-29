@@ -24,7 +24,6 @@ const UserProfilePage = () => {
         },
       });
 
-      console.log("profile >>>", res?.data?.data?.user);
       setUser(res?.data?.data?.user);
     } catch (error) {
       if (axios.isAxiosError(error)) {

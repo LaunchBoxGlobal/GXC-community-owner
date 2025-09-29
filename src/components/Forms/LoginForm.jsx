@@ -24,7 +24,9 @@ const LoginForm = () => {
       password: "",
     },
     validationSchema: Yup.object({
-      email: Yup.string().email("Invalid email address").required("Required"),
+      email: Yup.string()
+        .email("Invalid email address")
+        .required("Email is required"),
       password: Yup.string().required("Password is required"),
     }),
     onSubmit: async (values, { resetForm }) => {
@@ -112,7 +114,7 @@ const LoginForm = () => {
         <TextField
           type="text"
           name="email"
-          placeholder="Email Address"
+          placeholder="johndoe@gmail.com"
           value={formik.values.email}
           onChange={formik.handleChange}
           onBlur={formik.handleBlur}

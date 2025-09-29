@@ -145,22 +145,26 @@ const VerifyOtp = () => {
         onSubmit={formik.handleSubmit}
         className="w-full max-w-[350px] flex flex-col items-start gap-4"
       >
-        <div className="w-full">
+        {/* <div className="w-full">
           <img
             src="/verify-otp-image.svg"
             alt="verify-otp-image"
             className="w-[82px] h-[82px] object-contain mx-auto"
           />
-        </div>
+        </div> */}
 
         <div className="w-full text-center space-y-3 mt-4">
           <h1 className="font-semibold text-[32px] leading-none">Verify OTP</h1>
-          <p className="text-[var(--secondary-color)]">
-            The code was sent to{" "}
-            <span className="text-black font-medium">
-              {userEmail || verifyEmail || email}
-            </span>
-          </p>
+          {email || userEmail || verifyEmail ? (
+            <p className="text-[var(--secondary-color)]">
+              The code was sent to{" "}
+              <span className="text-black font-medium">
+                {userEmail || verifyEmail || email}
+              </span>
+            </p>
+          ) : (
+            ""
+          )}
         </div>
 
         <div className="w-full space-y-3 mt-3">
@@ -194,7 +198,7 @@ const VerifyOtp = () => {
             <p className="text-[var(--secondary-color)]">
               Didn't receive the code yet?{" "}
             </p>
-            <ResentOtp page={page} />
+            <ResentOtp page={page} email={userEmail || verifyEmail || email} />
           </div>
         </div>
       </form>
