@@ -1,46 +1,40 @@
-import { useEffect } from "react";
-import {
-  Link,
-  useLocation,
-  useNavigate,
-  useSearchParams,
-} from "react-router-dom";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { useAppContext } from "../../context/AppContext";
+import Cookies from "js-cookie";
+
 const PAGETITLE = import.meta.env.VITE_PAGE_TITLE;
 
-const CopyCommunityLinkPopup = ({ showPopup, togglePopup, redirectParams }) => {
-  // const location = useLocation();
-  // const { page } = location.state || {};
-  // const [searchParams] = useSearchParams();
+const CopyCommunityLinkPopup = () => {
+  const slug = Cookies.get("slug");
   const navigate = useNavigate();
-  // const redirect = searchParams.get("redirect");
   const { setShowCommunityLinkPopup, showCommunityLinkPopup } = useAppContext();
+  const [copied, setCopied] = useState(false);
 
   useEffect(() => {
     document.title = `Account verified - ${PAGETITLE}`;
   }, []);
 
-  const handleContinue = () => {
-    setShowCommunityLinkPopup(false);
-    // setShowCommunityPopup(true);
-    navigate("/complete-profile");
-  };
+  const handleCopyLink = async () => {
+    try {
+      const link = `invite.app.thegivexchange.com/${slug}`;
+      await navigator.clipboard.writeText(link);
+      setCopied(true);
 
-  // const handleContinue = () => {
-  //   if (redirectParams) {
-  //     setShowEmailVerificationPopup(false);
-  //     navigate(redirectParams);
-  //     togglePopup();
-  //   } else {
-  //     navigate("/add-payment-info");
-  //     togglePopup();
-  //   }
-  // };
+      setTimeout(() => {
+        setShowCommunityLinkPopup(false);
+        navigate("/complete-profile");
+        Cookies.remove("slug");
+      }, 1500);
+    } catch (err) {
+      console.error("Failed to copy link:", err);
+    }
+  };
 
   return (
     showCommunityLinkPopup && (
       <div className="w-full h-screen fixed inset-0 px-5 z-50 bg-[rgba(0,0,0,0.4)] flex items-center justify-center">
-        <div className="w-full max-w-[471px] bg-[#D1E6D2] p-8 rounded-2xl">
+        <div className="w-full max-w-[491px] bg-[#D1E6D2] p-8 rounded-2xl">
           <div className="w-full text-center">
             <div className="w-[107px] h-[107px] bg-[var(--button-bg)] flex items-center justify-center rounded-full mx-auto">
               <img
@@ -54,15 +48,15 @@ const CopyCommunityLinkPopup = ({ showPopup, togglePopup, redirectParams }) => {
             </h1>
 
             <div className="w-full h-[50px] p-1 bg-white rounded-[12px] flex items-center justify-between pl-4">
-              <p className="text-[#565656] leading-none">
-                www.thegivexchange/community/dummy
+              <p className="text-[#565656] leading-none overflow-hidden text-ellipsis">
+                www.thegivexchange/community/{slug}
               </p>
               <button
                 type="button"
-                onClick={() => handleContinue()}
-                className="w-full bg-[var(--button-bg)] text-white rounded-[8px] font-medium text-center h-full block max-w-[110px]"
+                onClick={handleCopyLink}
+                className="w-full bg-[var(--button-bg)] text-white rounded-[8px] font-medium text-center h-full block max-w-[110px] transition-all"
               >
-                Copy Link
+                {copied ? "Link Copied!" : "Copy Link"}
               </button>
             </div>
           </div>

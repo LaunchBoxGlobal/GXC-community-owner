@@ -16,10 +16,31 @@ import Cookies from "js-cookie";
 const SignUpForm = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
+  const [slugError, setSlugError] = useState(null);
 
   useEffect(() => {
     document.title = `Sign up - GiveXChange`;
   }, []);
+
+  const checkSlugAvailability = async (slug) => {
+    try {
+      if (!slug || slug.length < 3) {
+        setSlugError("Slug must be at least 3 characters");
+        return;
+      }
+
+      const res = await api.get(`${BASE_URL}/communities/check-slug/${slug}`);
+      const available = res?.data?.data?.available;
+
+      if (!available) {
+        setSlugError("Slug is already taken");
+      } else {
+        setSlugError(null);
+      }
+    } catch (err) {
+      setSlugError("Could not check slug availability");
+    }
+  };
 
   const formik = useFormik({
     initialValues: {
@@ -30,14 +51,13 @@ const SignUpForm = () => {
       communityName: "",
       description: "",
       urlSlug: "",
-      profileImage: null,
     },
     validationSchema: Yup.object({
       name: Yup.string()
         .min(3, "Name must contain at least 3 characters")
         .max(30, "Name must be 30 characters or less")
         .matches(
-          /^[A-Z][a-zA-Z ]*$/,
+          /^[A-Z][a-z]+(?: [A-Z][a-z]+)*$/,
           "Name must start with a capital letter and contain only letters and spaces"
         )
         .required("Name is required"),
@@ -46,8 +66,12 @@ const SignUpForm = () => {
         .max(30, "Community name must be 30 characters or less")
         .required("Community name is required"),
       urlSlug: Yup.string()
-        .min(3, "URL slug must contain atleast 3 characters")
-        .max(30, "Community slug must be 35 characters or less")
+        .min(3, "URL slug must contain at least 3 characters")
+        .max(30, "Community slug must be 30 characters or less")
+        .matches(
+          /^[a-z0-9-]+$/,
+          "Slug can only contain lowercase letters, numbers, and hyphens"
+        )
         .required("Community slug is required"),
       description: Yup.string()
         .min(30, `Description can not be less than 30 characters`)
@@ -70,23 +94,21 @@ const SignUpForm = () => {
       confirmPassword: Yup.string()
         .oneOf([Yup.ref("password"), null], "Passwords do not match")
         .required("Confirm password is required"),
-      profileImage: Yup.mixed().nullable(),
     }),
     onSubmit: async (values, { resetForm }) => {
+      if (slugError) {
+        return;
+      }
       try {
         setLoading(true);
         const formData = new FormData();
         formData.append("fullName", values.name);
         formData.append("email", values.email);
         formData.append("communityName", values.communityName);
-        formData.append("urlSlug", values.urlSlug);
-        formData.append("description", values.description);
+        formData.append("slug", values.urlSlug);
+        formData.append("communityDescription", values.description);
         formData.append("password", values.password);
         formData.append("userType", "community_owner");
-
-        if (values.profileImage) {
-          formData.append("profileImage", values.profileImage);
-        }
 
         const res = await axios.post(`${BASE_URL}/auth/register`, formData, {
           headers: {
@@ -97,7 +119,8 @@ const SignUpForm = () => {
         if (res?.data?.success) {
           Cookies.set("token", res?.data?.data?.token);
           Cookies.set("user", JSON.stringify(res?.data?.data?.user));
-          Cookies.set("signupEmail", values.email);
+          Cookies.set("userEmail", values.email);
+          Cookies.set("slug", values.urlSlug);
           resetForm();
 
           navigate("/verify-otp", {
@@ -107,8 +130,8 @@ const SignUpForm = () => {
           });
         }
       } catch (error) {
-        console.error("Sign up error:", error.response?.data);
-        alert(error.response?.data?.message);
+        // console.error("Sign up error:", error.response?.data);
+        alert(error.response?.data?.message || error?.message);
       } finally {
         setLoading(false);
       }
@@ -126,16 +149,6 @@ const SignUpForm = () => {
           Please enter details to continue
         </p>
       </div>
-
-      {/* <div className="w-full h-[100px] flex flex-col items-center justify-center gap-2 my-3">
-        <AuthImageUpload
-          name="profileImage"
-          setFieldValue={formik.setFieldValue}
-          error={
-            formik.errors.profileImage ? formik.touched.profileImage : null
-          }
-        />
-      </div> */}
 
       <div className="w-full space-y-3 mt-5">
         <TextField
@@ -166,7 +179,7 @@ const SignUpForm = () => {
           <TextField
             type="text"
             name="communityName"
-            placeholder="Enter your name"
+            placeholder="Enter your community name"
             value={formik.values.communityName}
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
@@ -180,8 +193,11 @@ const SignUpForm = () => {
             placeholder="Enter your Slug"
             value={formik.values.urlSlug}
             onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-            error={formik.errors.urlSlug}
+            onBlur={(e) => {
+              formik.handleBlur(e);
+              checkSlugAvailability(e.target.value);
+            }}
+            error={formik.errors.urlSlug || slugError}
             touched={formik.touched.urlSlug}
             label={`URL Slug`}
           />

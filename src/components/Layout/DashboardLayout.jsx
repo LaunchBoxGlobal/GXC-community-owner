@@ -7,11 +7,11 @@ import { BASE_URL } from "../../data/baseUrl";
 import { getToken } from "../../utils/getToken";
 import { useAppContext } from "../../context/AppContext";
 import Cookies from "js-cookie";
+import { handleApiError } from "../../utils/handleApiError";
 
 const DashboardLayout = ({ pages }) => {
   const sidebarRef = useRef(null);
   const navigate = useNavigate();
-  // const [user, setUser] = useState(null);
   const [isOpen, setisOpen] = useState(false);
   const { user, setUser } = useAppContext();
 
@@ -31,18 +31,17 @@ const DashboardLayout = ({ pages }) => {
         },
       });
 
-      // console.log("profile >>>", res?.data?.data?.user);
-      setUser(res?.data?.data?.user);
-      if (!res?.data?.data?.user?.emailVerified) {
-        Cookies.remove(`token`);
-        Cookies.remove(`user`);
+      const user = res?.data?.data?.user;
+
+      setUser(user);
+
+      if (!user?.emailVerified) {
+        Cookies.remove("token");
+        Cookies.remove("user");
         navigate("/login");
       }
     } catch (error) {
-      console.error("Unauthorized: Token expired or invalid.");
-      localStorage.removeItem("token");
-      Cookies.remove("token");
-      navigate("/login");
+      handleApiError(error, navigate);
     }
   };
 
@@ -51,7 +50,7 @@ const DashboardLayout = ({ pages }) => {
   }, []);
 
   return (
-    <div className="w-screen h-screen flex justify-start items-start">
+    <div className="w-screen h-screen flex justify-start items-start bg-[#FCFCFC]">
       <div
         onClick={toggleModal}
         className={`w-screen h-screen fixed top-0 left-0 transition-all duration-500  ${
@@ -62,14 +61,14 @@ const DashboardLayout = ({ pages }) => {
           ref={sidebarRef}
           className={`fixed top-0 left-0 transition-all duration-200  ${
             isOpen ? " lg:translate-x-0" : "-translate-x-full lg:translate-x-0"
-          } lg:static w-[60%] z-[2000] lg:z-auto py-5 pl-5 lg:w-60 xl:w-72 flex flex-col gap-3 items-center justify-start h-full bg-white`}
+          } lg:static w-[60%] z-[2000] lg:z-auto py-5 pl-5 lg:w-60 xl:w-72 flex flex-col gap-3 items-center justify-start h-full`}
         >
           <Sidebar />
         </div>
       </div>
 
-      <div className="w-full relative lg:w-[calc(100%-15rem)] xl:w-[calc(100%-18rem)] h-full  overflow-y-auto overflow-x-hidden p-5 bg-white">
-        <div className="sticky top-0 left-0 w-full h-[94px] bg-[#EAEAEA] flex items-center justify-between lg:justify-end px-4 z-20 rounded-[10px]">
+      <div className="w-full relative lg:w-[calc(100%-15rem)] xl:w-[calc(100%-18rem)] h-full  overflow-y-auto overflow-x-hidden p-5">
+        <div className="sticky top-0 left-0 w-full h-[94px] bg-[#fff] custom-shadow flex items-center justify-between lg:justify-end px-4 z-20 rounded-[10px]">
           <button
             onClick={() => setisOpen((prev) => !prev)}
             className="lg:hidden block"

@@ -34,25 +34,38 @@ const Sidebar = () => {
   };
 
   return (
-    <div className="w-full h-full rounded-[10px] py-6 px-2 lg:px-5 flex flex-col items-start gap-y-6 bg-[#EAEAEA]">
+    <div className="w-full h-full rounded-[10px] py-6 px-2 lg:px-5 flex flex-col items-start gap-y-6 bg-[#fff] custom-shadow">
       <div>
-        <h1 className="text-[35px] font-semibold tracking-tight">Logo</h1>
+        <img
+          src="/logo.svg"
+          alt="logo"
+          className="max-w-[144px] object-contain"
+        />
       </div>
       <ul className="w-full flex flex-col gap-y-2">
         {PAGE_LINKS?.map((link, index) => {
-          const Icon = link?.icon;
+          // const Icon = link?.icon;
           return (
             <li className={`w-full text-black h-[49px]`} key={index}>
               <Link
                 to={link?.page}
-                // onClick={() => navigateToLink(link?.page, link?.title)}
                 className={`text-sm flex items-center gap-x-2.5 font-medium w-full h-[49px] px-4 rounded-[12px] outline-none ${
-                  location?.pathname === link?.page
-                    ? "bg-black text-white"
-                    : "bg-transparent text-black hover:bg-black hover:text-white transition-all duration-300 group"
+                  location?.pathname === link?.page ||
+                  location?.pathname.startsWith(link?.page + "/")
+                    ? "bg-[var(--button-bg)] text-white"
+                    : "bg-transparent text-black hover:bg-[var(--button-bg)] hover:text-white transition-all duration-300 group"
                 }`}
               >
-                <Icon className="text-xl leading-none" />
+                {/* <Icon className="text-xl leading-none" /> */}
+                <img
+                  src={link?.icon}
+                  alt={link?.iconAltTag}
+                  width={link?.iconWidth}
+                  height={link?.iconHeight}
+                  className={`transition duration-300 group-hover:invert group-hover:brightness-0 ${
+                    location?.pathname === link?.page && "invert brightness-0"
+                  }`}
+                />
 
                 <span className="">{link?.title}</span>
               </Link>
@@ -64,7 +77,7 @@ const Sidebar = () => {
           type="button"
           onClick={() => handleLogout()}
           className={`text-sm flex items-center gap-x-2.5 font-medium w-full h-[49px] px-4 rounded-[12px] outline-none 
-                    bg-transparent text-black hover:bg-black hover:text-white transition-all duration-300 group"
+                    bg-transparent text-black hover:bg-[var(--button-bg)] hover:text-white transition-all duration-300 group"
                 }`}
         >
           <FiLogOut className="text-xl leading-none" />

@@ -34,8 +34,9 @@ const EditProfile = ({ togglePopup, showPopup, fetchUserProfile }) => {
         .max(25, "Name must be 25 characters or less")
         .required("Name is required"),
       description: Yup.string()
-        .min(50, `Description can not be less than 50 characters`)
-        .max(500, `Description can not be more than 500 characters`),
+        .min(10, `Description can not be less than 10 characters`)
+        .max(500, `Description can not be more than 500 characters`)
+        .required("Please enter your description"),
       email: Yup.string()
         .email("Invalid email address")
         .required("Email is required"),
@@ -191,7 +192,9 @@ const EditProfile = ({ togglePopup, showPopup, fetchUserProfile }) => {
           'error' '&&' 'touched' ? "border-red-500" : "border-[#D9D9D9]"`}
               ></textarea>
               {formik.touched.description && formik.errors.description ? (
-                <div>{formik.errors.description}</div>
+                <div className="text-red-500 text-xs">
+                  {formik.errors.description}
+                </div>
               ) : null}
             </div>
 

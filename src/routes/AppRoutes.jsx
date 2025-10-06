@@ -19,6 +19,12 @@ import UserProfilePage from "../pages/Profile/UserProfilePage";
 import SettingsLayout from "../components/Layout/SettingsLayout";
 import ChangePasswordPage from "../pages/Settings/ChangePasswordPage";
 import CompleteProfileForm from "../components/Forms/CompleteProfileForm";
+import CommunityPage from "../pages/Communities/CommunityPage";
+import ProductPage from "../pages/Communities/ProductPage";
+import MembersPage from "../pages/Members/MembersPage";
+import InvitesPage from "../pages/Invites/InvitesPage";
+import ReportsPage from "../pages/Reports/ReportsPage";
+import WalletPage from "../pages/Wallet/WalletPage";
 
 const isAuthenticated = () => !!Cookies.get("token");
 // const isAuthenticated = () => {
@@ -130,19 +136,6 @@ const AppRoutes = () => {
         }
       />
 
-      {/* <Route
-        path="/email-verification"
-        element={
-          <PrivateRoute
-            redirectTo={`/`}
-            element={
-              <AuthLayout>
-                <EmailVerificationStatusPage />
-              </AuthLayout>
-            }
-          />
-        }
-      /> */}
       <Route
         path="/add-payment-info"
         element={
@@ -201,6 +194,65 @@ const AppRoutes = () => {
           />
         }
       />
+      <Route
+        path="/communities/details/:slug"
+        element={
+          <PrivateRoute
+            redirectTo={"/login"}
+            element={<DashboardLayout pages={<CommunityPage />} />}
+          />
+        }
+      />
+
+      <Route
+        path="/products/:productId"
+        element={
+          <PrivateRoute
+            redirectTo={"/login"}
+            element={<DashboardLayout pages={<ProductPage />} />}
+          />
+        }
+      />
+
+      <Route
+        path="/members"
+        element={
+          <PrivateRoute
+            redirectTo={"/login"}
+            element={<DashboardLayout pages={<MembersPage />} />}
+          />
+        }
+      />
+
+      <Route
+        path="/invites"
+        element={
+          <PrivateRoute
+            redirectTo={"/login"}
+            element={<DashboardLayout pages={<InvitesPage />} />}
+          />
+        }
+      />
+
+      <Route
+        path="/reports"
+        element={
+          <PrivateRoute
+            redirectTo={"/login"}
+            element={<DashboardLayout pages={<ReportsPage />} />}
+          />
+        }
+      />
+
+      <Route
+        path="/wallet"
+        element={
+          <PrivateRoute
+            redirectTo={"/login"}
+            element={<DashboardLayout pages={<WalletPage />} />}
+          />
+        }
+      />
 
       <Route
         path="/settings"
@@ -215,6 +267,7 @@ const AppRoutes = () => {
           />
         }
       />
+
       <Route
         path="/settings/change-password"
         element={

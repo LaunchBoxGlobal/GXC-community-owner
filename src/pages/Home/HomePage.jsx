@@ -18,7 +18,7 @@ const HomePage = () => {
     document.title = "GiveXChange";
   }, []);
   return (
-    <main className="w-full p-5 rounded-[10px] bg-[var(--page-bg)]">
+    <main className="w-full p-5 rounded-[10px] bg-white custom-shadow min-h-[78.6vh]">
       <h1 className="text-base font-medium text-[var(--secondary-color)]">
         Hello John Doe,
       </h1>
@@ -29,6 +29,9 @@ const HomePage = () => {
       <HomePageStats />
 
       <div className="w-full mt-8">
+        <h2 className="text-[32px] font-semibold leading-none">
+          Recent Communities
+        </h2>
         <RecentCommunitiesList />
       </div>
     </main>

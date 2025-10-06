@@ -22,7 +22,7 @@ const VerifyOtp = () => {
   const [showPopup, setShowPopup] = useState(false);
   const [redirectParams, setRedirectParams] = useState(null);
   const { setShowEmailVerificationPopup } = useAppContext();
-  const userEmail = Cookies.get(`signupEmail`);
+  const userEmail = Cookies.get(`userEmail`);
   const verifyEmail = Cookies.get("verifyEmail");
 
   const togglePopup = () => {
@@ -48,11 +48,15 @@ const VerifyOtp = () => {
     }),
     onSubmit: async (values, { resetForm }) => {
       const otp = values.otp.join("");
+      if(!userEmail){
+        alert("Email not found");
+        return
+      }
 
       const body =
         page === "/signup"
           ? { code: otp }
-          : { code: otp, email: userEmail || verifyEmail || email };
+          : { code: otp, email: userEmail };
       setLoading(true);
       const token = page === "/login" ? "" : "";
       try {
@@ -76,17 +80,11 @@ const VerifyOtp = () => {
             setShowEmailVerificationPopup(true);
             Cookies.remove(`userEmail`);
             Cookies.remove(`verifyEmail`);
-            // setRedirectParams(redirect);
-
-            // navigate(
-            //   `/email-verification${redirect ? `?redirect=${redirect}` : ""}`,
-            //   {
-            //     state: { page: "/email-verification" },
-            //   }
-            // );
+          
           } else if (page === "/forgot-password") {
+            Cookies.set("otp", otp)
             navigate(`/change-password`, {
-              state: { otp, email: userEmail || verifyEmail || email },
+              state: { otp, email: userEmail },
             });
           } else if (page === "/login") {
             navigate("/");
@@ -97,8 +95,7 @@ const VerifyOtp = () => {
         alert(error.response?.data?.message || error?.message);
       } finally {
         setLoading(false);
-        // togglePopup();
-        // setShowEmailVerificationPopup(false);
+       
       }
     },
   });
@@ -145,21 +142,13 @@ const VerifyOtp = () => {
         onSubmit={formik.handleSubmit}
         className="w-full max-w-[350px] flex flex-col items-start gap-4"
       >
-        {/* <div className="w-full">
-          <img
-            src="/verify-otp-image.svg"
-            alt="verify-otp-image"
-            className="w-[82px] h-[82px] object-contain mx-auto"
-          />
-        </div> */}
-
         <div className="w-full text-center space-y-3 mt-4">
           <h1 className="font-semibold text-[32px] leading-none">Verify OTP</h1>
-          {email || userEmail || verifyEmail ? (
+          {userEmail ? (
             <p className="text-[var(--secondary-color)]">
               The code was sent to{" "}
               <span className="text-black font-medium">
-                {userEmail || verifyEmail || email}
+                {userEmail}
               </span>
             </p>
           ) : (
@@ -198,7 +187,7 @@ const VerifyOtp = () => {
             <p className="text-[var(--secondary-color)]">
               Didn't receive the code yet?{" "}
             </p>
-            <ResentOtp page={page} email={userEmail || verifyEmail || email} />
+            <ResentOtp page={page} email={userEmail} />
           </div>
         </div>
       </form>

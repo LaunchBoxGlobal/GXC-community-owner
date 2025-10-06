@@ -4,6 +4,7 @@ const Button = ({ type, title, isLoading }) => {
   return (
     <button
       type={type ? type : "button"}
+      disabled={isLoading}
       className="button relative flex items-center justify-center"
     >
       {isLoading ? <Loader /> : title}

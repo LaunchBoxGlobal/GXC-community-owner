@@ -20,6 +20,8 @@ const CompleteProfileForm = () => {
   const userData = JSON.parse(Cookies.get("user"));
   const [loading, setLoading] = useState(false);
   const [showPopup, setShowPopup] = useState(false);
+  Cookies.remove("userEmail")
+  // Cookies.remove("slug")
 
   const togglePopup = () => {
     setShowPopup((prev) => !prev);

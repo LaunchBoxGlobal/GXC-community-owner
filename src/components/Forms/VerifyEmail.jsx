@@ -39,9 +39,9 @@ const VerifyEmail = () => {
           }
         );
 
-        Cookies.set("verifyEmail", values.email);
-
+        
         if (res?.data?.success) {
+          Cookies.set("userEmail", values.email);
           resetForm();
           navigate("/verify-otp", {
             state: {

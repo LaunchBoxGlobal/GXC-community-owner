@@ -38,7 +38,9 @@ const ChangePassword = () => {
         .required("Password is required"),
     }),
     onSubmit: async (values, { resetForm }) => {
-      if (!email) {
+      const userEmail = Cookies.get("userEmail")
+      const userCode = Cookies.get("otp")
+      if (!userEmail) {
         alert("email not found");
         return;
       }
@@ -49,20 +51,16 @@ const ChangePassword = () => {
       try {
         setLoading(true);
         const res = await axios.post(`${BASE_URL}/auth/reset-password`, {
-          email,
-          code: otp,
+          email: userEmail,
+          code: otp || userCode,
           password: values?.password,
         });
 
-        // console.log("reset password response >>> ", res?.data);
-
         if (res?.data?.success) {
-          // alert(res?.data?.message);
           resetForm();
           setShowPopup(true);
           Cookies.remove(`userEmail`);
-          Cookies.remove(`verifyEmail`);
-          Cookies.remove("signupEmail");
+          Cookies.remove("otp");
         }
       } catch (error) {
         console.log(`reset password error >>> `, error);

@@ -28,7 +28,7 @@ const TextField = ({
         onChange={onChange}
         disabled={disabled}
         onBlur={onBlur}
-        className={`w-full border h-[49px] px-[15px] py-[14px] rounded-[8px] outline-none bg-white
+        className={`w-full border h-[49px] px-[15px] py-[14px] rounded-[8px] outline-none bg-[var(--secondary-bg)]
           ${
             error && touched ? "border-red-500" : "border-[#D9D9D9]"
           } disabled:bg-gray-50 disabled:cursor-not-allowed`}

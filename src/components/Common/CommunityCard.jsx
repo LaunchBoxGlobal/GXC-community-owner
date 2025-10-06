@@ -1,22 +1,16 @@
 import { HiOutlineDotsVertical } from "react-icons/hi";
 import { Link } from "react-router-dom";
 
-const CommunityCard = () => {
+const CommunityCard = ({ community }) => {
   return (
-    <Link to={`/community/45u98965`}>
-      <div className="w-full bg-white p-5 rounded-[20px]">
+    <Link to={`/communities/details/${community?.slug}`}>
+      <div className="w-full bg-white p-5 rounded-[20px] custom-shadow overflow-hidden">
         <div className="w-full flex items-center justify-between gap-4">
           <div className="flex items-center gap-2">
-            <div>
-              <img
-                src="/stats-card-icon-placeholder.png"
-                alt="community image placeholder"
-                className="w-[67px] h-[67px]"
-              />
-            </div>
             <div className="space-y-3">
-              <p className="text-lg font-semibold leading-none">Community 01</p>
-              <p className="text-sm text-[#717182] leading-none">Owner</p>
+              <p className="text-lg font-semibold leading-none">
+                {community?.name}
+              </p>
             </div>
           </div>
           <div>
@@ -26,17 +20,19 @@ const CommunityCard = () => {
           </div>
         </div>
 
-        <div className="w-full my-4">
-          <p className="text-sm leading-[1.2] text-[var(--secondary-color)]">
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. In
-            consequatur architecto placeat nesciunt possimus similique ratione
-            blanditiis rerum, optio repellat.
+        <div className="w-full my-4 min-h-[100px]">
+          <p className="text-sm leading-[1.2] text-[var(--secondary-color)] break-words">
+            {community?.description?.length > 300
+              ? community.description.slice(0, 300) + "..."
+              : community?.description}
           </p>
         </div>
 
         <div className="w-full flex items-center justify-between">
           <p className="text-sm font-normal text-[#202020]">Members</p>
-          <p className="text-sm font-semibold text-[#202020]">1250</p>
+          <p className="text-sm font-semibold text-[#202020]">
+            {community?.memberCount}
+          </p>
         </div>
 
         <div className="w-full border my-3" />

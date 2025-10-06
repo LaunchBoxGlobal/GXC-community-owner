@@ -6,6 +6,7 @@ import { getToken } from "../../utils/getToken";
 import { useNavigate } from "react-router-dom";
 import EditProfile from "./EditProfile";
 import { useAppContext } from "../../context/AppContext";
+import { handleApiError } from "../../utils/handleApiError";
 
 const UserProfilePage = () => {
   const { user, setUser } = useAppContext();
@@ -26,51 +27,21 @@ const UserProfilePage = () => {
 
       setUser(res?.data?.data?.user);
     } catch (error) {
-      if (axios.isAxiosError(error)) {
-        const status = error.response?.status;
-
-        switch (status) {
-          case 401:
-            console.error("Unauthorized: Token expired or invalid.");
-            localStorage.removeItem("token");
-            navigate("/login");
-            break;
-
-          case 403:
-            console.error("Forbidden: You do not have access.");
-            break;
-
-          case 404:
-            console.error("Profile not found.");
-            break;
-
-          case 500:
-            console.error("Server error. Please try again later.");
-            break;
-
-          default:
-            console.error(
-              `Unexpected error: ${status} - ${
-                error.response?.data?.message || error.message
-              }`
-            );
-        }
-      } else {
-        console.error("Network or unexpected error:", error);
-      }
+      handleApiError(error, navigate);
     }
   };
 
   useEffect(() => {
     fetchUserProfile();
   }, []);
+
   return (
     <>
       <div className="w-full rounded-[10px] bg-[var(--page-bg)]">
-        <div className="p-5">
+        <div className="mb-10">
           <h1 className="text-[32px] font-semibold leading-none">My Profile</h1>
 
-          <div className="w-full bg-white p-5 flex items-center justify-between flex-wrap rounded-[15px] mt-5 gap-5">
+          <div className="w-full bg-white p-5 flex items-center justify-between flex-wrap rounded-[15px] mt-5 gap-5 custom-shadow">
             <div className="w-full lg:max-w-[70%] flex items-start lg:items-center gap-3">
               <div className="">
                 {user?.profilePictureUrl ? (
