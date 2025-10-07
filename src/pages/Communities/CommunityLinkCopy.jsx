@@ -24,7 +24,7 @@ const CommunityLinkCopy = ({
             </button>
           </div>
 
-          <div className="w-full bg-[#F5F5F5] rounded-[12px] h-[49px] flex items-center px-5 my-8">
+          <div className="w-full bg-[#F5F5F5] rounded-[12px] min-h-[49px] py-2.5 flex items-center px-5 my-8">
             <p className="">invite.app.thegivexchange.com/{slug}</p>
           </div>
 

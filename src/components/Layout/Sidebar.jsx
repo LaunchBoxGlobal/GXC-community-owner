@@ -44,7 +44,6 @@ const Sidebar = () => {
       </div>
       <ul className="w-full flex flex-col gap-y-2">
         {PAGE_LINKS?.map((link, index) => {
-          // const Icon = link?.icon;
           return (
             <li className={`w-full text-black h-[49px]`} key={index}>
               <Link
@@ -56,14 +55,15 @@ const Sidebar = () => {
                     : "bg-transparent text-black hover:bg-[var(--button-bg)] hover:text-white transition-all duration-300 group"
                 }`}
               >
-                {/* <Icon className="text-xl leading-none" /> */}
                 <img
                   src={link?.icon}
                   alt={link?.iconAltTag}
                   width={link?.iconWidth}
                   height={link?.iconHeight}
                   className={`transition duration-300 group-hover:invert group-hover:brightness-0 ${
-                    location?.pathname === link?.page && "invert brightness-0"
+                    (location?.pathname === link?.page ||
+                      location?.pathname.startsWith(link?.page + "/")) &&
+                    "invert brightness-0"
                   }`}
                 />
 

@@ -27,12 +27,12 @@ const settingPages = [
 const SettingsLayout = ({ page }) => {
   const location = useLocation();
   return (
-    <div className="w-full p-5 rounded-[10px] bg-[var(--page-bg)]">
+    <div className="w-full p-5 rounded-[10px] bg-white custom-shadow">
       <h1 className="text-[32px] font-semibold leading-none">Settings</h1>
       <p className="text-[#565656] text-lg leading-none mt-4">
         Manage your account and preference{" "}
       </p>
-      <div className="w-full min-h-screen flex items-start justify-between bg-white rounded-[12px] mt-6">
+      <div className="w-full min-h-screen flex items-start justify-between bg-white rounded-[12px] mt-6 custom-shadow">
         <div className="w-[25%] min-h-screen border-r pt-5">
           <ul className="w-full flex flex-col gap-y-2">
             {settingPages?.map((link, index) => {

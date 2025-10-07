@@ -115,9 +115,17 @@ const CommunityPage = () => {
           <div className="w-full bg-white custom-shadow rounded-lg md:rounded-xl lg:rounded-[24px] p-7 mt-5 flex items-center justify-between">
             <div className="w-full lg:w-[70%]">
               <h2 className="page-heading">{community?.community?.name}</h2>
-              <p className="text-base text-[var(--secondary-color)] leading-[1.3] mt-2">
-                {community?.community?.description}
-              </p>
+              {community?.community?.slug && (
+                <p className="text-base text-[var(--secondary-color)] leading-[1.3] mt-2">
+                  <span className="font-semibold">Slug: </span>{" "}
+                  {community?.community?.slug}
+                </p>
+              )}
+              {community?.community?.description && (
+                <p className="text-base text-[var(--secondary-color)] leading-[1.3] mt-2">
+                  {community?.community?.description}
+                </p>
+              )}
             </div>
             <div className="w-full lg:w-[30%] flex items-center justify-end gap-10">
               <div className="text-center space-y-1">
@@ -128,8 +136,11 @@ const CommunityPage = () => {
               </div>
               <div className="text-center space-y-1">
                 <h4 className="">Products</h4>
+
                 <p className="font-semibold text-[var(--primary-color)] text-[24px] leading-none">
-                  1250
+                  {community?.community?.productCount
+                    ? community?.community?.productCount
+                    : "0"}
                 </p>
               </div>
               <div className="space-y-1.5 pt-1">

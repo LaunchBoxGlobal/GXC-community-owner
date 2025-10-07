@@ -1,11 +1,12 @@
 import axios from "axios";
-import React from "react";
+import React, { useState } from "react";
 import { HiOutlineDotsVertical } from "react-icons/hi";
 import { BASE_URL } from "../../data/baseUrl";
 import { getToken } from "../../utils/getToken";
 import { enqueueSnackbar } from "notistack";
 import { handleApiError } from "../../utils/handleApiError";
 import { useNavigate } from "react-router-dom";
+import Loader from "../../components/Loader/Loader";
 
 const MemberCard = ({
   member,
@@ -21,8 +22,10 @@ const MemberCard = ({
   getMembers,
 }) => {
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
 
   const handleUnblockUser = async () => {
+    setLoading(true);
     try {
       const res = await axios.post(
         `${BASE_URL}/communities/${communityId}/members/${member?.userId}/unban`,
@@ -35,7 +38,7 @@ const MemberCard = ({
       );
 
       if (res?.data?.success) {
-        enqueueSnackbar("Member unblocked successfully!", {
+        enqueueSnackbar(res?.data?.message || "Member unbanned successfully!", {
           variant: "success",
         });
         getMembers();
@@ -43,6 +46,8 @@ const MemberCard = ({
     } catch (error) {
       console.log("unblock member error >>> ", error);
       handleApiError(error, navigate);
+    } finally {
+      setLoading(false);
     }
   };
   return (
@@ -77,7 +82,7 @@ const MemberCard = ({
             onClick={() => handleUnblockUser()}
             className="w-[97px] h-[37px] bg-[#E6E6E6] rounded-[12px] text-sm"
           >
-            Unblock
+            {loading ? <Loader /> : "Unblock"}
           </button>
         ) : (
           <button

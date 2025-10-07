@@ -35,7 +35,7 @@ const AddCommunity = ({
         setSlugError(null);
       }
     } catch (err) {
-      console.error(err)
+      console.error(err);
       setSlugError("Could not check slug availability");
     }
   };
@@ -59,7 +59,7 @@ const AddCommunity = ({
       description: Yup.string()
         .min(30, `Description can not be less than 30 characters`)
         .max(500, `Description can not be more than 500 characters`)
-        .required("Please enter description"),
+        .required("Description is required"),
     }),
     onSubmit: async (values, { resetForm }) => {
       if (slugError) {
@@ -158,7 +158,7 @@ const AddCommunity = ({
                 onBlur={formik.handleBlur}
                 value={formik.values.description}
                 placeholder="Describe yourself"
-                className={`w-full border h-[124px] px-[15px] py-[14px] rounded-[8px] outline-none ${
+                className={`w-full border h-[124px] px-[15px] py-[14px] rounded-[8px] bg-[var(--secondary-bg)] outline-none ${
                   formik.touched.description && formik.errors.description
                     ? "border-red-500"
                     : "border-[#D9D9D9]"

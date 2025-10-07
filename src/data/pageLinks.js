@@ -26,14 +26,14 @@ export const PAGE_LINKS = [
     iconHeight: 20,
     iconAltTag: "communities-sidebar-icon",
   },
-  {
-    title: "Members",
-    page: "/members",
-    icon: "/members-icon.png",
-    iconWidth: 12,
-    iconHeight: 15,
-    iconAltTag: "members-icon",
-  },
+  // {
+  //   title: "Members",
+  //   page: "/members",
+  //   icon: "/members-icon.png",
+  //   iconWidth: 12,
+  //   iconHeight: 15,
+  //   iconAltTag: "members-icon",
+  // },
   {
     title: "Invites",
     page: "/invites",

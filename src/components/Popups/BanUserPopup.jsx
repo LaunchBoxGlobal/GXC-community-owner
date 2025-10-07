@@ -14,6 +14,7 @@ const BanUserPopup = ({
   userId,
   communityId,
   getMembers,
+  setIsBanned,
 }) => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
@@ -45,11 +46,12 @@ const BanUserPopup = ({
 
       console.log("Block user response >>> ", res?.data);
       if (res?.data?.success) {
-        enqueueSnackbar(res?.data?.message, {
-          variant: "success",
-        });
+        // enqueueSnackbar(res?.data?.message, {
+        //   variant: "success",
+        // });
         setOpenActions(false);
         getMembers();
+        setIsBanned(true);
       }
     } catch (error) {
       console.log("Block user error >>> ", error);
@@ -59,6 +61,7 @@ const BanUserPopup = ({
       setShowBlockUserPopup(false);
     }
   };
+
   return (
     showPopup && (
       <main className="w-full h-screen fixed inset-0 z-50 flex items-center justify-center px-4 bg-[rgba(0,0,0,0.4)]">

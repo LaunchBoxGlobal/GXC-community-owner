@@ -13,6 +13,8 @@ const RemoveUserPopup = ({
   userId,
   communityId,
   getMembers,
+  navigate,
+  setIsRemoved,
 }) => {
   const [loading, setLoading] = useState(false);
 
@@ -31,9 +33,8 @@ const RemoveUserPopup = ({
     }
     setLoading(true);
     try {
-      const res = await axios.post(
-        `${BASE_URL}/communities/${communityId}/members/${userId}/ban`,
-        {},
+      const res = await axios.delete(
+        `${BASE_URL}/communities/${communityId}/members/${userId}`,
         {
           headers: {
             Authorization: `Bearer ${getToken()}`,
@@ -43,10 +44,10 @@ const RemoveUserPopup = ({
 
       console.log("Block user response >>> ", res?.data);
       if (res?.data?.success) {
-        enqueueSnackbar(res?.data?.message, {
-          variant: "success",
-        });
-        setOpenActions(false);
+        // enqueueSnackbar(res?.data?.message, {
+        //   variant: "success",
+        // });
+        setIsRemoved(true);
         getMembers();
       }
     } catch (error) {
@@ -55,7 +56,7 @@ const RemoveUserPopup = ({
     } finally {
       setLoading(false);
       setShowRemoveUserPopup(false);
-      setOpenActions(false);
+      setOpenActions(null);
     }
   };
 

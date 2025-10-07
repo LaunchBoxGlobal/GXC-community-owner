@@ -45,6 +45,8 @@ const SignUpForm = () => {
   const formik = useFormik({
     initialValues: {
       name: "",
+      firstName: "",
+      lastName: "",
       email: "",
       password: "",
       confirmPassword: "",
@@ -53,14 +55,22 @@ const SignUpForm = () => {
       urlSlug: "",
     },
     validationSchema: Yup.object({
-      name: Yup.string()
-        .min(3, "Name must contain at least 3 characters")
-        .max(30, "Name must be 30 characters or less")
+      firstName: Yup.string()
+        .min(3, "First name must contain at least 3 characters")
+        .max(10, "First name must be 10 characters or less")
         .matches(
           /^[A-Z][a-z]+(?: [A-Z][a-z]+)*$/,
-          "Name must start with a capital letter and contain only letters and spaces"
+          "First name must start with a capital letter and contain only letters and spaces"
         )
-        .required("Name is required"),
+        .required("First name is required"),
+      lastName: Yup.string()
+        .min(3, "Last name must contain at least 3 characters")
+        .max(10, "Last name must be 10 characters or less")
+        .matches(
+          /^[A-Z][a-z]+(?: [A-Z][a-z]+)*$/,
+          "Last name must start with a capital letter and contain only letters and spaces"
+        )
+        .required("Last name is required"),
       communityName: Yup.string()
         .min(3, "Community name must contain atleast 3 characters")
         .max(30, "Community name must be 30 characters or less")
@@ -102,7 +112,8 @@ const SignUpForm = () => {
       try {
         setLoading(true);
         const formData = new FormData();
-        formData.append("fullName", values.name);
+        formData.append("firstName", values.firstName);
+        formData.append("lastName", values.lastName);
         formData.append("email", values.email);
         formData.append("communityName", values.communityName);
         formData.append("slug", values.urlSlug);
@@ -151,17 +162,30 @@ const SignUpForm = () => {
       </div>
 
       <div className="w-full space-y-3 mt-5">
-        <TextField
-          type="text"
-          name="name"
-          placeholder="Enter your full name"
-          value={formik.values.name}
-          onChange={formik.handleChange}
-          onBlur={formik.handleBlur}
-          error={formik.errors.name}
-          touched={formik.touched.name}
-          label={`Full Name`}
-        />
+        <div className="w-full grid grid-cols-2 gap-2">
+          <TextField
+            type="text"
+            name="firstName"
+            placeholder="Enter your first name"
+            value={formik.values.firstName}
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+            error={formik.errors.firstName}
+            touched={formik.touched.firstName}
+            label={`First Name`}
+          />
+          <TextField
+            type="text"
+            name="lastName"
+            placeholder="Enter your last name"
+            value={formik.values.lastName}
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+            error={formik.errors.lastName}
+            touched={formik.touched.lastName}
+            label={`Last Name`}
+          />
+        </div>
 
         <TextField
           type="text"
