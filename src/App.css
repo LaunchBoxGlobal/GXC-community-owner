@@ -18,14 +18,6 @@
   @apply w-full border border-[var(--button-bg)] text-[var(--button-bg)] hover:bg-[var(--button-bg)] hover:text-white h-[49px] rounded-[8px] text-center font-medium transition-all duration-300;
 }
 
-.auth-bg {
-  background-image: url("/auth-bg.svg");
-  background-size: cover;
-  background-position: center;
-  width: 100%;
-  height: 100%;
-}
-
 /* Remove border from the flag dropdown */
 .react-tel-input .flag-dropdown {
   border: none !important;

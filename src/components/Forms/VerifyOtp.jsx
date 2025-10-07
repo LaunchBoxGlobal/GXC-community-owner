@@ -48,15 +48,13 @@ const VerifyOtp = () => {
     }),
     onSubmit: async (values, { resetForm }) => {
       const otp = values.otp.join("");
-      if(!userEmail){
+      if (!userEmail) {
         alert("Email not found");
-        return
+        return;
       }
 
       const body =
-        page === "/signup"
-          ? { code: otp }
-          : { code: otp, email: userEmail };
+        page === "/signup" ? { code: otp } : { code: otp, email: userEmail };
       setLoading(true);
       const token = page === "/login" ? "" : "";
       try {
@@ -80,9 +78,8 @@ const VerifyOtp = () => {
             setShowEmailVerificationPopup(true);
             Cookies.remove(`userEmail`);
             Cookies.remove(`verifyEmail`);
-          
           } else if (page === "/forgot-password") {
-            Cookies.set("otp", otp)
+            Cookies.set("otp", otp);
             navigate(`/change-password`, {
               state: { otp, email: userEmail },
             });
@@ -95,7 +92,6 @@ const VerifyOtp = () => {
         alert(error.response?.data?.message || error?.message);
       } finally {
         setLoading(false);
-       
       }
     },
   });
@@ -147,9 +143,7 @@ const VerifyOtp = () => {
           {userEmail ? (
             <p className="text-[var(--secondary-color)]">
               The code was sent to{" "}
-              <span className="text-black font-medium">
-                {userEmail}
-              </span>
+              <span className="text-black font-medium">{userEmail}</span>
             </p>
           ) : (
             ""
@@ -167,15 +161,15 @@ const VerifyOtp = () => {
                 value={formik.values.otp[i]}
                 onChange={(e) => handleChange(e, i)}
                 onKeyDown={(e) => handleKeyDown(e, i)}
-                className={`w-[49px] border h-[49px] text-center text-lg font-medium rounded-[8px] outline-none 
-                ${formik.errors.otp ? "border-red-500" : "border-[#D9D9D9]"}`}
+                className={`w-[49px] border h-[49px] text-center text-lg font-medium rounded-[8px] outline-none bg-[var(--secondary-bg)]
+                ${
+                  formik.errors.otp
+                    ? "border-red-500"
+                    : "border-[var(--secondary-bg)]"
+                }`}
               />
             ))}
           </div>
-
-          {/* {formik.errors.otp && (
-          <p className="text-red-500 text-sm">{formik.errors.otp}</p>
-        )} */}
 
           <div className="pt-3">
             <Button type="submit" title="Verify" isLoading={loading} />

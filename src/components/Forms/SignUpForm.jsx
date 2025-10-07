@@ -238,10 +238,10 @@ const SignUpForm = () => {
             onBlur={formik.handleBlur}
             value={formik.values.description}
             placeholder="Enter description"
-            className={`w-full border min-h-[84px] max-h-[84px] px-[15px] py-[14px] rounded-[8px] outline-none ${
+            className={`w-full border bg-[var(--secondary-bg)] min-h-[84px] max-h-[84px] px-[15px] py-[14px] rounded-[8px] outline-none ${
               formik.touched.description && formik.errors.description
                 ? "border-red-500"
-                : "border-[#D9D9D9]"
+                : "border-[var(--secondary-bg)]"
             }`}
           />
           {formik.touched.description && formik.errors.description ? (

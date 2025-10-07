@@ -21,8 +21,8 @@ const PasswordField = ({
         </label>
       )}
       <div
-        className={`w-full bg-white border h-[49px] px-[15px] py-[14px] rounded-[8px] flex items-center justify-between  ${
-          error && touched ? "border-red-500" : "border-[#D9D9D9]"
+        className={`w-full bg-[#F5F5F5] border h-[49px] px-[15px] py-[14px] rounded-[8px] flex items-center justify-between  ${
+          error && touched ? "border-red-500" : "border-[#F5F5F5]"
         }`}
       >
         <input
@@ -32,7 +32,7 @@ const PasswordField = ({
           value={value}
           onChange={onChange}
           onBlur={onBlur}
-          className="w-full text-[#212121] outline-none"
+          className="w-full text-[#212121] outline-none bg-transparent"
         />
 
         <button type="button" onClick={() => setShowPass((prev) => !prev)}>
