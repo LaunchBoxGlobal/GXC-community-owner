@@ -27,11 +27,6 @@ import ReportsPage from "../pages/Reports/ReportsPage";
 import WalletPage from "../pages/Wallet/WalletPage";
 
 const isAuthenticated = () => !!Cookies.get("token");
-// const isAuthenticated = () => {
-//   const token = Cookies.get("token");
-//   const isVerified = Cookies.get("isVerified") === "true";
-//   return !!token && isVerified;
-// };
 
 const isUnverified = () => {
   const token = Cookies.get("token");
