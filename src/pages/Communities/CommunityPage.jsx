@@ -22,6 +22,7 @@ const CommunityPage = () => {
 
   const tabFromUrl = searchParams.get("tab") || "products";
   const [activeTab, setActiveTab] = useState(tabFromUrl);
+  const [memberCount, setMemberCount] = useState(null);
 
   const fetchCommunityDetails = async (showLoader = true) => {
     if (showLoader) setLoading(true);
@@ -117,7 +118,8 @@ const CommunityPage = () => {
               <h2 className="page-heading">{community?.community?.name}</h2>
               {community?.community?.slug && (
                 <p className="text-base text-[var(--secondary-color)] leading-[1.3] mt-2">
-                  <span className="font-semibold">Slug: </span>{" "}
+                  <span className="font-semibold">Slug: </span>
+                  user.thegivexchange.com/community/
                   {community?.community?.slug}
                 </p>
               )}
@@ -131,7 +133,7 @@ const CommunityPage = () => {
               <div className="text-center space-y-1">
                 <h4 className="">Members</h4>
                 <p className="font-semibold text-[var(--primary-color)] text-[24px] leading-none">
-                  {community?.community?.memberCount}
+                  {memberCount}
                 </p>
               </div>
               <div className="text-center space-y-1">
@@ -192,9 +194,14 @@ const CommunityPage = () => {
 
           <div className="w-full mt-6 min-h-[30vh]">
             {activeTab === "products" ? (
-              <ProductList />
+              <ProductList count={community?.community?.productCount} />
             ) : (
-              <MemberList communityId={community?.community?.id} />
+              <MemberList
+                communityId={community?.community?.id}
+                count={community?.community?.memberCount}
+                setMemberCount={setMemberCount}
+                community={community}
+              />
             )}
           </div>
         </>

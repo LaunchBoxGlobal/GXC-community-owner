@@ -13,11 +13,11 @@ const CommunityCard = ({ community }) => {
               </p>
             </div>
           </div>
-          <div>
+          {/* <div>
             <button type="button">
               <HiOutlineDotsVertical className="text-2xl" />
             </button>
-          </div>
+          </div> */}
         </div>
 
         <div className="w-full my-4 min-h-[100px]">
@@ -39,7 +39,9 @@ const CommunityCard = ({ community }) => {
 
         <div className="w-full flex items-center justify-between">
           <p className="text-sm font-normal text-[#202020]">Total Products</p>
-          <p className="text-sm font-semibold text-[#202020]">150</p>
+          <p className="text-sm font-semibold text-[#202020]">
+            {community?.productCount > 0 ? community?.productCount : 0}
+          </p>
         </div>
       </div>
     </Link>

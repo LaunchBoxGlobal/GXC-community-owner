@@ -58,6 +58,7 @@ const BanUserPopup = ({
       handleApiError(error, navigate);
     } finally {
       setLoading(false);
+      setOpenActions(null);
       setShowBlockUserPopup(false);
     }
   };

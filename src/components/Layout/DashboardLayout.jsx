@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import Sidebar from "./Sidebar";
-import { HiOutlineMenuAlt2 } from "react-icons/hi";
-import { useNavigate } from "react-router-dom";
+import { HiOutlineArrowLeft, HiOutlineMenuAlt2 } from "react-icons/hi";
+import { useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { BASE_URL } from "../../data/baseUrl";
 import { getToken } from "../../utils/getToken";
@@ -9,11 +9,21 @@ import { useAppContext } from "../../context/AppContext";
 import Cookies from "js-cookie";
 import { handleApiError } from "../../utils/handleApiError";
 
+const pathnames = [
+  "/",
+  "/communities",
+  "/invites",
+  "/reports",
+  "/wallet",
+  "/settings",
+];
+
 const DashboardLayout = ({ pages }) => {
   const sidebarRef = useRef(null);
   const navigate = useNavigate();
   const [isOpen, setisOpen] = useState(false);
   const { user, setUser } = useAppContext();
+  const location = useLocation();
 
   const toggleModal = () => {
     setisOpen(!isOpen);
@@ -68,20 +78,24 @@ const DashboardLayout = ({ pages }) => {
       </div>
 
       <div className="w-full relative lg:w-[calc(100%-15rem)] xl:w-[calc(100%-18rem)] h-full  overflow-y-auto overflow-x-hidden p-5">
-        <div className="sticky top-0 left-0 w-full h-[94px] bg-[#fff] custom-shadow flex items-center justify-between lg:justify-end px-4 z-20 rounded-[10px]">
+        <div
+          className={`sticky top-0 left-0 w-full h-[94px] bg-[#fff] custom-shadow flex items-center justify-between lg:justify-end px-4 z-20 rounded-[10px]`}
+        >
           <button
             onClick={() => setisOpen((prev) => !prev)}
             className="lg:hidden block"
           >
             <HiOutlineMenuAlt2 className="text-2xl" />
           </button>
-          {/* <button
-            type="button"
-            onClick={() => navigate(-1)}
-            className="text-[#5C5C5C] text-sm flex items-center gap-1"
-          >
-            <HiOutlineArrowLeft className="text-black text-base" /> Back
-          </button> */}
+          {/* {!pathnames.includes(location.pathname) && (
+            <button
+              type="button"
+              onClick={() => navigate(-1)}
+              className="text-[#5C5C5C] text-sm flex items-center gap-1"
+            >
+              <HiOutlineArrowLeft className="text-black text-base" /> Back
+            </button>
+          )} */}
           <button
             type="button"
             onClick={handleLogout}

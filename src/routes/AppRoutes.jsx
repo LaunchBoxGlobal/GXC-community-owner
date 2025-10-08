@@ -25,6 +25,7 @@ import MembersPage from "../pages/Members/MembersPage";
 import InvitesPage from "../pages/Invites/InvitesPage";
 import ReportsPage from "../pages/Reports/ReportsPage";
 import WalletPage from "../pages/Wallet/WalletPage";
+import MemberDetails from "../pages/Members/MemberDetails";
 
 const isAuthenticated = () => !!Cookies.get("token");
 
@@ -209,12 +210,21 @@ const AppRoutes = () => {
         }
       />
 
-      <Route
+      {/* <Route
         path="/members"
         element={
           <PrivateRoute
             redirectTo={"/login"}
             element={<DashboardLayout pages={<MembersPage />} />}
+          />
+        }
+      /> */}
+      <Route
+        path="/communities/details/:communityId/member/:userId"
+        element={
+          <PrivateRoute
+            redirectTo={"/login"}
+            element={<DashboardLayout pages={<MemberDetails />} />}
           />
         }
       />

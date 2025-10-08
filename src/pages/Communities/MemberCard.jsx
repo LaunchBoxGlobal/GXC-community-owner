@@ -5,7 +5,7 @@ import { BASE_URL } from "../../data/baseUrl";
 import { getToken } from "../../utils/getToken";
 import { enqueueSnackbar } from "notistack";
 import { handleApiError } from "../../utils/handleApiError";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Loader from "../../components/Loader/Loader";
 
 const MemberCard = ({
@@ -44,7 +44,7 @@ const MemberCard = ({
         getMembers();
       }
     } catch (error) {
-      console.log("unblock member error >>> ", error);
+      // console.log("unblock member error >>> ", error);
       handleApiError(error, navigate);
     } finally {
       setLoading(false);
@@ -68,7 +68,13 @@ const MemberCard = ({
           />
         </div>
         <div className="flex flex-col items-start justify-center">
-          <p className="text-sm font-medium">{member?.fullName}</p>
+          <p className="text-sm font-medium">
+            <Link
+              to={`/communities/details/${communityId}/member/${member?.userId}`}
+            >
+              {member?.fullName}
+            </Link>
+          </p>
           <p className="text-sm font-normal text-[var(--secondary-color)]">
             {member?.email}
           </p>
@@ -95,7 +101,7 @@ const MemberCard = ({
         {openActions == index && (
           <div
             className={`absolute right-0 w-[230px] h-[128px] bg-white custom-shadow rounded-[18px] z-50 flex flex-col items-start justify-center gap-3 ${
-              total <= 2 ? "bottom-full mb-2" : "top-full mt-2"
+              index >= total - 2 ? "bottom-full mb-2" : "top-full mt-2"
             }`}
           >
             <button
