@@ -11,6 +11,7 @@ import ResentOtp from "./ResentOtp";
 import EmailVerificationStatusPage from "../../pages/Auth/EmailVerificationStatusPage";
 import { useAppContext } from "../../context/AppContext";
 import CopyCommunityLinkPopup from "../Popups/CopyCommunityLinkPopup";
+import { enqueueSnackbar } from "notistack";
 
 const VerifyOtp = () => {
   const inputRefs = useRef([]);
@@ -49,7 +50,9 @@ const VerifyOtp = () => {
     onSubmit: async (values, { resetForm }) => {
       const otp = values.otp.join("");
       if (!userEmail) {
-        alert("Email not found");
+        enqueueSnackbar("Email not found", {
+          variant: "error",
+        });
         return;
       }
 
@@ -89,7 +92,9 @@ const VerifyOtp = () => {
         }
       } catch (error) {
         console.error("verify email error:", error);
-        alert(error.response?.data?.message || error?.message);
+        enqueueSnackbar(error.response?.data?.message || error?.message, {
+          variant: "error",
+        });
       } finally {
         setLoading(false);
       }
@@ -142,7 +147,7 @@ const VerifyOtp = () => {
           <h1 className="font-semibold text-[32px] leading-none">Verify OTP</h1>
           {userEmail ? (
             <p className="text-[var(--secondary-color)]">
-              The code was sent to{" "}
+              Verify the code sent at{" "}
               <span className="text-black font-medium">{userEmail}</span>
             </p>
           ) : (

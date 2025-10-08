@@ -20,7 +20,7 @@ const CompleteProfileForm = () => {
   const userData = JSON.parse(Cookies.get("user"));
   const [loading, setLoading] = useState(false);
   const [showPopup, setShowPopup] = useState(false);
-  Cookies.remove("userEmail")
+  Cookies.remove("userEmail");
   // Cookies.remove("slug")
 
   const togglePopup = () => {
@@ -38,8 +38,12 @@ const CompleteProfileForm = () => {
       email: userData?.email || "",
       phoneNumber: "",
       location: "",
-      description: "",
+      // description: "",
       profileImage: null,
+      zipcode: "",
+      city: "",
+      state: "",
+      country: "",
     },
     validationSchema: Yup.object({
       name: Yup.string()
@@ -56,14 +60,29 @@ const CompleteProfileForm = () => {
       phoneNumber: Yup.string()
         .matches(/^[0-9]{11}$/, "Phone number must contain 11 digits")
         .required("Enter your phone number"),
-      description: Yup.string()
-        .min(30, `Description can not be less than 30 characters`)
-        .max(500, `Description can not be more than 500 characters`)
-        .required("Please enter description"),
+      // description: Yup.string()
+      //   .min(30, `Description can not be less than 30 characters`)
+      //   .max(500, `Description can not be more than 500 characters`)
+      //   .required("Please enter description"),
       location: Yup.string()
         .min(11, `Address cannot be less than 11 characters`)
         .max(150, `Address can not be more than 150 characters`)
         .required("Please enter your location"),
+      zipcode: Yup.string()
+        .matches(/^[0-9]{5}$/, "Zip code must contain 5 digits")
+        .required("Enter your zip code"),
+      city: Yup.string()
+        .min(3, `City name cannot be less than 11 characters`)
+        .max(15, `City name cannot be more than 15 characters`)
+        .required("Enter your city"),
+      state: Yup.string()
+        .min(3, `State cannot be less than 11 characters`)
+        .max(15, `State can not be more than 15 characters`)
+        .required("Enter your state"),
+      country: Yup.string()
+        .min(3, `Country name cannot be less than 11 characters`)
+        .max(15, `Country name cannot be more than 15 characters`)
+        .required("Enter your country"),
 
       profileImage: Yup.mixed().nullable(),
     }),
@@ -206,19 +225,69 @@ const CompleteProfileForm = () => {
             />
           </div>
 
+          <div className="w-full grid grid-cols-2 gap-4">
+            <TextField
+              type="text"
+              name="city"
+              placeholder="Enter your city"
+              value={formik.values.city}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              error={formik.errors.city}
+              touched={formik.touched.city}
+              label={"City"}
+            />{" "}
+            <TextField
+              type="text"
+              name="zipcode"
+              placeholder="Enter zip code"
+              value={formik.values.zipcode}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              error={formik.errors.zipcode}
+              touched={formik.touched.zipcode}
+              label={"Zip Code"}
+            />
+          </div>
+
+          <div className="w-full grid grid-cols-2 gap-4">
+            <TextField
+              type="text"
+              name="state"
+              placeholder="Enter your state"
+              value={formik.values.state}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              error={formik.errors.state}
+              touched={formik.touched.state}
+              label={"State"}
+            />{" "}
+            <TextField
+              type="text"
+              name="country"
+              placeholder="Enter your country name"
+              value={formik.values.country}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              error={formik.errors.country}
+              touched={formik.touched.country}
+              label={"Country"}
+            />
+          </div>
+
           <TextField
             type="text"
             name="location"
-            placeholder="Enter your location"
+            placeholder="Enter your address"
             value={formik.values.location}
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
             error={formik.errors.location}
             touched={formik.touched.location}
-            label={"Location"}
+            label={"Home Address"}
           />
 
-          <div className="w-full flex flex-col gap-1">
+          {/* <div className="w-full flex flex-col gap-1">
             <label htmlFor="description" className="text-sm font-medium">
               Description
             </label>
@@ -240,7 +309,7 @@ const CompleteProfileForm = () => {
                 {formik.errors.description}
               </div>
             ) : null}
-          </div>
+          </div> */}
 
           <div className="pt-2 flex items-center justify-between">
             <Link

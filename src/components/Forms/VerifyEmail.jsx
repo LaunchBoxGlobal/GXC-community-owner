@@ -9,6 +9,7 @@ import axios from "axios";
 import { BASE_URL } from "../../data/baseUrl";
 const PAGETITLE = import.meta.env.VITE_PAGE_TITLE;
 import Cookies from "js-cookie";
+import { enqueueSnackbar } from "notistack";
 
 const VerifyEmail = () => {
   const navigate = useNavigate();
@@ -39,7 +40,6 @@ const VerifyEmail = () => {
           }
         );
 
-        
         if (res?.data?.success) {
           Cookies.set("userEmail", values.email);
           resetForm();
@@ -52,7 +52,9 @@ const VerifyEmail = () => {
         }
       } catch (error) {
         console.error("verify email error:", error);
-        alert(error.response?.data?.message || error?.message);
+        enqueueSnackbar(error.response?.data?.message || error?.message, {
+          variant: "error",
+        });
       } finally {
         setLoading(false);
       }
@@ -65,11 +67,11 @@ const VerifyEmail = () => {
       className="w-full max-w-[350px] flex flex-col items-start gap-4"
     >
       <div className="w-full text-center">
-        <img
+        {/* <img
           src="/forgot-password-image.svg"
           alt="image-placeholder"
           className="max-w-[71px] mx-auto"
-        />
+        /> */}
         <h2 className="font-semibold text-[32px] leading-none mt-8 mb-3">
           Forgot Password
         </h2>

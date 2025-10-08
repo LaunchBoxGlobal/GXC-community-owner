@@ -34,7 +34,7 @@ const PhoneNumberField = ({
 
       <div
         className={`w-full h-[49px] rounded-[8px] ${
-          error && touched ? "border border-red-500" : "border border-[#D9D9D9]"
+          error && touched ? "border border-red-500" : "border border-[#f5f5f5]"
         }`}
       >
         <PhoneInput
@@ -60,7 +60,7 @@ const PhoneNumberField = ({
             color: "gray",
             padding: "10px 50px",
             margin: "0",
-            background: "white",
+            background: "#f5f5f5",
             borderRadius: "8px",
           }}
           buttonStyle={{

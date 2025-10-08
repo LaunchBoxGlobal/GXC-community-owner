@@ -133,7 +133,7 @@ const CommunityPage = () => {
               <div className="text-center space-y-1">
                 <h4 className="">Members</h4>
                 <p className="font-semibold text-[var(--primary-color)] text-[24px] leading-none">
-                  {memberCount}
+                  {memberCount > 0 ? memberCount : 0}
                 </p>
               </div>
               <div className="text-center space-y-1">

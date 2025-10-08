@@ -34,7 +34,7 @@ const CopyCommunityLinkPopup = () => {
   return (
     showCommunityLinkPopup && (
       <div className="w-full h-screen fixed inset-0 px-5 z-50 bg-[rgba(0,0,0,0.4)] flex items-center justify-center">
-        <div className="w-full max-w-[491px] bg-[#D1E6D2] p-8 rounded-2xl">
+        <div className="w-full max-w-[491px] bg-[#fff] p-8 rounded-2xl">
           <div className="w-full text-center">
             <div className="w-[107px] h-[107px] bg-[var(--button-bg)] flex items-center justify-center rounded-full mx-auto">
               <img
@@ -47,7 +47,7 @@ const CopyCommunityLinkPopup = () => {
               Your Community Has Been Created!
             </h1>
 
-            <div className="w-full h-[50px] p-1 bg-white rounded-[12px] flex items-center justify-between pl-4">
+            <div className="w-full h-[50px] p-1 bg-[#f5f5f5] rounded-[12px] flex items-center justify-between pl-4">
               <p className="text-[#565656] leading-none overflow-hidden text-ellipsis">
                 www.thegivexchange/community/{slug}
               </p>

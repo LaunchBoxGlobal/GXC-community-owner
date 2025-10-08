@@ -3,6 +3,7 @@ import Cookies from "js-cookie";
 import { useEffect, useState } from "react";
 import { BASE_URL } from "../../data/baseUrl";
 import { getToken } from "../../utils/getToken";
+import { enqueueSnackbar } from "notistack";
 
 const ResentOtp = ({ email, page }) => {
   const [timer, setTimer] = useState(60);
@@ -39,19 +40,23 @@ const ResentOtp = ({ email, page }) => {
       );
 
       if (res?.data?.success) {
-        alert(res?.data?.message);
-        setTimer(60); // start 60s countdown
+        enqueueSnackbar(res?.data?.message, {
+          variant: "info",
+        });
+        setTimer(60);
       }
     } catch (error) {
-      console.error("verify email error:", error);
-      alert(error?.response?.data?.message || error.message);
+      // console.error("verify email error:", error);
+      enqueueSnackbar(error?.response?.data?.message || error.message, {
+        variant: "error",
+      });
     }
   };
 
   return (
     <button
       type="button"
-      className={`font-medium ${
+      className={`font-medium text-[var(--button-bg)] ${
         timer > 0 ? "opacity-50 cursor-not-allowed" : ""
       }`}
       onClick={handleResendOtp}

@@ -12,6 +12,7 @@ import axios from "axios";
 import { BASE_URL } from "../../data/baseUrl";
 import api from "../../services/axiosInstance";
 import Cookies from "js-cookie";
+import { enqueueSnackbar } from "notistack";
 
 const SignUpForm = () => {
   const navigate = useNavigate();
@@ -142,7 +143,9 @@ const SignUpForm = () => {
         }
       } catch (error) {
         // console.error("Sign up error:", error.response?.data);
-        alert(error.response?.data?.message || error?.message);
+        enqueueSnackbar(error.response?.data?.message || error?.message, {
+          variant: "error",
+        });
       } finally {
         setLoading(false);
       }
