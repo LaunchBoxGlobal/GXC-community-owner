@@ -1,4 +1,4 @@
-import { Navigate, Route, Routes, useLocation } from "react-router-dom";
+import { Navigate, Route, Routes } from "react-router-dom";
 import AuthLayout from "../components/Layout/AuthLayout";
 import SignUpForm from "../components/Forms/SignUpForm";
 import VerifyOtp from "../components/Forms/VerifyOtp";
@@ -24,40 +24,19 @@ import ReportsPage from "../pages/Reports/ReportsPage";
 import WalletPage from "../pages/Wallet/WalletPage";
 import MemberDetails from "../pages/Members/MemberDetails";
 
-const getUser = () => {
-  const user = Cookies.get("user");
-  return user ? JSON.parse(user) : null;
-};
-
 const isAuthenticated = () => !!Cookies.get("token");
-const isEmailVerified = () => getUser()?.emailVerified;
+// const isVerified =  JSON.parse(Cookies.get("user"));
 
-export const PrivateRoute = ({ element }) => {
-  const location = useLocation();
-
-  if (!isAuthenticated()) {
-    if (location.pathname !== "/login") {
-      return <Navigate to="/login" replace />;
-    }
-  }
-
-  if (isAuthenticated() && !isEmailVerified()) {
-    const fromPath = location.state?.from?.pathname || "/verify-otp";
-    return <Navigate to={fromPath} replace />;
-  }
-
-  return element;
+export const PrivateRoute = ({ element, redirectTo }) => {
+  return isAuthenticated() ? (
+    element
+  ) : (
+    <Navigate to={`${redirectTo}`} replace />
+  );
 };
 
-export const PublicRoute = ({ element, redirectTo }) => {
-  const location = useLocation();
-  const user = getUser();
-
-  if (isAuthenticated() && user?.emailVerified) {
-    return <Navigate to={redirectTo} state={{ from: location }} replace />;
-  }
-
-  return element;
+const PublicRoute = ({ element, redirectTo }) => {
+  return isAuthenticated() ? <Navigate to={redirectTo} /> : element;
 };
 
 const AppRoutes = () => {

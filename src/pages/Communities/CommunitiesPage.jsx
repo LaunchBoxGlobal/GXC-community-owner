@@ -19,6 +19,8 @@ const CommunitiesPage = () => {
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
 
+  console.log(`communities >>> `, communities);
+
   const fetchCommunities = async (query = "") => {
     setLoading(true);
     try {
@@ -41,11 +43,10 @@ const CommunitiesPage = () => {
     }
   };
 
-  // 🔹 Debounce the search (wait for user to stop typing)
   useEffect(() => {
     const delayDebounce = setTimeout(() => {
       fetchCommunities(searchTerm);
-    }, 500); // 500ms delay
+    }, 500);
 
     return () => clearTimeout(delayDebounce);
   }, [searchTerm]);
@@ -110,7 +111,6 @@ const CommunitiesPage = () => {
         </div>
       </div>
 
-      {/* communities list */}
       <RecentCommunitiesList
         showAddCommunityPopup={showAddCommunityPopup}
         setShowAddCommunityPopup={setShowAddCommunityPopup}
@@ -120,7 +120,7 @@ const CommunitiesPage = () => {
         setShowSuccessPopup={setShowSuccessPopup}
         toggleCommunityPopup={toggleCommunityPopup}
         handleCloseSuccessPopup={handleCloseSuccessPopup}
-        fetchCommunities={fetchCommunities}
+        // fetchCommunities={fetchCommunities}
         loading={loading}
         setLoading={setLoading}
         total={total}
