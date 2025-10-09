@@ -27,13 +27,14 @@ const VerifyOtp = () => {
   const verifyEmail = Cookies.get("verifyEmail");
   const { user } = useAppContext();
 
-  console.log(user);
-
   const togglePopup = () => {
     setShowEmailVerificationPopup(true);
   };
 
   useEffect(() => {
+    if (!userEmail) {
+      navigate("/login");
+    }
     document.title = `Verify OTP - GiveXChange`;
   }, []);
 

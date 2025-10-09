@@ -3,7 +3,7 @@ const PasswordUpdateSuccessModal = ({ showPopup, handleTogglePopup }) => {
     // showPopup && (
     <main className="w-full h-screen fixed inset-0 z-50 flex items-center justify-center px-4 bg-[rgba(0,0,0,0.4)]">
       <div className="w-full max-w-[471px] min-h-[301px] bg-[#fff] flex flex-col items-center gap-4 rounded-[18px] p-7 lg:p-10">
-        <div className="w-[107px] h-[107px] bg-[var(--button-bg)] flex items-center justify-center rounded-full">
+        <div className="w-[107px] h-[107px] bg-[var(--button-bg)] flex items-center justify-center rounded-full mx-auto">
           <img
             src="/check-icon.svg"
             alt="check-icon"

@@ -85,7 +85,7 @@ const BanUserPopup = ({
             <img
               src="/block-member-icon.svg"
               alt="block-member-icon"
-              className="w-[48px] h-[48px]"
+              className="w-[48px] h-[48px] invert brightness-0"
             />
           </div>
           <h2 className="text-[24px] font-semibold leading-[1.3] text-center">

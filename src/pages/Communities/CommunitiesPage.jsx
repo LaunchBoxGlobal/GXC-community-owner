@@ -19,8 +19,6 @@ const CommunitiesPage = () => {
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
 
-  console.log(`communities >>> `, communities);
-
   const fetchCommunities = async (query = "") => {
     setLoading(true);
     try {

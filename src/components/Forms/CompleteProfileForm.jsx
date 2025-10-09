@@ -12,6 +12,12 @@ import { getToken } from "../../utils/getToken";
 import AccountSuccessPopup from "../Popups/AccountSuccessPopup";
 import PhoneNumberField from "../Common/PhoneNumberField";
 import { enqueueSnackbar } from "notistack";
+import {
+  CountrySelect,
+  StateSelect,
+  CitySelect,
+} from "react-country-state-city";
+import "react-country-state-city/dist/react-country-state-city.css";
 
 const CompleteProfileForm = () => {
   const navigate = useNavigate();
@@ -20,9 +26,7 @@ const CompleteProfileForm = () => {
   const [showPopup, setShowPopup] = useState(false);
   Cookies.remove("userEmail");
 
-  const togglePopup = () => {
-    setShowPopup((prev) => !prev);
-  };
+  const togglePopup = () => setShowPopup((prev) => !prev);
 
   useEffect(() => {
     document.title = `Complete Profile - GiveXChange`;
@@ -31,7 +35,8 @@ const CompleteProfileForm = () => {
   const formik = useFormik({
     enableReinitialize: true,
     initialValues: {
-      name: userData?.fullName || "",
+      firstName: userData?.firstName || "",
+      lastName: userData?.lastName || "",
       email: userData?.email || "",
       phoneNumber: "",
       location: "",
@@ -40,26 +45,32 @@ const CompleteProfileForm = () => {
       city: "",
       state: "",
       country: "",
+      countryId: "", // store id separately
+      stateId: "",
     },
     validationSchema: Yup.object({
-      name: Yup.string()
-        .min(3, "Name must contain at least 3 characters")
-        .max(30, "Name must be 30 characters or less")
+      firstName: Yup.string()
+        .min(3, "First name must contain at least 3 characters")
+        .max(10, "First name must be 10 characters or less")
         .matches(
           /^[A-Z][a-zA-Z ]*$/,
-          "Name must start with a capital letter and contain only letters and spaces"
+          "First must start with a capital letter and contain only letters and spaces"
         )
-        .required("Name is required"),
+        .required("First name is required"),
+      lastName: Yup.string()
+        .min(3, "Last name must contain at least 3 characters")
+        .max(10, "Last name must be 10 characters or less")
+        .matches(
+          /^[A-Z][a-zA-Z ]*$/,
+          "Last name must start with a capital letter and contain only letters and spaces"
+        )
+        .required("Last name is required"),
       email: Yup.string()
         .email("Invalid email address")
         .required("Email is required"),
       phoneNumber: Yup.string()
         .matches(/^[0-9]{11}$/, "Phone number must contain 11 digits")
         .required("Enter your phone number"),
-      // description: Yup.string()
-      //   .min(30, `Description can not be less than 30 characters`)
-      //   .max(500, `Description can not be more than 500 characters`)
-      //   .required("Please enter description"),
       location: Yup.string()
         .min(11, `Address cannot be less than 11 characters`)
         .max(150, `Address can not be more than 150 characters`)
@@ -67,33 +78,9 @@ const CompleteProfileForm = () => {
       zipcode: Yup.string()
         .matches(/^[0-9]{5}$/, "Zip code must contain 5 digits")
         .required("Enter your zip code"),
-      city: Yup.string()
-        .min(3, "City name cannot be less than 3 characters")
-        .max(15, "City name cannot be more than 15 characters")
-        .matches(
-          /^[A-Z][a-zA-Z\s]*$/,
-          "City must start with uppercase and contain only letters and spaces"
-        )
-        .required("Enter your city"),
-
-      state: Yup.string()
-        .min(3, "State cannot be less than 3 characters")
-        .max(15, "State cannot be more than 15 characters")
-        .matches(
-          /^[A-Z][a-zA-Z\s]*$/,
-          "State must start with uppercase and contain only letters and spaces"
-        )
-        .required("Enter your state"),
-
-      country: Yup.string()
-        .min(3, "Country name cannot be less than 3 characters")
-        .max(15, "Country name cannot be more than 15 characters")
-        .matches(
-          /^[A-Z][a-zA-Z\s]*$/,
-          "Country must start with uppercase and contain only letters and spaces"
-        )
-        .required("Enter your country"),
-
+      city: Yup.string().required("Enter your city"),
+      state: Yup.string().required("Enter your state"),
+      country: Yup.string().required("Enter your country"),
       profileImage: Yup.mixed().nullable(),
     }),
     validateOnChange: true,
@@ -104,9 +91,9 @@ const CompleteProfileForm = () => {
         const profileRes = await axios.put(
           `${BASE_URL}/auth/profile`,
           {
-            fullName: values.name,
+            firstName: values.firstName,
+            lastName: values.lastName,
             email: values.email,
-            description: values.description,
             address: values.location,
             phone: values.phoneNumber,
             zipcode: values.zipcode,
@@ -115,17 +102,14 @@ const CompleteProfileForm = () => {
             country: values.country,
           },
           {
-            headers: {
-              Authorization: `Bearer ${getToken()}`,
-            },
+            headers: { Authorization: `Bearer ${getToken()}` },
           }
         );
 
         if (values.profileImage instanceof File) {
           const formData = new FormData();
           formData.append("profilePicture", values.profileImage);
-
-          const imageRes = await axios.post(
+          await axios.post(
             `${BASE_URL}/auth/upload-profile-picture`,
             formData,
             {
@@ -135,14 +119,10 @@ const CompleteProfileForm = () => {
               },
             }
           );
-          console.log("Image uploaded response:", imageRes.data);
         }
 
         if (profileRes?.data?.success) {
           resetForm();
-
-          // alert("Profile Updated Successfully!");
-          // navigate("/");
           togglePopup();
           Cookies.remove(`userEmail`);
           Cookies.remove(`verifyEmail`);
@@ -170,6 +150,7 @@ const CompleteProfileForm = () => {
         onSubmit={formik.handleSubmit}
         className="w-full max-w-[500px] flex flex-col items-start gap-4"
       >
+        {/* Heading */}
         <div className="w-full text-center space-y-3">
           <h1 className="font-semibold text-[32px] leading-none">
             Complete Profile Details
@@ -179,6 +160,7 @@ const CompleteProfileForm = () => {
           </p>
         </div>
 
+        {/* Profile image */}
         <div className="w-full h-[100px] flex flex-col items-center justify-center gap-2 my-3">
           <AuthImageUpload
             name="profileImage"
@@ -187,25 +169,36 @@ const CompleteProfileForm = () => {
           />
         </div>
 
-        <div className="w-full">
-          <h2 className="font-semibold text-[24px] leading-none">
-            Basic Details
-          </h2>
-        </div>
-        <div className="w-full space-y-3">
-          <TextField
-            type="text"
-            name="name"
-            placeholder="Full Name"
-            value={formik.values.name}
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-            error={formik.errors.name}
-            touched={formik.touched.name}
-            label={`Full Name`}
-          />
+        {/* Basic details */}
+        <h2 className="font-semibold text-[24px] leading-none w-full">
+          Basic Details
+        </h2>
 
-          <div className="w-full grid grid-cols-2 gap-4">
+        <div className="w-full space-y-3">
+          <div className="w-full grid grid-cols-2 gap-3">
+            <TextField
+              type="text"
+              name="firstName"
+              placeholder="First Name"
+              value={formik.values.firstName}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              error={formik.errors.firstName}
+              touched={formik.touched.firstName}
+            />
+            <TextField
+              type="text"
+              name="lastName"
+              placeholder="Last Name"
+              value={formik.values.lastName}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              error={formik.errors.lastName}
+              touched={formik.touched.lastName}
+            />
+          </div>
+
+          <div className="grid grid-cols-2 gap-4">
             <TextField
               type="text"
               name="email"
@@ -216,20 +209,9 @@ const CompleteProfileForm = () => {
               onBlur={formik.handleBlur}
               error={formik.errors.email}
               touched={formik.touched.email}
-              label={"Email Address"}
+              label="Email Address"
             />
 
-            {/* <TextField
-              type="text"
-              name="phoneNumber"
-              placeholder="+000 0000 00"
-              value={formik.values.phoneNumber}
-              onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
-              error={formik.errors.phoneNumber}
-              touched={formik.touched.phoneNumber}
-              label={"Phone Number"}
-            /> */}
             <PhoneNumberField
               type="text"
               name="phoneNumber"
@@ -239,22 +221,84 @@ const CompleteProfileForm = () => {
               onBlur={formik.handleBlur}
               error={formik.errors.phoneNumber}
               touched={formik.touched.phoneNumber}
-              label={"Phone Number"}
+              label="Phone Number"
             />
           </div>
 
-          <div className="w-full grid grid-cols-2 gap-4">
-            <TextField
-              type="text"
-              name="city"
-              placeholder="Enter your city"
-              value={formik.values.city}
-              onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
-              error={formik.errors.city}
-              touched={formik.touched.city}
-              label={"City"}
-            />{" "}
+          {/* Country, State, City, Zip */}
+          <div className="grid grid-cols-2 gap-4">
+            <div className="w-full flex flex-col gap-1">
+              <label className="text-sm font-medium">Country</label>
+              <CountrySelect
+                containerClassName="w-full"
+                inputClassName={`w-full border h-[39px] px-[15px] rounded-[8px] outline-none 
+        ${
+          formik.touched.country && formik.errors.country
+            ? "border-red-500"
+            : "border-gray-200"
+        }
+      `}
+                placeHolder="Select Country"
+                onChange={(val) => {
+                  formik.setFieldValue("country", val.name);
+                  formik.setFieldValue("countryId", val.id);
+                  formik.setFieldValue("state", "");
+                  formik.setFieldValue("stateId", "");
+                  formik.setFieldValue("city", "");
+                }}
+              />
+              {formik.touched.country && formik.errors.country && (
+                <p className="text-red-500 text-xs">{formik.errors.country}</p>
+              )}
+            </div>
+
+            <div className="w-full flex flex-col gap-1">
+              <label className="text-sm font-medium">State</label>
+              <StateSelect
+                countryid={formik.values.countryId || 0}
+                containerClassName="w-full"
+                inputClassName={`w-full border h-[39px] px-[15px] rounded-[8px] outline-none 
+        ${
+          formik.touched.state && formik.errors.state
+            ? "border-red-500"
+            : "border-gray-200"
+        }
+      `}
+                placeHolder="Select State"
+                onChange={(val) => {
+                  formik.setFieldValue("state", val.name);
+                  formik.setFieldValue("stateId", val.id);
+                  formik.setFieldValue("city", "");
+                }}
+              />
+              {formik.touched.state && formik.errors.state && (
+                <p className="text-red-500 text-xs">{formik.errors.state}</p>
+              )}
+            </div>
+          </div>
+
+          <div className="grid grid-cols-2 gap-4">
+            <div className="w-full flex flex-col gap-1">
+              <label className="text-sm font-medium">City</label>
+              <CitySelect
+                countryid={formik.values.countryId || 0}
+                stateid={formik.values.stateId || 0}
+                containerClassName="w-full"
+                inputClassName={`w-full border h-[39px] px-[15px] rounded-[8px] outline-none 
+        ${
+          formik.touched.city && formik.errors.city
+            ? "border-red-500"
+            : "border-gray-200"
+        }
+      `}
+                placeHolder="Select City"
+                onChange={(val) => formik.setFieldValue("city", val.name)}
+              />
+              {formik.touched.city && formik.errors.city && (
+                <p className="text-red-500 text-xs">{formik.errors.city}</p>
+              )}
+            </div>
+
             <TextField
               type="text"
               name="zipcode"
@@ -264,32 +308,7 @@ const CompleteProfileForm = () => {
               onBlur={formik.handleBlur}
               error={formik.errors.zipcode}
               touched={formik.touched.zipcode}
-              label={"Zip Code"}
-            />
-          </div>
-
-          <div className="w-full grid grid-cols-2 gap-4">
-            <TextField
-              type="text"
-              name="state"
-              placeholder="Enter your state"
-              value={formik.values.state}
-              onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
-              error={formik.errors.state}
-              touched={formik.touched.state}
-              label={"State"}
-            />{" "}
-            <TextField
-              type="text"
-              name="country"
-              placeholder="Enter your country name"
-              value={formik.values.country}
-              onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
-              error={formik.errors.country}
-              touched={formik.touched.country}
-              label={"Country"}
+              label="Zip Code"
             />
           </div>
 
@@ -302,40 +321,17 @@ const CompleteProfileForm = () => {
             onBlur={formik.handleBlur}
             error={formik.errors.location}
             touched={formik.touched.location}
-            label={"Home Address"}
+            label="Home Address"
           />
 
-          {/* <div className="w-full flex flex-col gap-1">
-            <label htmlFor="description" className="text-sm font-medium">
-              Description
-            </label>
-            <textarea
-              name="description"
-              id="description"
-              onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
-              value={formik.values.description}
-              placeholder="Describe yourself"
-              className={`w-full border h-[124px] px-[15px] py-[14px] rounded-[8px] outline-none ${
-                formik.touched.description && formik.errors.description
-                  ? "border-red-500"
-                  : "border-[#D9D9D9]"
-              }`}
-            ></textarea>
-            {formik.touched.description && formik.errors.description ? (
-              <div className="text-red-500 text-xs">
-                {formik.errors.description}
-              </div>
-            ) : null}
-          </div> */}
-
+          {/* Buttons */}
           <div className="pt-2 flex items-center justify-between">
             <Link
               to={`/`}
               className="text-sm font-medium flex items-center gap-1 text-black"
             >
               Skip
-            </Link>{" "}
+            </Link>
             <div className="w-full max-w-[110px]">
               <Button type="submit" title="Save" isLoading={loading} />
             </div>

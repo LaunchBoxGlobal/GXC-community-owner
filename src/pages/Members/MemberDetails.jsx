@@ -63,7 +63,7 @@ const MemberDetails = () => {
               )}
               {member?.member?.phone && (
                 <p className="text-sm lg:text-base text-[var(--secondary-color)] leading-[1.3] mt-2">
-                  {member?.member?.phone}
+                  +{member?.member?.phone}
                 </p>
               )}
               {member?.member?.address && (

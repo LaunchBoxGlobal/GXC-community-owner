@@ -40,3 +40,13 @@
 textarea {
   resize: none;
 }
+
+.stdropdown-container {
+  border: none !important;
+  @apply bg-[var(--secondary-bg)];
+}
+
+.stsearch-box > input {
+  border: none !important;
+  background-color: transparent !important;
+}

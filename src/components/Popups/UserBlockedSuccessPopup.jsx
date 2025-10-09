@@ -21,11 +21,11 @@ const UserBlockedSuccessPopup = ({
               className="w-[22px] h-[22px]"
             />
           </button>
-          <div className="w-[107px] h-[107px] bg-[var(--button-bg)] rounded-full flex items-center justify-center">
+          <div className="w-[107px] h-[107px] bg-[var(--button-bg)] flex items-center justify-center rounded-full mx-auto">
             <img
-              src="/green-check.png"
-              alt="block-member-icon"
-              className="w-[107px] h-[107px]"
+              src="/check-icon.svg"
+              alt="check-icon"
+              className="w-[31px] h-[23px] invert brightness-0"
             />
           </div>
           <h2 className="text-[24px] font-semibold leading-[1.3] text-center">

@@ -16,9 +16,13 @@ const RecentCommunitiesList = ({
   setShowSuccessPopup,
   toggleCommunityPopup,
   handleCloseSuccessPopup,
+  communities,
+  setCommunities,
+  loading,
+  setLoading,
 }) => {
-  const [loading, setLoading] = useState(false);
-  const [communities, setCommunities] = useState(null);
+  // const [loading, setLoading] = useState(false);
+  // const [communities, setCommunities] = useState(null);
 
   const fetchCommunities = async () => {
     setLoading(true);
@@ -39,9 +43,9 @@ const RecentCommunitiesList = ({
     }
   };
 
-  useEffect(() => {
-    fetchCommunities();
-  }, []);
+  // useEffect(() => {
+  //   fetchCommunities();
+  // }, []);
 
   return (
     <div className="w-full">
@@ -68,8 +72,8 @@ const RecentCommunitiesList = ({
               ))}
             </div>
           ) : (
-            <div className="w-full mt-5">
-              <p>You have not created any community yet.</p>
+            <div className="w-full mt-5 text-center pt-20">
+              <p>No communities found!</p>
             </div>
           )}
         </>

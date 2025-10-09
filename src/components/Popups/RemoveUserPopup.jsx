@@ -78,11 +78,14 @@ const RemoveUserPopup = ({
               className="w-[22px] h-[22px]"
             />
           </button>
-          <img
-            src="/remove-user-modal-icon.svg"
-            alt="remove-user-modal-icon"
-            className="max-w-[107px]"
-          />
+          <div className="w-[107px] h-[107px] bg-[var(--button-bg)] rounded-full flex items-center justify-center">
+            <img
+              src="/remove-member-icon.svg"
+              alt="remove-user-modal-icon"
+              className="w-[48px] h-[48px] invert brightness-0"
+            />
+          </div>
+
           <h2 className="text-[24px] font-semibold leading-[1.3] text-center">
             Remove Member
           </h2>

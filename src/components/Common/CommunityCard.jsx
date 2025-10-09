@@ -22,8 +22,8 @@ const CommunityCard = ({ community }) => {
 
         <div className="w-full my-4 min-h-[100px]">
           <p className="text-sm leading-[1.2] text-[var(--secondary-color)] break-words">
-            {community?.description?.length > 300
-              ? community.description.slice(0, 300) + "..."
+            {community?.description?.length > 100
+              ? community.description.slice(0, 100) + "..."
               : community?.description}
           </p>
         </div>

@@ -11,11 +11,19 @@ import { getToken } from "../../utils/getToken";
 import { useAppContext } from "../../context/AppContext";
 import { enqueueSnackbar } from "notistack";
 import PhoneNumberField from "../../components/Common/PhoneNumberField";
+import {
+  CountrySelect,
+  StateSelect,
+  CitySelect,
+} from "react-country-state-city";
+import "react-country-state-city/dist/react-country-state-city.css";
+import Loader from "../../components/Loader/Loader";
 
 const EditProfile = ({ togglePopup, showPopup, fetchUserProfile }) => {
   const [preview, setPreview] = useState(null);
   const navigate = useNavigate();
   const { user } = useAppContext();
+  const [loading, setLoading] = useState(false);
 
   console.log(user);
 
@@ -31,12 +39,15 @@ const EditProfile = ({ togglePopup, showPopup, fetchUserProfile }) => {
       firstName: user?.firstName || "",
       lastName: user?.lastName || "",
       email: user?.email || "",
-      description: user?.description || "",
+      // description: user?.description || "",
       profileImage: null,
       phoneNumber: user?.phone || "",
       city: user?.city || "",
       state: user?.state || "",
       country: user?.country || "",
+      countryId: "",
+      stateId: "",
+      zipcode: user?.zipcode || "",
     },
     validationSchema: Yup.object({
       firstName: Yup.string()
@@ -55,14 +66,14 @@ const EditProfile = ({ togglePopup, showPopup, fetchUserProfile }) => {
           "Last name must start with a capital letter and contain only letters and spaces"
         )
         .required("Last name is required"),
-      description: Yup.string()
-        .notRequired()
-        .nullable()
-        .test(
-          "len",
-          "Description must be between 10 and 500 characters",
-          (val) => !val || (val.length >= 10 && val.length <= 500)
-        ),
+      // description: Yup.string()
+      //   .notRequired()
+      //   .nullable()
+      //   .test(
+      //     "len",
+      //     "Description must be between 10 and 500 characters",
+      //     (val) => !val || (val.length >= 10 && val.length <= 500)
+      //   ),
       phoneNumber: Yup.string()
         .matches(/^[0-9]{11}$/, "Phone number must contain 11 digits")
         .required("Enter your phone number"),
@@ -96,15 +107,24 @@ const EditProfile = ({ togglePopup, showPopup, fetchUserProfile }) => {
           "Country must start with uppercase and contain only letters and spaces"
         )
         .required("Enter your country"),
+      zipcode: Yup.string()
+        .matches(/^[0-9]{5}$/, "Zip code must contain 5 digits")
+        .required("Enter your zip code"),
     }),
     onSubmit: async (values, { resetForm }) => {
       try {
+        setLoading(true);
         const profileRes = await axios.put(
           `${BASE_URL}/auth/profile`,
           {
-            fullName: values.name,
+            firstName: values.firstName,
+            lastName: values.lastName,
             email: values.email,
-            description: values.description,
+            description: null,
+            country: values?.country,
+            state: values?.state,
+            city: values?.city,
+            zipcode: values?.zipcode,
           },
           {
             headers: {
@@ -149,6 +169,8 @@ const EditProfile = ({ togglePopup, showPopup, fetchUserProfile }) => {
             variant: "error",
           });
         }
+      } finally {
+        setLoading(false);
       }
     },
   });
@@ -212,9 +234,6 @@ const EditProfile = ({ togglePopup, showPopup, fetchUserProfile }) => {
                   >
                     Upload Profile Picture
                   </label>
-                  {/* {error && (
-                <span className="text-xl text-red-500 font-medium">*</span>
-              )} */}
                 </div>
               </div>
             </div>
@@ -265,59 +284,98 @@ const EditProfile = ({ togglePopup, showPopup, fetchUserProfile }) => {
                 label={null}
               />
               <div className="w-full grid grid-cols-2 gap-3">
-                <TextField
-                  type="text"
-                  name="city"
-                  placeholder="City"
-                  value={formik.values.city}
-                  onChange={formik.handleChange}
-                  onBlur={formik.handleBlur}
-                  error={formik.errors.city}
-                  touched={formik.touched.city}
-                />
-                <TextField
-                  type="text"
-                  name="state"
-                  placeholder="State"
-                  value={formik.values.state}
-                  onChange={formik.handleChange}
-                  onBlur={formik.handleBlur}
-                  error={formik.errors.state}
-                  touched={formik.touched.state}
-                />
+                <div className="w-full flex flex-col gap-1">
+                  <label className="text-sm font-medium">Country</label>
+                  <CountrySelect
+                    containerClassName="w-full"
+                    inputClassName={`w-full border h-[39px] px-[15px] rounded-[8px] outline-none bg-[var(--secondary-bg)] ${
+                      formik.touched.country && formik.errors.country
+                        ? "border-red-500"
+                        : "border-gray-200"
+                    }`}
+                    placeHolder="Select Country"
+                    onChange={(val) => {
+                      formik.setFieldValue("country", val.name);
+                      formik.setFieldValue("countryId", val.id);
+                      formik.setFieldValue("state", "");
+                      formik.setFieldValue("city", "");
+                    }}
+                    defaultValue={
+                      formik.values.country
+                        ? { name: formik.values.country }
+                        : null
+                    }
+                  />
+                  {formik.touched.country && formik.errors.country && (
+                    <p className="text-red-500 text-xs">
+                      {formik.errors.country}
+                    </p>
+                  )}
+                </div>
+                <div className="w-full flex flex-col gap-1">
+                  <label className="text-sm font-medium">State</label>
+                  <StateSelect
+                    countryid={formik.values.countryId || undefined}
+                    containerClassName="w-full"
+                    inputClassName={`w-full border h-[39px] px-[15px] rounded-[8px] outline-none bg-[var(--secondary-bg)] ${
+                      formik.touched.state && formik.errors.state
+                        ? "border-red-500"
+                        : "border-gray-200"
+                    }`}
+                    placeHolder="Select State"
+                    onChange={(val) => {
+                      formik.setFieldValue("state", val.name);
+                      formik.setFieldValue("stateId", val.id);
+                      formik.setFieldValue("city", "");
+                    }}
+                    defaultValue={
+                      formik.values.state ? { name: formik.values.state } : null
+                    }
+                  />
+                  {formik.touched.state && formik.errors.state && (
+                    <p className="text-red-500 text-xs">
+                      {formik.errors.state}
+                    </p>
+                  )}
+                </div>
               </div>
+              <div className="w-full flex flex-col gap-1 mt-3">
+                <label className="text-sm font-medium">City</label>
+                <CitySelect
+                  countryid={formik.values.countryId || undefined}
+                  stateid={formik.values.stateId || undefined}
+                  containerClassName="w-full"
+                  inputClassName={`w-full border h-[39px] px-[15px] rounded-[8px] outline-none bg-[var(--secondary-bg)] ${
+                    formik.touched.city && formik.errors.city
+                      ? "border-red-500"
+                      : "border-gray-200"
+                  }`}
+                  placeHolder="Select City"
+                  onChange={(val) => formik.setFieldValue("city", val.name)}
+                  defaultValue={
+                    formik.values.city ? { name: formik.values.city } : null
+                  }
+                />
+                {formik.touched.city && formik.errors.city && (
+                  <p className="text-red-500 text-xs">{formik.errors.city}</p>
+                )}
+              </div>
+
               <TextField
                 type="text"
-                name="country"
-                placeholder="Country"
-                value={formik.values.country}
+                name="zipcode"
+                placeholder="Enter zip code"
+                value={formik.values.zipcode}
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
-                error={formik.errors.country}
-                touched={formik.touched.country}
+                error={formik.errors.zipcode}
+                touched={formik.touched.zipcode}
+                label="Zip Code"
               />
-              {/* {user && user?.description && ( */}
-              <div className="w-full flex flex-col gap-1">
-                <textarea
-                  name="description"
-                  id="description"
-                  onChange={formik.handleChange}
-                  onBlur={formik.handleBlur}
-                  value={formik.values.description}
-                  placeholder="Describe yourself"
-                  className={`w-full border h-[142px] px-[15px] py-[14px] rounded-[8px] outline-none bg-[var(--secondary-bg)] border-[var(--secondary-bg)]`}
-                ></textarea>
-                {formik.touched.description && formik.errors.description ? (
-                  <div className="text-red-500 text-xs">
-                    {formik.errors.description}
-                  </div>
-                ) : null}
-              </div>
-              {/* )} */}
 
               <div className="w-full">
                 <button type="submit" className="button">
-                  Update Profile
+                  {loading ? <Loader /> : "Update Profile"}
                 </button>
               </div>
             </div>
