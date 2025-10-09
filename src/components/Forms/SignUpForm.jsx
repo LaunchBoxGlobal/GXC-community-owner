@@ -3,11 +3,8 @@ import * as Yup from "yup";
 import Button from "../Common/Button";
 import PasswordField from "../Common/PasswordField";
 import TextField from "../Common/TextField";
-import AuthImageUpload from "../Common/AuthImageUpload";
-import { Link, useNavigate, useSearchParams } from "react-router-dom";
-import { RiArrowLeftSLine } from "react-icons/ri";
+import { Link, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-const PAGETITLE = import.meta.env.VITE_PAGE_TITLE;
 import axios from "axios";
 import { BASE_URL } from "../../data/baseUrl";
 import api from "../../services/axiosInstance";
@@ -77,19 +74,27 @@ const SignUpForm = () => {
         .max(30, "Community name must be 30 characters or less")
         .required("Community name is required"),
       urlSlug: Yup.string()
-        .min(3, "URL slug must contain at least 3 characters")
-        .max(30, "Community slug must be 30 characters or less")
+        .min(3, "Slug can not be less than 3 characters")
+        .max(50, "Slug can not be more than 50 characters")
         .matches(
           /^[a-z0-9-]+$/,
           "Slug can only contain lowercase letters, numbers, and hyphens"
         )
-        .required("Community slug is required"),
+        .required("Slug is required"),
       description: Yup.string()
         .min(30, `Description can not be less than 30 characters`)
         .max(500, `Description can not be more than 500 characters`)
         .required("Description is required"),
       email: Yup.string()
         .email("Invalid email address")
+        .matches(
+          /^(?![._-])([a-zA-Z0-9._%+-]{1,64})@([a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}$/,
+          "Please enter a valid email address"
+        )
+        .matches(
+          /^(?!.*[._-]{2,})(?!.*\.\.).*$/,
+          "Email cannot contain consecutive special characters"
+        )
         .required("Email is required"),
       password: Yup.string()
         .min(8, "Password must be at least 8 characters")
@@ -106,6 +111,8 @@ const SignUpForm = () => {
         .oneOf([Yup.ref("password"), null], "Passwords do not match")
         .required("Confirm password is required"),
     }),
+    validateOnChange: true,
+    validateOnBlur: false,
     onSubmit: async (values, { resetForm }) => {
       if (slugError) {
         return;
@@ -133,6 +140,7 @@ const SignUpForm = () => {
           Cookies.set("user", JSON.stringify(res?.data?.data?.user));
           Cookies.set("userEmail", values.email);
           Cookies.set("slug", values.urlSlug);
+          Cookies.set("isEmailVerified", false);
           resetForm();
 
           navigate("/verify-otp", {
@@ -151,6 +159,16 @@ const SignUpForm = () => {
       }
     },
   });
+
+  useEffect(() => {
+    if (!formik.values.urlSlug) return;
+
+    const timeout = setTimeout(() => {
+      checkSlugAvailability(formik.values.urlSlug);
+    }, 500);
+
+    return () => clearTimeout(timeout);
+  }, [formik.values.urlSlug]);
 
   return (
     <form
@@ -220,10 +238,7 @@ const SignUpForm = () => {
             placeholder="Enter your Slug"
             value={formik.values.urlSlug}
             onChange={formik.handleChange}
-            onBlur={(e) => {
-              formik.handleBlur(e);
-              checkSlugAvailability(e.target.value);
-            }}
+            onBlur={formik.handleBlur}
             error={formik.errors.urlSlug || slugError}
             touched={formik.touched.urlSlug}
             label={`URL Slug`}
@@ -232,7 +247,7 @@ const SignUpForm = () => {
 
         <div className="w-full flex flex-col gap-1">
           <label htmlFor="description" className="text-sm font-medium">
-            Description
+            Community Description
           </label>
           <textarea
             name="description"
@@ -241,13 +256,14 @@ const SignUpForm = () => {
             onBlur={formik.handleBlur}
             value={formik.values.description}
             placeholder="Enter description"
-            className={`w-full border bg-[var(--secondary-bg)] min-h-[84px] max-h-[84px] px-[15px] py-[14px] rounded-[8px] outline-none ${
+            className={`w-full border bg-[var(--secondary-bg)] min-h-[94px] max-h-[94px] px-[15px] py-[14px] rounded-[8px] outline-none ${
               formik.touched.description && formik.errors.description
                 ? "border-red-500"
                 : "border-[var(--secondary-bg)]"
             }`}
           />
-          {formik.touched.description && formik.errors.description ? (
+          {(formik.touched.description || formik.errors.description) &&
+          formik.errors.description ? (
             <div className="text-red-500 text-sm">
               {formik.errors.description}
             </div>

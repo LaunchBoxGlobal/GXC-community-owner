@@ -3,25 +3,22 @@ import * as Yup from "yup";
 import Button from "../Common/Button";
 import TextField from "../Common/TextField";
 import AuthImageUpload from "../Common/AuthImageUpload";
-import { Link, useNavigate, useSearchParams } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { BASE_URL } from "../../data/baseUrl";
 import Cookies from "js-cookie";
-import { useAppContext } from "../../context/AppContext";
 import { getToken } from "../../utils/getToken";
 import AccountSuccessPopup from "../Popups/AccountSuccessPopup";
-import PhoneInput from "react-phone-input-2";
 import PhoneNumberField from "../Common/PhoneNumberField";
+import { enqueueSnackbar } from "notistack";
 
 const CompleteProfileForm = () => {
   const navigate = useNavigate();
-  const { user } = useAppContext();
   const userData = JSON.parse(Cookies.get("user"));
   const [loading, setLoading] = useState(false);
   const [showPopup, setShowPopup] = useState(false);
   Cookies.remove("userEmail");
-  // Cookies.remove("slug")
 
   const togglePopup = () => {
     setShowPopup((prev) => !prev);
@@ -38,7 +35,6 @@ const CompleteProfileForm = () => {
       email: userData?.email || "",
       phoneNumber: "",
       location: "",
-      // description: "",
       profileImage: null,
       zipcode: "",
       city: "",
@@ -72,20 +68,36 @@ const CompleteProfileForm = () => {
         .matches(/^[0-9]{5}$/, "Zip code must contain 5 digits")
         .required("Enter your zip code"),
       city: Yup.string()
-        .min(3, `City name cannot be less than 11 characters`)
-        .max(15, `City name cannot be more than 15 characters`)
+        .min(3, "City name cannot be less than 3 characters")
+        .max(15, "City name cannot be more than 15 characters")
+        .matches(
+          /^[A-Z][a-zA-Z\s]*$/,
+          "City must start with uppercase and contain only letters and spaces"
+        )
         .required("Enter your city"),
+
       state: Yup.string()
-        .min(3, `State cannot be less than 11 characters`)
-        .max(15, `State can not be more than 15 characters`)
+        .min(3, "State cannot be less than 3 characters")
+        .max(15, "State cannot be more than 15 characters")
+        .matches(
+          /^[A-Z][a-zA-Z\s]*$/,
+          "State must start with uppercase and contain only letters and spaces"
+        )
         .required("Enter your state"),
+
       country: Yup.string()
-        .min(3, `Country name cannot be less than 11 characters`)
-        .max(15, `Country name cannot be more than 15 characters`)
+        .min(3, "Country name cannot be less than 3 characters")
+        .max(15, "Country name cannot be more than 15 characters")
+        .matches(
+          /^[A-Z][a-zA-Z\s]*$/,
+          "Country must start with uppercase and contain only letters and spaces"
+        )
         .required("Enter your country"),
 
       profileImage: Yup.mixed().nullable(),
     }),
+    validateOnChange: true,
+    validateOnBlur: true,
     onSubmit: async (values, { resetForm }) => {
       try {
         setLoading(true);
@@ -97,6 +109,10 @@ const CompleteProfileForm = () => {
             description: values.description,
             address: values.location,
             phone: values.phoneNumber,
+            zipcode: values.zipcode,
+            city: values.city,
+            state: values.state,
+            country: values.country,
           },
           {
             headers: {
@@ -134,7 +150,9 @@ const CompleteProfileForm = () => {
         }
       } catch (error) {
         console.error("complete profile error:", error);
-        alert(error.response?.data?.message || error?.message);
+        enqueueSnackbar(error.response?.data?.message || error?.message, {
+          variant: "error",
+        });
         if (error?.response?.status === 401) {
           Cookies.remove("token");
           Cookies.remove("user");

@@ -9,6 +9,7 @@ import axios from "axios";
 import { BASE_URL } from "../../data/baseUrl";
 const PAGETITLE = import.meta.env.VITE_PAGE_TITLE;
 import Cookies from "js-cookie";
+import { enqueueSnackbar } from "notistack";
 
 const LoginForm = () => {
   const navigate = useNavigate();
@@ -29,14 +30,24 @@ const LoginForm = () => {
         .required("Email is required"),
       password: Yup.string().required("Password is required"),
     }),
+    validateOnChange: true,
+    validateOnBlur: true,
     onSubmit: async (values, { resetForm }) => {
       try {
         setLoading(true);
-        const res = await axios.post(`${BASE_URL}/auth/login`, values, {
-          headers: {
-            "Content-Type": "application/json",
+        const res = await axios.post(
+          `${BASE_URL}/auth/login`,
+          {
+            email: values?.email,
+            password: values?.password,
+            userType: "community_owner",
           },
-        });
+          {
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
 
         if (res?.data?.success) {
           Cookies.set("token", res?.data?.data?.token);
@@ -70,7 +81,9 @@ const LoginForm = () => {
             );
 
             if (resendRes?.data?.success) {
-              alert(resendRes.data.message);
+              enqueueSnackbar(resendRes.data.message, {
+                variant: "success",
+              });
               navigate("/verify-otp", {
                 state: {
                   email: values.email,
@@ -80,11 +93,15 @@ const LoginForm = () => {
             }
           } catch (err) {
             console.error("verify email error:", err);
-            alert(err.response?.data?.message || err.message);
+            enqueueSnackbar(err.response?.data?.message || err.message, {
+              variant: "error",
+            });
           }
         } else {
           // for all other errors show normal error
-          alert(apiRes?.message || error?.message);
+          enqueueSnackbar(apiRes?.message || error?.message, {
+            variant: "error",
+          });
         }
       } finally {
         setLoading(false);

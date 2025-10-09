@@ -25,6 +25,9 @@ const VerifyOtp = () => {
   const { setShowEmailVerificationPopup } = useAppContext();
   const userEmail = Cookies.get(`userEmail`);
   const verifyEmail = Cookies.get("verifyEmail");
+  const { user } = useAppContext();
+
+  console.log(user);
 
   const togglePopup = () => {
     setShowEmailVerificationPopup(true);
@@ -47,6 +50,8 @@ const VerifyOtp = () => {
           /^\d{6}$/.test(arr.join(""))
         ),
     }),
+    validateOnChange: true,
+    validateOnBlur: true,
     onSubmit: async (values, { resetForm }) => {
       const otp = values.otp.join("");
       if (!userEmail) {
@@ -73,7 +78,6 @@ const VerifyOtp = () => {
           },
         });
 
-        const redirect = searchParams.get("redirect");
         if (res?.data?.success) {
           resetForm();
 
@@ -81,6 +85,7 @@ const VerifyOtp = () => {
             setShowEmailVerificationPopup(true);
             Cookies.remove(`userEmail`);
             Cookies.remove(`verifyEmail`);
+            Cookies.set("isEmailVerified", true);
           } else if (page === "/forgot-password") {
             Cookies.set("otp", otp);
             navigate(`/change-password`, {

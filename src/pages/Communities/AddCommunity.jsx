@@ -53,8 +53,12 @@ const AddCommunity = ({
         .max(30, "Name must be 30 characters or less")
         .required("Name is required"),
       urlSlug: Yup.string()
-        .min(3, `Slug can not be less than 3 characters`)
-        .max(50, `Slug can not be more than 50 characters`)
+        .min(3, "Slug can not be less than 3 characters")
+        .max(50, "Slug can not be more than 50 characters")
+        .matches(
+          /^[a-z0-9-]+$/,
+          "Slug can only contain lowercase letters, numbers, and hyphens"
+        )
         .required("Slug is required"),
       description: Yup.string()
         .min(30, `Description can not be less than 30 characters`)

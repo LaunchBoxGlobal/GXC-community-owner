@@ -8,6 +8,7 @@ import { useState } from "react";
 import axios from "axios";
 import { BASE_URL } from "../../data/baseUrl";
 import Cookies from "js-cookie";
+import { enqueueSnackbar } from "notistack";
 
 const ChangePassword = () => {
   const navigate = useNavigate();
@@ -37,15 +38,21 @@ const ChangePassword = () => {
         .oneOf([Yup.ref("password"), null], "Passwords do not match")
         .required("Password is required"),
     }),
+    validateOnChange: true,
+    validateOnBlur: true,
     onSubmit: async (values, { resetForm }) => {
-      const userEmail = Cookies.get("userEmail")
-      const userCode = Cookies.get("otp")
+      const userEmail = Cookies.get("userEmail");
+      const userCode = Cookies.get("otp");
       if (!userEmail) {
-        alert("email not found");
+        enqueueSnackbar("email not found", {
+          variant: "error",
+        });
         return;
       }
       if (!otp) {
-        alert("otp not found");
+        enqueueSnackbar("otp not found", {
+          variant: "error",
+        });
         return;
       }
       try {
@@ -64,7 +71,9 @@ const ChangePassword = () => {
         }
       } catch (error) {
         console.log(`reset password error >>> `, error);
-        alert(error?.response?.data?.message || error?.message);
+        enqueueSnackbar(error?.response?.data?.message || error?.message, {
+          variant: "error",
+        });
       } finally {
         setLoading(false);
       }

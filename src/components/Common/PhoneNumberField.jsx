@@ -34,7 +34,9 @@ const PhoneNumberField = ({
 
       <div
         className={`w-full h-[49px] rounded-[8px] ${
-          error && touched ? "border border-red-500" : "border border-[#f5f5f5]"
+          (error || touched) && error
+            ? "border border-red-500"
+            : "border border-[#f5f5f5]"
         }`}
       >
         <PhoneInput
@@ -71,7 +73,11 @@ const PhoneNumberField = ({
         />
       </div>
 
-      {error && touched && <p className="text-red-500 text-xs">{error}</p>}
+      {(touched || error) && error && (
+        <p className="text-red-500 text-xs">{error}</p>
+      )}
+
+      {/* {error && touched && <p className="text-red-500 text-xs">{error}</p>} */}
     </div>
   );
 };

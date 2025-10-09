@@ -2,7 +2,6 @@ import { Navigate, Route, Routes, useLocation } from "react-router-dom";
 import AuthLayout from "../components/Layout/AuthLayout";
 import SignUpForm from "../components/Forms/SignUpForm";
 import VerifyOtp from "../components/Forms/VerifyOtp";
-import EmailVerificationStatusPage from "../pages/Auth/EmailVerificationStatusPage";
 import AddPaymentInfo from "../components/Forms/AddPaymentInfo";
 import PaymentMethods from "../pages/PaymentMethods";
 import AccountSuccessPage from "../pages/Auth/AccountSuccessPage";
@@ -14,38 +13,51 @@ import Cookies from "js-cookie";
 import NotFound from "../pages/NotFound";
 import DashboardLayout from "../components/Layout/DashboardLayout";
 import CommunitiesPage from "../pages/Communities/CommunitiesPage";
-import SettingsPage from "../pages/Settings/SettingsPage";
 import UserProfilePage from "../pages/Profile/UserProfilePage";
 import SettingsLayout from "../components/Layout/SettingsLayout";
 import ChangePasswordPage from "../pages/Settings/ChangePasswordPage";
 import CompleteProfileForm from "../components/Forms/CompleteProfileForm";
 import CommunityPage from "../pages/Communities/CommunityPage";
 import ProductPage from "../pages/Communities/ProductPage";
-import MembersPage from "../pages/Members/MembersPage";
 import InvitesPage from "../pages/Invites/InvitesPage";
 import ReportsPage from "../pages/Reports/ReportsPage";
 import WalletPage from "../pages/Wallet/WalletPage";
 import MemberDetails from "../pages/Members/MemberDetails";
 
+const getUser = () => {
+  const user = Cookies.get("user");
+  return user ? JSON.parse(user) : null;
+};
+
 const isAuthenticated = () => !!Cookies.get("token");
+const isEmailVerified = () => getUser()?.emailVerified;
 
-const isUnverified = () => {
-  const token = Cookies.get("token");
-  const isVerified = Cookies.get("isVerified") === "true";
-  return !!token && !isVerified;
-};
-
-export const PrivateRoute = ({ element, redirectTo }) => {
+export const PrivateRoute = ({ element }) => {
   const location = useLocation();
-  return isAuthenticated() ? (
-    element
-  ) : (
-    <Navigate to={`${redirectTo}`} replace />
-  );
+
+  if (!isAuthenticated()) {
+    if (location.pathname !== "/login") {
+      return <Navigate to="/login" replace />;
+    }
+  }
+
+  if (isAuthenticated() && !isEmailVerified()) {
+    const fromPath = location.state?.from?.pathname || "/verify-otp";
+    return <Navigate to={fromPath} replace />;
+  }
+
+  return element;
 };
 
-const PublicRoute = ({ element, redirectTo }) => {
-  return isAuthenticated() ? <Navigate to={redirectTo} /> : element;
+export const PublicRoute = ({ element, redirectTo }) => {
+  const location = useLocation();
+  const user = getUser();
+
+  if (isAuthenticated() && user?.emailVerified) {
+    return <Navigate to={redirectTo} state={{ from: location }} replace />;
+  }
+
+  return element;
 };
 
 const AppRoutes = () => {

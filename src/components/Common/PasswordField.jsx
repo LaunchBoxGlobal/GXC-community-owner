@@ -22,7 +22,7 @@ const PasswordField = ({
       )}
       <div
         className={`w-full bg-[#F5F5F5] border h-[49px] px-[15px] py-[14px] rounded-[8px] flex items-center justify-between  ${
-          error && touched ? "border-red-500" : "border-[#F5F5F5]"
+          (error || touched) && error ? "border-red-500" : "border-[#F5F5F5]"
         }`}
       >
         <input
@@ -43,7 +43,11 @@ const PasswordField = ({
           )}
         </button>
       </div>
-      {error && touched && <p className="text-red-500 text-xs">{error}</p>}
+
+      {(touched || error) && error && (
+        <p className="text-red-500 text-xs">{error}</p>
+      )}
+      {/* {error && touched && <p className="text-red-500 text-xs">{error}</p>} */}
     </div>
   );
 };
