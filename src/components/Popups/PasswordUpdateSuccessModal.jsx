@@ -1,4 +1,5 @@
 const PasswordUpdateSuccessModal = ({ showPopup, handleTogglePopup }) => {
+  if (!showPopup) return null;
   return (
     // showPopup && (
     <main className="w-full h-screen fixed inset-0 z-50 flex items-center justify-center px-4 bg-[rgba(0,0,0,0.4)]">

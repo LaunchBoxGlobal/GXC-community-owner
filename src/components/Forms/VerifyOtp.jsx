@@ -1,7 +1,12 @@
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import Button from "../Common/Button";
-import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
+import {
+  Link,
+  useLocation,
+  useNavigate,
+  useSearchParams,
+} from "react-router-dom";
 import { useEffect, useRef, useState } from "react";
 import axios from "axios";
 import { BASE_URL } from "../../data/baseUrl";
@@ -12,6 +17,7 @@ import EmailVerificationStatusPage from "../../pages/Auth/EmailVerificationStatu
 import { useAppContext } from "../../context/AppContext";
 import CopyCommunityLinkPopup from "../Popups/CopyCommunityLinkPopup";
 import { enqueueSnackbar } from "notistack";
+import { RiArrowLeftSLine } from "react-icons/ri";
 
 const VerifyOtp = () => {
   const inputRefs = useRef([]);
@@ -79,6 +85,9 @@ const VerifyOtp = () => {
           },
         });
 
+        console.log(res);
+
+        console.log(page);
         if (res?.data?.success) {
           resetForm();
 
@@ -194,6 +203,19 @@ const VerifyOtp = () => {
             </p>
             <ResentOtp page={page} email={userEmail} />
           </div>
+        </div>
+
+        <div className="w-full mt-2 flex flex-col items-center gap-4">
+          <button
+            type="button"
+            onClick={() => navigate(-1)}
+            className="text-sm font-medium flex items-center gap-1 text-[var(--primary-color)]"
+          >
+            <div className="w-[18px] h-[18px] bg-[var(--button-bg)] rounded-full flex items-center justify-center">
+              <RiArrowLeftSLine className="text-white text-base" />
+            </div>
+            Back
+          </button>
         </div>
       </form>
 
