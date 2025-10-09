@@ -53,16 +53,16 @@ const CompleteProfileForm = () => {
         .min(3, "First name must contain at least 3 characters")
         .max(10, "First name must be 10 characters or less")
         .matches(
-          /^[A-Z][a-zA-Z ]*$/,
-          "First must start with a capital letter and contain only letters and spaces"
+          /^[A-Za-z ]+$/,
+          "First name must contain only letters and spaces"
         )
         .required("First name is required"),
       lastName: Yup.string()
         .min(3, "Last name must contain at least 3 characters")
         .max(10, "Last name must be 10 characters or less")
         .matches(
-          /^[A-Z][a-zA-Z ]*$/,
-          "Last name must start with a capital letter and contain only letters and spaces"
+          /^[A-Za-z ]+$/,
+          "Last name must contain only letters and spaces"
         )
         .required("Last name is required"),
       email: Yup.string()

@@ -57,16 +57,16 @@ const SignUpForm = () => {
         .min(3, "First name must contain at least 3 characters")
         .max(10, "First name must be 10 characters or less")
         .matches(
-          /^[A-Z][a-z]+(?: [A-Z][a-z]+)*$/,
-          "First name must start with a capital letter and contain only letters and spaces"
+          /^[A-Za-z ]+$/,
+          "First name must contain only letters and spaces"
         )
         .required("First name is required"),
       lastName: Yup.string()
         .min(3, "Last name must contain at least 3 characters")
         .max(10, "Last name must be 10 characters or less")
         .matches(
-          /^[A-Z][a-z]+(?: [A-Z][a-z]+)*$/,
-          "Last name must start with a capital letter and contain only letters and spaces"
+          /^[A-Za-z ]+$/,
+          "Last name must contain only letters and spaces"
         )
         .required("Last name is required"),
       communityName: Yup.string()
@@ -82,8 +82,8 @@ const SignUpForm = () => {
         )
         .required("Slug is required"),
       description: Yup.string()
-        .min(30, `Description can not be less than 30 characters`)
-        .max(500, `Description can not be more than 500 characters`)
+        .min(11, `Description can not be less than 11 characters`)
+        .max(150, `Description can not be more than 150 characters`)
         .required("Description is required"),
       email: Yup.string()
         .email("Invalid email address")

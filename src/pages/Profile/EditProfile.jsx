@@ -54,16 +54,16 @@ const EditProfile = ({ togglePopup, showPopup, fetchUserProfile }) => {
         .min(3, "First name must contain at least 3 characters")
         .max(10, "First name must be 10 characters or less")
         .matches(
-          /^[A-Z][a-z]+(?: [A-Z][a-z]+)*$/,
-          "First name must start with a capital letter and contain only letters and spaces"
+          /^[A-Za-z ]+$/,
+          "First name must contain only letters and spaces"
         )
         .required("First name is required"),
       lastName: Yup.string()
         .min(3, "Last name must contain at least 3 characters")
         .max(10, "Last name must be 10 characters or less")
         .matches(
-          /^[A-Z][a-z]+(?: [A-Z][a-z]+)*$/,
-          "Last name must start with a capital letter and contain only letters and spaces"
+          /^[A-Za-z ]+$/,
+          "Last name must contain only letters and spaces"
         )
         .required("Last name is required"),
       // description: Yup.string()
@@ -85,8 +85,8 @@ const EditProfile = ({ togglePopup, showPopup, fetchUserProfile }) => {
         .min(3, "City name cannot be less than 3 characters")
         .max(15, "City name cannot be more than 15 characters")
         .matches(
-          /^[A-Z][a-zA-Z\s]*$/,
-          "City must start with uppercase and contain only letters and spaces"
+          /^[A-Za-z ]+$/,
+          "City name must contain only letters and spaces"
         )
         .required("Enter your city"),
 
@@ -94,8 +94,8 @@ const EditProfile = ({ togglePopup, showPopup, fetchUserProfile }) => {
         .min(3, "State cannot be less than 3 characters")
         .max(15, "State cannot be more than 15 characters")
         .matches(
-          /^[A-Z][a-zA-Z\s]*$/,
-          "State must start with uppercase and contain only letters and spaces"
+          /^[A-Za-z ]+$/,
+          "State name must contain only letters and spaces"
         )
         .required("Enter your state"),
 
@@ -103,8 +103,8 @@ const EditProfile = ({ togglePopup, showPopup, fetchUserProfile }) => {
         .min(3, "Country name cannot be less than 3 characters")
         .max(15, "Country name cannot be more than 15 characters")
         .matches(
-          /^[A-Z][a-zA-Z\s]*$/,
-          "Country must start with uppercase and contain only letters and spaces"
+          /^[A-Za-z ]+$/,
+          "Country name must contain only letters and spaces"
         )
         .required("Enter your country"),
       zipcode: Yup.string()
