@@ -124,7 +124,7 @@ const CommunityPage = () => {
                 </p>
               )}
               {community?.community?.description && (
-                <p className="text-base text-[var(--secondary-color)] leading-[1.3] mt-2">
+                <p className="text-base text-[var(--secondary-color)] leading-[1.3] mt-2 break-words">
                   {community?.community?.description}
                 </p>
               )}
