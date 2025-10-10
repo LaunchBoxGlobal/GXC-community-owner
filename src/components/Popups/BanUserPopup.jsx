@@ -44,11 +44,7 @@ const BanUserPopup = ({
         }
       );
 
-      console.log("Block user response >>> ", res?.data);
       if (res?.data?.success) {
-        // enqueueSnackbar(res?.data?.message, {
-        //   variant: "success",
-        // });
         setOpenActions(false);
         getMembers();
         setIsBanned(true);

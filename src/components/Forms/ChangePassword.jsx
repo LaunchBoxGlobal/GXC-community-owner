@@ -67,6 +67,7 @@ const ChangePassword = () => {
           resetForm();
           setShowPopup(true);
           Cookies.remove(`userEmail`);
+          Cookies.remove(`verifyEmail`);
           Cookies.remove("otp");
         }
       } catch (error) {

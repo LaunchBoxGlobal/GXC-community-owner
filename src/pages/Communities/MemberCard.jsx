@@ -55,7 +55,7 @@ const MemberCard = ({
   useEffect(() => {
     const handleClickOutside = (e) => {
       if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
-        toggleActionsDropdown(null); // close dropdown
+        toggleActionsDropdown(null);
       }
     };
 
@@ -128,7 +128,7 @@ const MemberCard = ({
               type="button"
               onClick={() => {
                 setShowRemoveUserPopup(true);
-                toggleActionsDropdown(null);
+                toggleActionsDropdown(index, member?.userId);
               }}
               className="flex items-center justify-start gap-2 px-6"
             >
@@ -146,7 +146,7 @@ const MemberCard = ({
               type="button"
               onClick={() => {
                 setShowBlockUserPopup(true);
-                toggleActionsDropdown(null);
+                toggleActionsDropdown(index, member?.userId);
               }}
               className="flex items-center justify-start gap-2 px-6"
             >

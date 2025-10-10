@@ -140,9 +140,9 @@ const SignUpForm = () => {
           Cookies.set("user", JSON.stringify(res?.data?.data?.user));
           Cookies.set("userEmail", values.email);
           Cookies.set("slug", values.urlSlug);
-          Cookies.set("isEmailVerified", false);
+          Cookies.set("isOwnerEmailVerified", false);
           resetForm();
-
+          Cookies.set("page", "/signup");
           navigate("/verify-otp", {
             state: {
               page: "/signup",

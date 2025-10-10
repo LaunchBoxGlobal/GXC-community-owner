@@ -22,16 +22,12 @@ import { RiArrowLeftSLine } from "react-icons/ri";
 const VerifyOtp = () => {
   const inputRefs = useRef([]);
   const navigate = useNavigate();
-  const location = useLocation();
-  const { page, email } = location.state || {};
-  const [searchParams] = useSearchParams();
   const [loading, setLoading] = useState(false);
   const [showPopup, setShowPopup] = useState(false);
   const [redirectParams, setRedirectParams] = useState(null);
   const { setShowEmailVerificationPopup } = useAppContext();
   const userEmail = Cookies.get(`userEmail`);
-  const verifyEmail = Cookies.get("verifyEmail");
-  const { user } = useAppContext();
+  const page = Cookies.get("page");
 
   const togglePopup = () => {
     setShowEmailVerificationPopup(true);
@@ -85,23 +81,28 @@ const VerifyOtp = () => {
           },
         });
 
-        console.log(res);
-
-        console.log(page);
         if (res?.data?.success) {
           resetForm();
+          const user = Cookies.get("user")
+            ? JSON.parse(Cookies.get("user"))
+            : null;
+          if (user) {
+            user.emailVerified = true;
+            Cookies.set("user", JSON.stringify(user));
+          }
+          Cookies.set("isOwnerEmailVerified", true);
 
           if (page === "/signup") {
             setShowEmailVerificationPopup(true);
-            Cookies.remove(`userEmail`);
-            Cookies.remove(`verifyEmail`);
-            Cookies.set("isEmailVerified", true);
+            // Cookies.remove(`userEmail`);
+            // Cookies.remove(`verifyEmail`);
+            Cookies.set("isOwnerEmailVerified", true);
           } else if (page === "/forgot-password") {
             Cookies.set("otp", otp);
             navigate(`/change-password`, {
               state: { otp, email: userEmail },
             });
-          } else if (page === "/login") {
+          } else {
             navigate("/");
           }
         }

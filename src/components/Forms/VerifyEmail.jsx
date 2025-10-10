@@ -44,6 +44,7 @@ const VerifyEmail = () => {
 
         if (res?.data?.success) {
           Cookies.set("userEmail", values.email);
+          Cookies.set("page", "/forgot-password");
           resetForm();
           navigate("/verify-otp", {
             state: {
@@ -69,11 +70,6 @@ const VerifyEmail = () => {
       className="w-full max-w-[350px] flex flex-col items-start gap-4"
     >
       <div className="w-full text-center">
-        {/* <img
-          src="/forgot-password-image.svg"
-          alt="image-placeholder"
-          className="max-w-[71px] mx-auto"
-        /> */}
         <h2 className="font-semibold text-[32px] leading-none mt-8 mb-3">
           Forgot Password
         </h2>

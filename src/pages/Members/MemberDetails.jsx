@@ -21,7 +21,6 @@ const MemberDetails = () => {
         }
       );
 
-      console.log(res?.data);
       setMember(res?.data?.data);
     } catch (error) {
       console.log(error);

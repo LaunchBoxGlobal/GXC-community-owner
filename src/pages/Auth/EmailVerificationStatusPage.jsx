@@ -1,23 +1,8 @@
 import { useEffect } from "react";
-import {
-  Link,
-  useLocation,
-  useNavigate,
-  useSearchParams,
-} from "react-router-dom";
 import { useAppContext } from "../../context/AppContext";
 const PAGETITLE = import.meta.env.VITE_PAGE_TITLE;
 
-const EmailVerificationStatusPage = ({
-  showPopup,
-  togglePopup,
-  redirectParams,
-}) => {
-  // const location = useLocation();
-  // const { page } = location.state || {};
-  // const [searchParams] = useSearchParams();
-  const navigate = useNavigate();
-  // const redirect = searchParams.get("redirect");
+const EmailVerificationStatusPage = () => {
   const {
     setShowEmailVerificationPopup,
     setShowCommunityLinkPopup,
@@ -25,24 +10,13 @@ const EmailVerificationStatusPage = ({
   } = useAppContext();
 
   useEffect(() => {
-    document.title = `Account verified - ${PAGETITLE}`;
+    document.title = `Account verified`;
   }, []);
 
   const handleContinue = () => {
     setShowEmailVerificationPopup(false);
     setShowCommunityLinkPopup(true);
   };
-
-  // const handleContinue = () => {
-  //   if (redirectParams) {
-  //     setShowEmailVerificationPopup(false);
-  //     navigate(redirectParams);
-  //     togglePopup();
-  //   } else {
-  //     navigate("/add-payment-info");
-  //     togglePopup();
-  //   }
-  // };
 
   return (
     showEmailVerificationPopup && (

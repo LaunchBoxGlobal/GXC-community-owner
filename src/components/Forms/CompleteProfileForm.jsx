@@ -321,7 +321,7 @@ const CompleteProfileForm = () => {
             onBlur={formik.handleBlur}
             error={formik.errors.location}
             touched={formik.touched.location}
-            label="Home Address"
+            label="Address"
           />
 
           {/* Buttons */}

@@ -25,8 +25,6 @@ const HomePage = () => {
   const [fetchingStats, setFetchingStats] = useState(false);
   const [stats, setStats] = useState(null);
 
-  console.log(stats);
-
   const fetchStats = async () => {
     setFetchingStats(true);
     try {
