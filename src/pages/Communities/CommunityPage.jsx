@@ -95,14 +95,14 @@ const CommunityPage = () => {
 
   return (
     <main className="w-full p-5 rounded-[10px] bg-white custom-shadow">
-      <div className="w-full flex items-center justify-between">
+      <div className="w-full flex items-center justify-between gap-5">
         <h2 className="page-heading whitespace-nowrap">Community</h2>
         <div className="flex items-center justify-end gap-3 w-full lg:w-[80%]">
           <button
             type="button"
             disabled={!community?.community?.inviteLinkActive}
             onClick={() => setShowCopyLinkPopup(true)}
-            className="button px-5 max-w-[160px]"
+            className="button px-3 md:px-5 max-w-[160px]"
           >
             Invite Members
           </button>
@@ -113,11 +113,11 @@ const CommunityPage = () => {
         <PageLoader />
       ) : (
         <>
-          <div className="w-full bg-white custom-shadow rounded-lg md:rounded-xl lg:rounded-[24px] p-7 mt-5 flex items-center justify-between">
+          <div className="w-full bg-white custom-shadow rounded-lg md:rounded-xl lg:rounded-[24px] p-7 mt-5 flex flex-wrap overflow-hidden items-center justify-between gap-y-5">
             <div className="w-full lg:w-[70%]">
               <h2 className="page-heading">{community?.community?.name}</h2>
               {community?.community?.slug && (
-                <p className="text-base text-[var(--secondary-color)] leading-[1.3] mt-2">
+                <p className="text-base text-[var(--secondary-color)] leading-[1.3] mt-2 break-words">
                   <span className="font-semibold">Slug: </span>
                   user.thegivexchange.com/community/
                   {community?.community?.slug}
@@ -129,7 +129,7 @@ const CommunityPage = () => {
                 </p>
               )}
             </div>
-            <div className="w-full lg:w-[30%] flex items-center justify-end gap-10">
+            <div className="w-full lg:w-[30%] flex items-center justify-between md:justify-end flex-wrap md:gap-10">
               <div className="text-center space-y-1">
                 <h4 className="">Members</h4>
                 <p className="font-semibold text-[var(--primary-color)] text-[24px] leading-none">
@@ -170,7 +170,7 @@ const CommunityPage = () => {
               <button
                 type="button"
                 onClick={() => setActiveTab("products")}
-                className={`w-full text-lg font-medium rounded-[12px] ${
+                className={`w-full text-sm lg:text-lg font-medium rounded-[12px] ${
                   activeTab === "products"
                     ? "bg-[var(--button-bg)] text-white"
                     : "bg-white text-black"
@@ -181,7 +181,7 @@ const CommunityPage = () => {
               <button
                 type="button"
                 onClick={() => setActiveTab("members")}
-                className={`w-full text-lg font-medium rounded-[12px] ${
+                className={`w-full text-sm lg:text-lg font-medium rounded-[12px] ${
                   activeTab === "members"
                     ? "bg-[var(--button-bg)] text-white"
                     : "bg-white text-black"

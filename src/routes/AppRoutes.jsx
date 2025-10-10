@@ -24,21 +24,6 @@ import ReportsPage from "../pages/Reports/ReportsPage";
 import WalletPage from "../pages/Wallet/WalletPage";
 import MemberDetails from "../pages/Members/MemberDetails";
 
-// const isAuthenticated = () => !!Cookies.get("token");
-// const isEmailVerified = () => Cookies.get("isOwnerEmailVerified") === "true";
-
-// export const PrivateRoute = ({ element, redirectTo }) => {
-//   return isAuthenticated() && isEmailVerified() ? (
-//     element
-//   ) : (
-//     <Navigate to={`${redirectTo}`} replace />
-//   );
-// };
-
-// const PublicRoute = ({ element, redirectTo }) => {
-//   return isAuthenticated() ? <Navigate to={redirectTo} /> : element;
-// };
-
 const getUser = () => {
   const userCookie = Cookies.get("user");
   return userCookie ? JSON.parse(userCookie) : null;

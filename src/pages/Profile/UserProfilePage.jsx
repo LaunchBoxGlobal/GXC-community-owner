@@ -41,7 +41,7 @@ const UserProfilePage = () => {
         <div className="mb-10">
           <h1 className="text-[32px] font-semibold leading-none">My Profile</h1>
 
-          <div className="w-full bg-white p-5 flex items-center justify-between flex-wrap rounded-[15px] mt-5 gap-5 custom-shadow">
+          <div className="w-full bg-white p-5 flex items-center flex-col md:flex-row justify-between rounded-[15px] mt-5 gap-5 custom-shadow">
             <div className="w-full lg:max-w-[70%] flex items-start lg:items-center gap-3">
               <div className="">
                 {user?.profilePictureUrl ? (
@@ -75,7 +75,7 @@ const UserProfilePage = () => {
               </div>
             </div>
 
-            <div className="">
+            <div className="min-w-[160px]">
               <button
                 type="button"
                 onClick={() => togglePopup()}

@@ -48,6 +48,7 @@ const EditProfile = ({ togglePopup, showPopup, fetchUserProfile }) => {
       countryId: "",
       stateId: "",
       zipcode: user?.zipcode || "",
+      location: user?.address || "",
     },
     validationSchema: Yup.object({
       firstName: Yup.string()
@@ -66,14 +67,6 @@ const EditProfile = ({ togglePopup, showPopup, fetchUserProfile }) => {
           "Last name must contain only letters and spaces"
         )
         .required("Last name is required"),
-      // description: Yup.string()
-      //   .notRequired()
-      //   .nullable()
-      //   .test(
-      //     "len",
-      //     "Description must be between 10 and 500 characters",
-      //     (val) => !val || (val.length >= 10 && val.length <= 500)
-      //   ),
       phoneNumber: Yup.string()
         .matches(/^[0-9]{11}$/, "Phone number must contain 11 digits")
         .required("Enter your phone number"),
@@ -107,6 +100,10 @@ const EditProfile = ({ togglePopup, showPopup, fetchUserProfile }) => {
           "Country name must contain only letters and spaces"
         )
         .required("Enter your country"),
+      location: Yup.string()
+        .min(11, `Address cannot be less than 11 characters`)
+        .max(150, `Address can not be more than 150 characters`)
+        .required("Please enter your location"),
       zipcode: Yup.string()
         .matches(/^[0-9]{5}$/, "Zip code must contain 5 digits")
         .required("Enter your zip code"),
@@ -125,6 +122,7 @@ const EditProfile = ({ togglePopup, showPopup, fetchUserProfile }) => {
             state: values?.state,
             city: values?.city,
             zipcode: values?.zipcode,
+            address: values?.location,
           },
           {
             headers: {
@@ -371,6 +369,17 @@ const EditProfile = ({ togglePopup, showPopup, fetchUserProfile }) => {
                 error={formik.errors.zipcode}
                 touched={formik.touched.zipcode}
                 label="Zip Code"
+              />
+              <TextField
+                type="text"
+                name="location"
+                placeholder="Enter address"
+                value={formik.values.location}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                error={formik.errors.location}
+                touched={formik.touched.location}
+                label="Address"
               />
 
               <div className="w-full">

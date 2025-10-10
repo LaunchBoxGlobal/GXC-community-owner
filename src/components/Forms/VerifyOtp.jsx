@@ -1,16 +1,10 @@
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import Button from "../Common/Button";
-import {
-  Link,
-  useLocation,
-  useNavigate,
-  useSearchParams,
-} from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useEffect, useRef, useState } from "react";
 import axios from "axios";
 import { BASE_URL } from "../../data/baseUrl";
-const PAGETITLE = import.meta.env.VITE_PAGE_TITLE;
 import Cookies from "js-cookie";
 import ResentOtp from "./ResentOtp";
 import EmailVerificationStatusPage from "../../pages/Auth/EmailVerificationStatusPage";
@@ -31,18 +25,22 @@ const VerifyOtp = () => {
   const page = Cookies.get("page");
   const [showEmailVerificationStatus, setShowEmailVerificationStatus] =
     useState(false);
-  const [data, setData] = useState(null);
 
   const togglePopup = () => {
     setShowEmailVerificationPopup(true);
   };
 
   useEffect(() => {
-    if (!userEmail) {
+    const isAuthenticated = !!Cookies.get("token");
+    const hasEmail = !!userEmail;
+
+    // Redirect only if user is not authenticated AND no email in cookies
+    if (!isAuthenticated && !hasEmail) {
       navigate("/login");
     }
+
     document.title = `Verify OTP - GiveXChange`;
-  }, []);
+  }, [navigate, userEmail]);
 
   const formik = useFormik({
     initialValues: {

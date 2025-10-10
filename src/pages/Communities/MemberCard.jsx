@@ -94,7 +94,7 @@ const MemberCard = ({
               {member?.fullName}
             </Link>
           </p>
-          <p className="text-sm font-normal text-[var(--secondary-color)]">
+          <p className="text-xs md:text-sm font-normal text-[var(--secondary-color)]">
             {member?.email}
           </p>
         </div>

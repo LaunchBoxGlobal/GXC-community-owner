@@ -41,7 +41,7 @@ const ResentOtp = ({ email, page }) => {
 
       if (res?.data?.success) {
         enqueueSnackbar(res?.data?.message, {
-          variant: "info",
+          variant: "success",
         });
         setTimer(60);
       }

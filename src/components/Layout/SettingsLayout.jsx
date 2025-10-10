@@ -32,9 +32,9 @@ const SettingsLayout = ({ page }) => {
       <p className="text-[#565656] text-lg leading-none mt-4">
         Manage your account and preference{" "}
       </p>
-      <div className="w-full min-h-screen flex items-start justify-between bg-white rounded-[12px] mt-6 custom-shadow">
-        <div className="w-[25%] min-h-screen border-r pt-5">
-          <ul className="w-full flex flex-col gap-y-2">
+      <div className="w-full min-h-screen flex flex-col lg:flex-row items-start lg:justify-between bg-white rounded-[12px] mt-6 custom-shadow">
+        <div className="w-full lg:w-[25%] lg:min-h-screen border-r pt-5 overflow-hidden">
+          <ul className="w-full flex lg:flex-col gap-y-2 overflow-auto">
             {settingPages?.map((link, index) => {
               return (
                 <li className={`w-full text-black h-[49px]`} key={index}>
@@ -42,9 +42,9 @@ const SettingsLayout = ({ page }) => {
                     to={link?.url}
                     className={`text-sm flex items-center gap-x-2.5 font-medium w-full h-[49px] px-4 outline-none ${
                       location?.pathname === link?.url
-                        ? "border-l-[4px] border-black"
+                        ? "lg:border-l-[4px] border-black"
                         : " transition-all duration-300 group"
-                    }`}
+                    } whitespace-nowrap`}
                   >
                     <span className="">{link?.title}</span>
                   </Link>
@@ -53,7 +53,9 @@ const SettingsLayout = ({ page }) => {
             })}
           </ul>
         </div>
-        <div className="w-[72%] pt-5 pr-5 pb-5">{page}</div>
+        <div className="w-full lg:w-[72%] pt-5 pr-5 pl-5 lg:pl-0 pb-5">
+          {page}
+        </div>
       </div>
     </div>
   );

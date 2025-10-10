@@ -11,7 +11,7 @@
 }
 
 .button {
-  @apply w-full bg-[var(--button-bg)] text-white h-[49px] rounded-[8px] text-center font-medium disabled:cursor-not-allowed;
+  @apply md:w-full bg-[var(--button-bg)] text-white h-[49px] rounded-[8px] text-sm lg:text-base text-center font-medium disabled:cursor-not-allowed;
 }
 
 .outlined-button {

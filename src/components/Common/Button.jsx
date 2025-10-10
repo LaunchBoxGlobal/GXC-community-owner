@@ -5,7 +5,7 @@ const Button = ({ type, title, isLoading }) => {
     <button
       type={type ? type : "button"}
       disabled={isLoading}
-      className="button relative flex items-center justify-center"
+      className="button w-full relative flex items-center justify-center"
     >
       {isLoading ? <Loader /> : title}
     </button>

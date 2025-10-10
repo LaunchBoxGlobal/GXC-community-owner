@@ -36,7 +36,7 @@ const HomePageStats = ({ stats }) => {
     <div className="w-full mt-5 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
       {DASHBOARD_STATS?.map((st, i) => {
         return (
-          <div className="w-full bg-[var(--light-green)] p-5 rounded-[20px] flex items-center justify-between gap-3">
+          <div className="w-full bg-[var(--light-green)] p-5 rounded-[20px] flex items-center justify-between flex-wrap gap-3">
             <div>
               <p className="text-[#565656] font-medium">{st?.title}</p>
               <p className="text-[24px] font-semibold">

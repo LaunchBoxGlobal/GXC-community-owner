@@ -120,9 +120,9 @@ const MemberList = ({ communityId, setMemberCount, community }) => {
   return (
     <div className="w-full">
       {/* Header + Search */}
-      <div className="w-full flex items-center justify-between">
+      <div className="w-full flex items-center justify-between flex-wrap gap-5">
         <h2 className="page-heading whitespace-nowrap">Members</h2>
-        <div className="w-full max-w-[252px]">
+        <div className="w-full md:max-w-[252px]">
           <div className="border h-[49px] pl-[15px] pr-[10px] rounded-[8px] bg-white border-[#D9D9D9] flex items-center gap-2">
             <LuSearch className="text-xl text-[var(--secondary-color)]" />
             <input
@@ -154,7 +154,7 @@ const MemberList = ({ communityId, setMemberCount, community }) => {
             setListType("active");
             setPage(1);
           }}
-          className={`px-5 py-3 rounded-lg text-sm font-medium ${
+          className={`px-5 py-3 rounded-lg text-xs lg:text-sm font-medium ${
             listType === "active"
               ? "bg-[var(--button-bg)] text-white"
               : "bg-[#E6E6E6] text-black"
@@ -168,7 +168,7 @@ const MemberList = ({ communityId, setMemberCount, community }) => {
             setListType("blocked");
             setPage(1);
           }}
-          className={`px-5 py-3 rounded-lg text-sm font-medium ${
+          className={`px-5 py-3 rounded-lg text-xs lg:text-sm font-medium ${
             listType === "blocked"
               ? "bg-[var(--button-bg)] text-white"
               : "bg-[#E6E6E6] text-black"

@@ -75,8 +75,8 @@ const CommunitiesPage = () => {
         </div>
 
         {/* search & add new community */}
-        <div className="w-full lg:max-w-1/2 flex justify-end gap-4">
-          <div className="w-full max-w-[252px]">
+        <div className="w-full lg:max-w-1/2 flex flex-wrap mt-5 justify-end gap-4">
+          <div className="w-full md:max-w-[252px]">
             <div className="border h-[49px] pl-[15px] pr-[10px] rounded-[8px] bg-white border-[#D9D9D9] flex items-center justify-start gap-2">
               <LuSearch className="text-xl text-[var(--secondary-color)]" />
               <input
