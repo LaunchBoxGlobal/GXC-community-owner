@@ -8,6 +8,7 @@ import { BASE_URL } from "../../data/baseUrl";
 import { getToken } from "../../utils/getToken";
 import Button from "../../components/Common/Button";
 import Cookies from "js-cookie";
+import { enqueueSnackbar } from "notistack";
 
 const AddCommunity = ({
   showPopup,
@@ -93,7 +94,9 @@ const AddCommunity = ({
           setCommunityUrl(values.urlSlug);
         }
       } catch (error) {
-        alert(error.response?.data?.message || error?.message);
+        enqueueSnackbar(error.response?.data?.message || error?.message, {
+          variant: "error",
+        });
         if (error?.response?.status === 401) {
           Cookies.remove("token");
           Cookies.remove("user");
