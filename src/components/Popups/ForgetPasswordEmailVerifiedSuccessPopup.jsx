@@ -1,23 +1,7 @@
-import { useEffect } from "react";
-import { useAppContext } from "../../context/AppContext";
-const PAGETITLE = import.meta.env.VITE_PAGE_TITLE;
-
-const EmailVerificationStatusPage = () => {
-  const {
-    setShowEmailVerificationPopup,
-    setShowCommunityLinkPopup,
-    showEmailVerificationPopup,
-  } = useAppContext();
-
-  useEffect(() => {
-    document.title = `Account verified`;
-  }, []);
-
-  const handleContinue = () => {
-    setShowEmailVerificationPopup(false);
-    setShowCommunityLinkPopup(true);
-  };
-
+const ForgetPasswordEmailVerifiedSuccessPopup = ({
+  showEmailVerificationPopup,
+  handleContinue,
+}) => {
   return (
     showEmailVerificationPopup && (
       <div className="w-full h-screen fixed inset-0 px-5 z-50 bg-[rgba(0,0,0,0.4)] flex items-center justify-center">
@@ -47,4 +31,4 @@ const EmailVerificationStatusPage = () => {
   );
 };
 
-export default EmailVerificationStatusPage;
+export default ForgetPasswordEmailVerifiedSuccessPopup;

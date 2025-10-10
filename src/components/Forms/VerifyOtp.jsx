@@ -18,6 +18,7 @@ import { useAppContext } from "../../context/AppContext";
 import CopyCommunityLinkPopup from "../Popups/CopyCommunityLinkPopup";
 import { enqueueSnackbar } from "notistack";
 import { RiArrowLeftSLine } from "react-icons/ri";
+import ForgetPasswordEmailVerifiedSuccessPopup from "../Popups/ForgetPasswordEmailVerifiedSuccessPopup";
 
 const VerifyOtp = () => {
   const inputRefs = useRef([]);
@@ -28,6 +29,9 @@ const VerifyOtp = () => {
   const { setShowEmailVerificationPopup } = useAppContext();
   const userEmail = Cookies.get(`userEmail`);
   const page = Cookies.get("page");
+  const [showEmailVerificationStatus, setShowEmailVerificationStatus] =
+    useState(false);
+  const [data, setData] = useState(null);
 
   const togglePopup = () => {
     setShowEmailVerificationPopup(true);
@@ -67,7 +71,6 @@ const VerifyOtp = () => {
       const body =
         page === "/signup" ? { code: otp } : { code: otp, email: userEmail };
       setLoading(true);
-      const token = page === "/login" ? "" : "";
       try {
         const url =
           page === "/signup"
@@ -94,14 +97,14 @@ const VerifyOtp = () => {
 
           if (page === "/signup") {
             setShowEmailVerificationPopup(true);
-            // Cookies.remove(`userEmail`);
-            // Cookies.remove(`verifyEmail`);
             Cookies.set("isOwnerEmailVerified", true);
+            Cookies.remove("userEmail");
           } else if (page === "/forgot-password") {
             Cookies.set("otp", otp);
-            navigate(`/change-password`, {
-              state: { otp, email: userEmail },
-            });
+            setShowEmailVerificationStatus(true);
+            // navigate(`/change-password`, {
+            //   state: { otp, email: userEmail },
+            // });
           } else {
             navigate("/");
           }
@@ -151,6 +154,11 @@ const VerifyOtp = () => {
         if (inputRefs.current[i]) inputRefs.current[i].value = val;
       });
     }
+  };
+
+  const handleConitnueChangePassword = () => {
+    setShowEmailVerificationStatus(false);
+    navigate(`/change-password`);
   };
 
   return (
@@ -209,7 +217,10 @@ const VerifyOtp = () => {
         <div className="w-full mt-2 flex flex-col items-center gap-4">
           <button
             type="button"
-            onClick={() => navigate(-1)}
+            onClick={() => {
+              navigate(-1);
+              Cookies.remove("userEmail");
+            }}
             className="text-sm font-medium flex items-center gap-1 text-[var(--primary-color)]"
           >
             <div className="w-[18px] h-[18px] bg-[var(--button-bg)] rounded-full flex items-center justify-center">
@@ -224,6 +235,11 @@ const VerifyOtp = () => {
         showPopup={showPopup}
         togglePopup={togglePopup}
         redirectParams={redirectParams}
+      />
+
+      <ForgetPasswordEmailVerifiedSuccessPopup
+        showEmailVerificationPopup={showEmailVerificationStatus}
+        handleContinue={handleConitnueChangePassword}
       />
 
       <CopyCommunityLinkPopup />

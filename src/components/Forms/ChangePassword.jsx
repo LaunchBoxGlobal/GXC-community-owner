@@ -13,8 +13,6 @@ import { enqueueSnackbar } from "notistack";
 const ChangePassword = () => {
   const navigate = useNavigate();
   const [showPopup, setShowPopup] = useState(false);
-  const location = useLocation();
-  const { email, otp } = location?.state || {};
   const [loading, setLoading] = useState(false);
 
   const formik = useFormik({
@@ -49,8 +47,8 @@ const ChangePassword = () => {
         });
         return;
       }
-      if (!otp) {
-        enqueueSnackbar("otp not found", {
+      if (!userCode) {
+        enqueueSnackbar("Code not found", {
           variant: "error",
         });
         return;
@@ -59,7 +57,7 @@ const ChangePassword = () => {
         setLoading(true);
         const res = await axios.post(`${BASE_URL}/auth/reset-password`, {
           email: userEmail,
-          code: otp || userCode,
+          code: userCode,
           password: values?.password,
         });
 

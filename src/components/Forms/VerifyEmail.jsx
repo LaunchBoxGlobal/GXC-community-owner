@@ -46,6 +46,9 @@ const VerifyEmail = () => {
           Cookies.set("userEmail", values.email);
           Cookies.set("page", "/forgot-password");
           resetForm();
+          enqueueSnackbar(res?.data?.message, {
+            variant: "success",
+          });
           navigate("/verify-otp", {
             state: {
               page: "/forgot-password",
