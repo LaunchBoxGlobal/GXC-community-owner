@@ -16,7 +16,7 @@ export const DASHBOARD_STATS = [
     iconHeight: 28,
   },
   {
-    title: "Pending Invites",
+    title: "Active Links",
     count: "540",
     icon: "/pending-invites-icon-2.png",
     iconWidth: 33,
@@ -44,8 +44,8 @@ const HomePageStats = ({ stats }) => {
                   ? stats?.activeCommunities
                   : st?.title === "Total Members"
                   ? stats?.totalMembers
-                  : st?.title === "Pending Invites"
-                  ? stats?.pendingInvites
+                  : st?.title === "Active Links"
+                  ? stats?.activeLinks
                   : st?.title === "Total Earnings"
                   ? stats?.totalEarnings
                   : 0}

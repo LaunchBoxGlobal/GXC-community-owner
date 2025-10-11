@@ -7,9 +7,13 @@ import { getToken } from "../../utils/getToken";
 import Cookies from "js-cookie";
 import { useNavigate } from "react-router-dom";
 import { enqueueSnackbar } from "notistack";
+import { handleApiError } from "../../utils/handleApiError";
+import { useState } from "react";
+import Loader from "../../components/Loader/Loader";
 
 const ChangePasswordPage = () => {
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
 
   const formik = useFormik({
     initialValues: {
@@ -34,6 +38,7 @@ const ChangePasswordPage = () => {
     }),
     onSubmit: async (values, { resetForm }) => {
       try {
+        setLoading(true);
         const res = await axios.post(
           `${BASE_URL}/auth/change-password`,
           { password: values?.password },
@@ -53,14 +58,17 @@ const ChangePasswordPage = () => {
         }
       } catch (error) {
         console.error("change password error:", error.response?.data);
-        enqueueSnackbar(error?.message || error?.response?.data?.message, {
-          variant: "error",
-        });
-        if (error?.response?.status === 401) {
-          Cookies.remove("token");
-          Cookies.remove("user");
-          navigate("/login");
-        }
+        handleApiError(error, navigate);
+        // enqueueSnackbar(error?.message || error?.response?.data?.message, {
+        //   variant: "error",
+        // });
+        // if (error?.response?.status === 401) {
+        //   Cookies.remove("token");
+        //   Cookies.remove("user");
+        //   navigate("/login");
+        // }
+      } finally {
+        setLoading(false);
       }
     },
   });
@@ -102,7 +110,7 @@ const ChangePasswordPage = () => {
             type="submit"
             className="bg-[var(--button-bg)] button max-w-[150px]"
           >
-            Save
+            {loading ? <Loader /> : "Save"}
           </button>
         </div>
       </form>

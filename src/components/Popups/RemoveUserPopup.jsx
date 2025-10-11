@@ -90,7 +90,7 @@ const RemoveUserPopup = ({
             Remove Member
           </h2>
           <p className="text-[var(--secondary-color)] text-center leading-[1.3]">
-            Are You Sure You Want to Remove This Member?
+            Are you sure you want to remove this member?
           </p>
           <div className="w-full grid grid-cols-2 gap-2 mt-2">
             <button

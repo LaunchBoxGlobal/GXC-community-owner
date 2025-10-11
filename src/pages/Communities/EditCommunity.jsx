@@ -9,16 +9,23 @@ import { getToken } from "../../utils/getToken";
 import Button from "../../components/Common/Button";
 import Cookies from "js-cookie";
 import { enqueueSnackbar } from "notistack";
+import { handleApiError } from "../../utils/handleApiError";
+import { useNavigate } from "react-router-dom";
 
-const AddCommunity = ({
+const EditCommunity = ({
   showPopup,
   togglePopup,
   setCommunityUrl,
   setShowAddCommunityPopup,
   setShowSuccessPopup,
+  setShowEditCommunityPopup,
+  showEditCommunityPopup,
+  community,
+  fetchCommunityDetails,
 }) => {
   const [loading, setLoading] = useState(false);
   const [slugError, setSlugError] = useState(null);
+  const navigate = useNavigate();
 
   const checkSlugAvailability = async (slug) => {
     try {
@@ -44,27 +51,27 @@ const AddCommunity = ({
   const formik = useFormik({
     enableReinitialize: true,
     initialValues: {
-      name: "",
-      urlSlug: "",
-      description: "",
+      name: community?.name || "",
+      urlSlug: community?.slug || "",
+      description: community?.description || "",
     },
     validationSchema: Yup.object({
       name: Yup.string()
         .min(3, "Community name must contain at least 3 characters")
-        .max(35, "Community name must be 35 characters or less")
+        .max(35, "Community name can not be more than 35 characters")
         .required("Community name is required"),
       urlSlug: Yup.string()
-        .min(3, "Community slug can not be less than 3 characters")
-        .max(50, "Community slug can not be more than 50 characters")
+        .min(3, "Slug can not be less than 3 characters")
+        .max(50, "Slug can not be more than 50 characters")
         .matches(
           /^[a-z0-9-]+$/,
-          "Community slug can only contain lowercase letters, numbers, and hyphens"
+          "Slug can only contain lowercase letters, numbers, and hyphens"
         )
-        .required("Community slug is required"),
+        .required("Slug is required"),
       description: Yup.string()
         .min(30, `Description can not be less than 30 characters`)
         .max(500, `Description can not be more than 500 characters`)
-        .required("Community description is required"),
+        .required("Description is required"),
     }),
     onSubmit: async (values, { resetForm }) => {
       if (slugError) {
@@ -72,8 +79,8 @@ const AddCommunity = ({
       }
       try {
         setLoading(true);
-        const communityRes = await axios.post(
-          `${BASE_URL}/communities/create`,
+        const communityRes = await axios.put(
+          `${BASE_URL}/communities/${community?.id}`,
           {
             name: values.name,
             slug: values.urlSlug,
@@ -88,27 +95,27 @@ const AddCommunity = ({
         if (communityRes?.data?.success) {
           Cookies.set("slug", communityRes?.data?.data?.community?.slug);
           resetForm();
-          togglePopup();
-          setShowAddCommunityPopup(false);
-          setShowSuccessPopup(true);
-          setCommunityUrl(values.urlSlug);
+          setShowEditCommunityPopup(false);
+          fetchCommunityDetails();
+          enqueueSnackbar(communityRes?.data?.message, {
+            variant: "success",
+          });
+          // setShowAddCommunityPopup(false);
+          // setShowSuccessPopup(true);
+          // setCommunityUrl(values.urlSlug);
         }
       } catch (error) {
-        enqueueSnackbar(error.response?.data?.message || error?.message, {
-          variant: "error",
-        });
-        if (error?.response?.status === 401) {
-          Cookies.remove("token");
-          Cookies.remove("user");
-          navigate("/login");
-        }
+        handleApiError(error, navigate);
+        // enqueueSnackbar(error.response?.data?.message || error?.message, {
+        //   variant: "error",
+        // });
       } finally {
         setLoading(false);
       }
     },
   });
   return (
-    showPopup && (
+    showEditCommunityPopup && (
       <div className="w-full h-screen flex items-center justify-center px-5 fixed inset-0 z-50 bg-[rgba(0,0,0,0.4)]">
         <form
           onSubmit={formik.handleSubmit}
@@ -116,11 +123,11 @@ const AddCommunity = ({
         >
           <div className="w-full flex items-center justify-between gap-5">
             <h3 className="text-[20px] lg:text-[24px] font-semibold leading-none max-w-[80%]">
-              Add New Community
+              Edit Community
             </h3>
             <button
               type="button"
-              onClick={() => setShowAddCommunityPopup(false)}
+              onClick={() => setShowEditCommunityPopup(false)}
               className="w-[22px] h-[22px] border border-[#989898] rounded"
             >
               <IoClose className="w-full h-full" />
@@ -133,42 +140,46 @@ const AddCommunity = ({
             <TextField
               type="text"
               name="name"
-              placeholder="Community name"
+              placeholder="Full Name"
               value={formik.values.name}
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
               error={formik.errors.name}
               touched={formik.touched.name}
-              label={null}
+              label={"Comunity Name"}
             />
 
             <TextField
               type="text"
               name="urlSlug"
-              placeholder="Community slug"
+              placeholder="URL Slug"
               value={formik.values.urlSlug}
               onChange={formik.handleChange}
               onBlur={(e) => {
                 formik.handleBlur(e);
                 checkSlugAvailability(e.target.value);
               }}
+              disabled={true}
               error={formik.errors.urlSlug || slugError}
               touched={formik.touched.urlSlug}
-              label={null}
+              label={"Community Slug"}
             />
 
             <div className="">
+              <label htmlFor="description" className="text-sm font-medium">
+                Community Description
+              </label>
               <textarea
                 name="description"
                 id="description"
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
                 value={formik.values.description}
-                placeholder="Community description..."
-                className={`w-full h-[124px] px-[15px] py-[14px] rounded-[8px] bg-[var(--secondary-bg)] outline-none ${
+                placeholder="Describe yourself"
+                className={`w-full border h-[124px] px-[15px] py-[14px] rounded-[8px] bg-[var(--secondary-bg)] outline-none ${
                   formik.touched.description && formik.errors.description
                     ? "border-red-500"
-                    : "border-[var(--secondary-bg]"
+                    : "border-[var(--secondary-bg)]"
                 }`}
               ></textarea>
               {formik.touched.description && formik.errors.description ? (
@@ -179,11 +190,7 @@ const AddCommunity = ({
             </div>
 
             <div className="w-full">
-              <Button
-                type={`submit`}
-                isLoading={loading}
-                title={"Add Community"}
-              />
+              <Button type={`submit`} isLoading={loading} title={"Save"} />
             </div>
           </div>
         </form>
@@ -192,4 +199,4 @@ const AddCommunity = ({
   );
 };
 
-export default AddCommunity;
+export default EditCommunity;

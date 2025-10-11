@@ -71,7 +71,7 @@ const SignUpForm = () => {
         .required("Last name is required"),
       communityName: Yup.string()
         .min(3, "Community name must contain atleast 3 characters")
-        .max(30, "Community name must be 30 characters or less")
+        .max(35, "Community name must be 35 characters or less")
         .required("Community name is required"),
       urlSlug: Yup.string()
         .min(3, "Slug can not be less than 3 characters")

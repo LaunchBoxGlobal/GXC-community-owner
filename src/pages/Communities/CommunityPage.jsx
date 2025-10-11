@@ -9,6 +9,7 @@ import { getToken } from "../../utils/getToken";
 import { handleApiError } from "../../utils/handleApiError";
 import PageLoader from "../../components/Loader/PageLoader";
 import { enqueueSnackbar } from "notistack";
+import EditCommunity from "./EditCommunity";
 
 const CommunityPage = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -19,6 +20,7 @@ const CommunityPage = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [enableDisableLoading, setEnableDisableLoading] = useState(false);
+  const [showEditCommunityPopup, setShowEditCommunityPopup] = useState(false);
 
   const tabFromUrl = searchParams.get("tab") || "products";
   const [activeTab, setActiveTab] = useState(tabFromUrl);
@@ -100,6 +102,13 @@ const CommunityPage = () => {
         <div className="flex items-center justify-end gap-3 w-full lg:w-[80%]">
           <button
             type="button"
+            onClick={() => setShowEditCommunityPopup(true)}
+            className="button px-3 md:px-5 max-w-[190px]"
+          >
+            Edit Community
+          </button>
+          <button
+            type="button"
             disabled={!community?.community?.inviteLinkActive}
             onClick={() => setShowCopyLinkPopup(true)}
             className="button px-3 md:px-5 max-w-[160px]"
@@ -114,7 +123,7 @@ const CommunityPage = () => {
       ) : (
         <>
           <div className="w-full bg-white custom-shadow rounded-lg md:rounded-xl lg:rounded-[24px] p-7 mt-5 flex flex-wrap overflow-hidden items-center justify-between gap-y-5">
-            <div className="w-full lg:w-[70%]">
+            <div className="w-full lg:max-w-[70%]">
               <h2 className="page-heading">{community?.community?.name}</h2>
               {community?.community?.slug && (
                 <p className="text-base text-[var(--secondary-color)] leading-[1.3] mt-2 break-words">
@@ -125,6 +134,7 @@ const CommunityPage = () => {
               )}
               {community?.community?.description && (
                 <p className="text-base text-[var(--secondary-color)] leading-[1.3] mt-2 break-words">
+                  <span className="font-semibold">Description: </span>
                   {community?.community?.description}
                 </p>
               )}
@@ -213,6 +223,13 @@ const CommunityPage = () => {
         setShowCopyLinkPopup={setShowCopyLinkPopup}
         showCopyLinkPopup={showCopyLinkPopup}
         slug={slug}
+      />
+
+      <EditCommunity
+        setShowEditCommunityPopup={setShowEditCommunityPopup}
+        showEditCommunityPopup={showEditCommunityPopup}
+        community={community?.community}
+        fetchCommunityDetails={fetchCommunityDetails}
       />
     </main>
   );

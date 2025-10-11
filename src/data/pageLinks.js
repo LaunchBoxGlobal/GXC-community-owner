@@ -34,14 +34,14 @@ export const PAGE_LINKS = [
   //   iconHeight: 15,
   //   iconAltTag: "members-icon",
   // },
-  {
-    title: "Invites",
-    page: "/invites",
-    icon: "/members-sidebar-icon.png",
-    iconWidth: 18,
-    iconHeight: 18,
-    iconAltTag: "invites icons",
-  },
+  // {
+  //   title: "Invites",
+  //   page: "/invites",
+  //   icon: "/members-sidebar-icon.png",
+  //   iconWidth: 18,
+  //   iconHeight: 18,
+  //   iconAltTag: "invites icons",
+  // },
   {
     title: "Reports",
     page: "/reports",
