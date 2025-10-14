@@ -1,25 +1,27 @@
 import { useEffect } from "react";
 import { useAppContext } from "../../context/AppContext";
+import { useNavigate } from "react-router-dom";
 const PAGETITLE = import.meta.env.VITE_PAGE_TITLE;
 
-const EmailVerificationStatusPage = () => {
+const EmailVerificationStatusPage = ({ showLinkPopup }) => {
   const {
     setShowEmailVerificationPopup,
     setShowCommunityLinkPopup,
     showEmailVerificationPopup,
-    showLinkPopup,
   } = useAppContext();
+  const navigate = useNavigate();
 
   useEffect(() => {
     document.title = `Account verified`;
   }, []);
 
   const handleContinue = () => {
-    setShowEmailVerificationPopup(false);
     if (showLinkPopup) {
-      setShowCommunityLinkPopup(true);
+      setShowEmailVerificationPopup(false);
+      navigate("/");
     } else {
-      setShowCommunityLinkPopup(false);
+      setShowCommunityLinkPopup(true);
+      setShowEmailVerificationPopup(false);
     }
   };
 

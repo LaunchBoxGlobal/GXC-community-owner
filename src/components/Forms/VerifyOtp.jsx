@@ -23,7 +23,6 @@ const VerifyOtp = () => {
   const { setShowEmailVerificationPopup } = useAppContext();
   const userEmail = Cookies.get(`userEmail`);
   const page = Cookies.get("page");
-  console.log("page", page);
   const [showEmailVerificationStatus, setShowEmailVerificationStatus] =
     useState(false);
 
@@ -102,6 +101,10 @@ const VerifyOtp = () => {
           } else if (page === "/forgot-password") {
             Cookies.set("otp", otp);
             setShowEmailVerificationStatus(true);
+          }
+          if (page === "/login") {
+            setShowLinkPopup(true);
+            setShowEmailVerificationPopup(true);
           } else {
             navigate("/");
           }
@@ -254,7 +257,7 @@ const VerifyOtp = () => {
         showPopup={showPopup}
         togglePopup={togglePopup}
         redirectParams={redirectParams}
-        showLinkPopup={false}
+        showLinkPopup={showLinkPopup}
       />
 
       <ForgetPasswordEmailVerifiedSuccessPopup
