@@ -23,9 +23,11 @@ const VerifyOtp = () => {
   const { setShowEmailVerificationPopup } = useAppContext();
   const userEmail = Cookies.get(`userEmail`);
   const page = Cookies.get("page");
+  console.log("page", page);
   const [showEmailVerificationStatus, setShowEmailVerificationStatus] =
     useState(false);
 
+  const [showLinkPopup, setShowLinkPopup] = useState(false);
   const togglePopup = () => {
     setShowEmailVerificationPopup(true);
   };
@@ -100,9 +102,6 @@ const VerifyOtp = () => {
           } else if (page === "/forgot-password") {
             Cookies.set("otp", otp);
             setShowEmailVerificationStatus(true);
-            // navigate(`/change-password`, {
-            //   state: { otp, email: userEmail },
-            // });
           } else {
             navigate("/");
           }
@@ -212,12 +211,34 @@ const VerifyOtp = () => {
           </div>
         </div>
 
-        <div className="w-full mt-2 flex flex-col items-center gap-4">
+        <div className="w-full mt-2 flex items-center gap-2 justify-center">
+          <p className="">Entered wrong email?</p>
           <button
             type="button"
             onClick={() => {
-              navigate(-1);
+              Cookies.remove("token");
+              Cookies.remove("user");
               Cookies.remove("userEmail");
+              Cookies.remove("slug");
+              Cookies.remove("isOwnerEmailVerified");
+              navigate("/signup");
+            }}
+            className="text-sm font-medium flex items-center gap-1 text-[var(--primary-color)]"
+          >
+            Change Email
+          </button>
+        </div>
+
+        {/* <div className="w-full mt-2 flex flex-col items-center gap-4">
+          <button
+            type="button"
+            onClick={() => {
+              navigate("/login");
+              Cookies.remove("token");
+              Cookies.remove("user");
+              Cookies.remove("userEmail");
+              Cookies.remove("slug");
+              Cookies.remove("isOwnerEmailVerified");
             }}
             className="text-sm font-medium flex items-center gap-1 text-[var(--primary-color)]"
           >
@@ -226,13 +247,14 @@ const VerifyOtp = () => {
             </div>
             Back
           </button>
-        </div>
+        </div> */}
       </form>
 
       <EmailVerificationStatusPage
         showPopup={showPopup}
         togglePopup={togglePopup}
         redirectParams={redirectParams}
+        showLinkPopup={false}
       />
 
       <ForgetPasswordEmailVerifiedSuccessPopup

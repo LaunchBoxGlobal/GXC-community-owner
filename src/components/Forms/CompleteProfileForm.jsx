@@ -21,7 +21,7 @@ import "react-country-state-city/dist/react-country-state-city.css";
 
 const CompleteProfileForm = () => {
   const navigate = useNavigate();
-  const userData = JSON.parse(Cookies.get("user"));
+  const userData = Cookies.get("user") ? JSON.parse(Cookies.get("user")) : null;
   const [loading, setLoading] = useState(false);
   const [showPopup, setShowPopup] = useState(false);
   Cookies.remove("userEmail");
@@ -127,6 +127,7 @@ const CompleteProfileForm = () => {
           Cookies.remove(`userEmail`);
           Cookies.remove(`verifyEmail`);
           Cookies.remove("signupEmail");
+          Cookies.remove("page");
         }
       } catch (error) {
         console.error("complete profile error:", error);

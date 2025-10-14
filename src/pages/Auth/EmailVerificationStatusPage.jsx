@@ -7,6 +7,7 @@ const EmailVerificationStatusPage = () => {
     setShowEmailVerificationPopup,
     setShowCommunityLinkPopup,
     showEmailVerificationPopup,
+    showLinkPopup,
   } = useAppContext();
 
   useEffect(() => {
@@ -15,7 +16,11 @@ const EmailVerificationStatusPage = () => {
 
   const handleContinue = () => {
     setShowEmailVerificationPopup(false);
-    setShowCommunityLinkPopup(true);
+    if (showLinkPopup) {
+      setShowCommunityLinkPopup(true);
+    } else {
+      setShowCommunityLinkPopup(false);
+    }
   };
 
   return (

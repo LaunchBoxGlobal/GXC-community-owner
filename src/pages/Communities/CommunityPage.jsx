@@ -128,7 +128,6 @@ const CommunityPage = () => {
               {community?.community?.slug && (
                 <p className="text-base text-[var(--secondary-color)] leading-[1.3] mt-2 break-words">
                   <span className="font-semibold">Slug: </span>
-                  user.thegivexchange.com/community/
                   {community?.community?.slug}
                 </p>
               )}
@@ -204,7 +203,10 @@ const CommunityPage = () => {
 
           <div className="w-full mt-6 min-h-[30vh]">
             {activeTab === "products" ? (
-              <ProductList count={community?.community?.productCount} />
+              <ProductList
+                count={community?.community?.productCount}
+                community={community?.community}
+              />
             ) : (
               <MemberList
                 communityId={community?.community?.id}

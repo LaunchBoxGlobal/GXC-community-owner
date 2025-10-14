@@ -60,13 +60,14 @@ const LoginForm = () => {
 
         const apiRes = error?.response?.data;
 
-        // check if it's email not verified case
         if (
           apiRes?.message === "Please verify your email before logging in" &&
           apiRes?.data?.token
         ) {
           const newToken = apiRes.data.token;
           Cookies.set("token", newToken);
+          Cookies.set("token", newToken);
+          Cookies.set("page", "/login");
 
           try {
             const resendRes = await axios.post(
@@ -81,6 +82,7 @@ const LoginForm = () => {
             );
 
             if (resendRes?.data?.success) {
+              Cookies.set("userEmail", values.email);
               enqueueSnackbar(resendRes.data.message, {
                 variant: "success",
               });

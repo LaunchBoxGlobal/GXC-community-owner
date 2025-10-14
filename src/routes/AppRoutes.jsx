@@ -24,42 +24,62 @@ import ReportsPage from "../pages/Reports/ReportsPage";
 import WalletPage from "../pages/Wallet/WalletPage";
 import MemberDetails from "../pages/Members/MemberDetails";
 
-const getUser = () => {
-  const userCookie = Cookies.get("user");
-  return userCookie ? JSON.parse(userCookie) : null;
-};
+// const getUser = () => {
+//   const userCookie = Cookies.get("user");
+//   return userCookie ? JSON.parse(userCookie) : null;
+// };
 
+// const isAuthenticated = () => !!Cookies.get("token");
+// const isEmailVerified = () => {
+//   const user = getUser();
+//   return user?.emailVerified === true;
+// };
+
+// export const PrivateRoute = ({ element, redirectTo = "/login" }) => {
+//   const auth = isAuthenticated();
+//   const verified = isEmailVerified();
+
+//   if (!auth) return <Navigate to={redirectTo} replace />;
+
+//   if (auth && !verified) return <Navigate to="/login" replace />;
+
+//   return element;
+// };
+
+// export const PublicRoute = ({ element, redirectTo = "/" }) => {
+//   const auth = isAuthenticated();
+//   const verified = isEmailVerified();
+
+//   if (auth && verified) return <Navigate to={redirectTo} replace />;
+
+//   if (auth && !verified) return <Navigate to="/verify-otp" replace />;
+
+//   return element;
+// };
+
+// --- Helpers ---
 const isAuthenticated = () => !!Cookies.get("token");
-const isEmailVerified = () => {
-  const user = getUser();
-  return user?.emailVerified === true;
-};
 
-// ✅ Route Guards
+// --- Private Route ---
 export const PrivateRoute = ({ element, redirectTo = "/login" }) => {
   const auth = isAuthenticated();
-  const verified = isEmailVerified();
 
-  // not logged in → go to login
+  // If not logged in → redirect to login
   if (!auth) return <Navigate to={redirectTo} replace />;
 
-  // logged in but not verified → go to verify-otp
-  if (auth && !verified) return <Navigate to="/verify-otp" replace />;
-
-  return element; // ok
+  // Otherwise → allow access
+  return element;
 };
 
+// --- Public Route ---
 export const PublicRoute = ({ element, redirectTo = "/" }) => {
   const auth = isAuthenticated();
-  const verified = isEmailVerified();
 
-  // logged in and verified → go to home/dashboard
-  if (auth && verified) return <Navigate to={redirectTo} replace />;
+  // If logged in → redirect to home/dashboard
+  if (auth) return <Navigate to={redirectTo} replace />;
 
-  // logged in but not verified → go to verify-otp
-  if (auth && !verified) return <Navigate to="/verify-otp" replace />;
-
-  return element; // public route ok
+  // Otherwise → allow access
+  return element;
 };
 
 const AppRoutes = () => {
@@ -106,6 +126,7 @@ const AppRoutes = () => {
           />
         }
       />
+
       <Route
         path="/change-password"
         element={

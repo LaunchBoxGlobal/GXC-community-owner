@@ -14,12 +14,17 @@ export const handleApiError = (error, navigate) => {
       Cookies.remove("user");
       localStorage.removeItem("token");
       navigate("/login");
-      return; // stop here since we already redirected
+      return;
     } else if (status === 403) {
       console.warn("Forbidden: You don’t have access.");
-      enqueueSnackbar("Access denied. Please contact support.", {
-        variant: "error",
-      });
+      enqueueSnackbar(
+        error?.response?.data?.message ||
+          error?.message ||
+          "Access denied, please contact support",
+        {
+          variant: "error",
+        }
+      );
     } else if (status >= 500) {
       console.error("Server error:", error?.response?.data?.message);
       enqueueSnackbar(
@@ -30,9 +35,12 @@ export const handleApiError = (error, navigate) => {
       );
     } else {
       console.error("API error:", error.response.data?.message);
-      enqueueSnackbar(error.response.data?.message || "An error occurred.", {
-        variant: "error",
-      });
+      enqueueSnackbar(
+        error.response.data?.message || error?.message || "An error occurred.",
+        {
+          variant: "error",
+        }
+      );
     }
   } else if (error?.request) {
     console.error("No response from server:", error.request);

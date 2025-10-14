@@ -18,14 +18,13 @@ import {
 } from "react-country-state-city";
 import "react-country-state-city/dist/react-country-state-city.css";
 import Loader from "../../components/Loader/Loader";
+import { handleApiError } from "../../utils/handleApiError";
 
 const EditProfile = ({ togglePopup, showPopup, fetchUserProfile }) => {
   const [preview, setPreview] = useState(null);
   const navigate = useNavigate();
   const { user } = useAppContext();
   const [loading, setLoading] = useState(false);
-
-  console.log(user);
 
   useEffect(() => {
     if (user?.profilePicture) {
@@ -123,6 +122,7 @@ const EditProfile = ({ togglePopup, showPopup, fetchUserProfile }) => {
             city: values?.city,
             zipcode: values?.zipcode,
             address: values?.location,
+            phone: values?.phoneNumber,
           },
           {
             headers: {
@@ -158,15 +158,16 @@ const EditProfile = ({ togglePopup, showPopup, fetchUserProfile }) => {
         }
       } catch (error) {
         console.error("Update profile error:", error.response?.data);
-        if (error?.response?.status === 401) {
-          enqueueSnackbar("Session expired, please login again.", {
-            variant: "error",
-          });
-        } else {
-          enqueueSnackbar(error.response?.data?.message || error?.message, {
-            variant: "error",
-          });
-        }
+        handleApiError(error, navigate);
+        // if (error?.response?.status === 401) {
+        //   enqueueSnackbar("Session expired, please login again.", {
+        //     variant: "error",
+        //   });
+        // } else {
+        //   enqueueSnackbar(error.response?.data?.message || error?.message, {
+        //     variant: "error",
+        //   });
+        // }
       } finally {
         setLoading(false);
       }
