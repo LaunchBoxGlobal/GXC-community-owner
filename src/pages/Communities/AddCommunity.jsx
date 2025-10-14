@@ -62,8 +62,8 @@ const AddCommunity = ({
         )
         .required("Community slug is required"),
       description: Yup.string()
-        .min(30, `Description can not be less than 30 characters`)
-        .max(500, `Description can not be more than 500 characters`)
+        .min(11, `Description can not be less than 11 characters`)
+        .max(150, `Description can not be more than 150 characters`)
         .required("Community description is required"),
     }),
     onSubmit: async (values, { resetForm }) => {
