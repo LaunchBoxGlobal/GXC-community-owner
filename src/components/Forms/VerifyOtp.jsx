@@ -96,18 +96,24 @@ const VerifyOtp = () => {
 
           if (page === "/signup") {
             setShowEmailVerificationPopup(true);
-            Cookies.set("isOwnerEmailVerified", true);
             Cookies.remove("userEmail");
-          } else if (page === "/forgot-password") {
+            return;
+          }
+
+          if (page === "/forgot-password") {
             Cookies.set("otp", otp);
             setShowEmailVerificationStatus(true);
+            return; // ✅ stop navigation here
           }
+
           if (page === "/login") {
             setShowLinkPopup(true);
             setShowEmailVerificationPopup(true);
-          } else {
-            navigate("/");
+            return;
           }
+
+          // default for other pages
+          navigate("/");
         }
       } catch (error) {
         console.error("verify email error:", error);

@@ -24,7 +24,9 @@ const VerifyEmail = () => {
       email: "",
     },
     validationSchema: Yup.object({
-      email: Yup.string().email("Invalid email address").required("Required"),
+      email: Yup.string()
+        .email("Invalid email address")
+        .required("Email addres is required"),
     }),
     validateOnChange: true,
     validateOnBlur: true,
