@@ -7,6 +7,7 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import { useDebounce } from "use-debounce";
 import axios from "axios";
 import { getToken } from "../../utils/getToken";
+import Loader from "../../components/Loader/Loader";
 
 const ProductList = ({ community }) => {
   // Query params
@@ -78,27 +79,39 @@ const ProductList = ({ community }) => {
       ...(debouncedSearch && { search: debouncedSearch }),
     });
   }, [listType, page, limit, debouncedSearch]);
+
+  if (loading) {
+    return (
+      <div className="w-full pt-10 flex items-center justify-center">
+        <Loader />
+      </div>
+    );
+  }
+
   return (
     <div className="w-full">
       <div className="w-full">
         <h3 className="page-heading">
-          Products <span>(0)</span>
+          Products{" "}
+          {products?.length > 0 ? (
+            <span>{`(${products?.length})`}</span>
+          ) : (
+            `(0)`
+          )}
         </h3>
       </div>
 
-      {/* <div className="w-full mt-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-        <ProductCard />
-        <ProductCard />
-        <ProductCard />
-        <ProductCard />
-        <ProductCard />
-        <ProductCard />
-        <ProductCard />
-        <ProductCard />
-        <ProductCard />
-        <ProductCard />
-        <ProductCard />
-      </div> */}
+      <div className="w-full mt-6">
+        {products && products?.length > 0 ? (
+          <div className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+            {products?.map((product, index) => {
+              return <ProductCard product={product} key={index} />;
+            })}
+          </div>
+        ) : (
+          <>no products</>
+        )}
+      </div>
     </div>
   );
 };

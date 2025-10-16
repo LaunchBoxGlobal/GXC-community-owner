@@ -7,7 +7,7 @@ import "swiper/css/thumbs";
 import "./swiper.css";
 import { FreeMode, Navigation, Thumbs } from "swiper/modules";
 
-export default function Gallery() {
+export default function Gallery({ product }) {
   const [thumbsSwiper, setThumbsSwiper] = useState(null);
 
   return (
@@ -23,109 +23,46 @@ export default function Gallery() {
         modules={[FreeMode, Navigation, Thumbs]}
         className="mySwiper2 max-h-[310px] rounded-[20px]"
       >
-        <SwiperSlide>
-          <img
-            src="https://swiperjs.com/demos/images/nature-1.jpg"
-            className="rounded-[20px]"
-          />
-        </SwiperSlide>
-        <SwiperSlide>
-          <img src="https://swiperjs.com/demos/images/nature-2.jpg" />
-        </SwiperSlide>
-        <SwiperSlide>
-          <img src="https://swiperjs.com/demos/images/nature-3.jpg" />
-        </SwiperSlide>
-        <SwiperSlide>
-          <img src="https://swiperjs.com/demos/images/nature-4.jpg" />
-        </SwiperSlide>
-        <SwiperSlide>
-          <img src="https://swiperjs.com/demos/images/nature-5.jpg" />
-        </SwiperSlide>
-        <SwiperSlide>
-          <img src="https://swiperjs.com/demos/images/nature-6.jpg" />
-        </SwiperSlide>
-        <SwiperSlide>
-          <img src="https://swiperjs.com/demos/images/nature-7.jpg" />
-        </SwiperSlide>
-        <SwiperSlide>
-          <img src="https://swiperjs.com/demos/images/nature-8.jpg" />
-        </SwiperSlide>
-        <SwiperSlide>
-          <img src="https://swiperjs.com/demos/images/nature-9.jpg" />
-        </SwiperSlide>
-        <SwiperSlide>
-          <img src="https://swiperjs.com/demos/images/nature-10.jpg" />
-        </SwiperSlide>
+        {product && product?.images?.length > 0 ? (
+          <>
+            {product?.images?.map((image, index) => {
+              return (
+                <SwiperSlide key={index}>
+                  <img src={image?.imageUrl} className="rounded-[20px]" />
+                </SwiperSlide>
+              );
+            })}
+          </>
+        ) : (
+          <div className="">
+            <p>Something went wrong while fetching images.</p>
+          </div>
+        )}
       </Swiper>
       <Swiper
         onSwiper={setThumbsSwiper}
         spaceBetween={10}
-        slidesPerView={4}
+        slidesPerView={5}
         freeMode={true}
         watchSlidesProgress={true}
         modules={[Navigation, Thumbs]}
         className="mySwiper"
       >
-        <SwiperSlide className="rounded-[10px]">
-          <img
-            src="https://swiperjs.com/demos/images/nature-1.jpg"
-            className="rounded-[20px]"
-          />
-        </SwiperSlide>
-        <SwiperSlide className="rounded-[10px]">
-          <img
-            src="https://swiperjs.com/demos/images/nature-2.jpg"
-            className="rounded-[20px]"
-          />
-        </SwiperSlide>
-        <SwiperSlide className="rounded-[10px]">
-          <img
-            src="https://swiperjs.com/demos/images/nature-3.jpg"
-            className="rounded-[20px]"
-          />
-        </SwiperSlide>
-        <SwiperSlide className="rounded-[10px]">
-          <img
-            src="https://swiperjs.com/demos/images/nature-4.jpg"
-            className="rounded-[20px]"
-          />
-        </SwiperSlide>
-        <SwiperSlide className="rounded-[10px]">
-          <img
-            src="https://swiperjs.com/demos/images/nature-5.jpg"
-            className="rounded-[20px]"
-          />
-        </SwiperSlide>
-        <SwiperSlide className="rounded-[10px]">
-          <img
-            src="https://swiperjs.com/demos/images/nature-6.jpg"
-            className="rounded-[20px]"
-          />
-        </SwiperSlide>
-        <SwiperSlide className="rounded-[10px]">
-          <img
-            src="https://swiperjs.com/demos/images/nature-7.jpg"
-            className="rounded-[20px]"
-          />
-        </SwiperSlide>
-        <SwiperSlide className="rounded-[10px]">
-          <img
-            src="https://swiperjs.com/demos/images/nature-8.jpg"
-            className="rounded-[20px]"
-          />
-        </SwiperSlide>
-        <SwiperSlide className="rounded-[10px]">
-          <img
-            src="https://swiperjs.com/demos/images/nature-9.jpg"
-            className="rounded-[20px]"
-          />
-        </SwiperSlide>
-        <SwiperSlide className="rounded-[10px]">
-          <img
-            src="https://swiperjs.com/demos/images/nature-10.jpg"
-            className="rounded-[20px]"
-          />
-        </SwiperSlide>
+        {product && product?.images?.length > 0 ? (
+          <>
+            {product?.images?.map((image, index) => {
+              return (
+                <SwiperSlide key={index}>
+                  <img src={image?.imageUrl} className="rounded-[20px]" />
+                </SwiperSlide>
+              );
+            })}
+          </>
+        ) : (
+          <div className="">
+            <p>Something went wrong while fetching images.</p>
+          </div>
+        )}
       </Swiper>
     </>
   );

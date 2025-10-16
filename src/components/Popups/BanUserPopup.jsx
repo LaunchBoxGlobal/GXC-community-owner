@@ -62,7 +62,7 @@ const BanUserPopup = ({
   return (
     showPopup && (
       <main className="w-full h-screen fixed inset-0 z-50 flex items-center justify-center px-4 bg-[rgba(0,0,0,0.4)]">
-        <div className="w-full max-w-[471px]  bg-white flex flex-col items-center gap-2 rounded-[18px] p-7 lg:p-10 relative">
+        <div className="w-full max-w-[481px]  bg-white flex flex-col items-center gap-2 rounded-[18px] p-7 lg:p-10 relative">
           <button
             type="button"
             onClick={() => {
@@ -89,6 +89,11 @@ const BanUserPopup = ({
           </h2>
           <p className="text-[var(--secondary-color)] text-center leading-[1.3]">
             Are you sure you want to block this member?
+          </p>
+          <p className="text-[var(--secondary-color)] text-center leading-[1.3]">
+            When you block a member, they’ll be removed from the community. To
+            let them rejoin using an invite link, you’ll need to unblock them in
+            the Blocked Members tab.
           </p>
           <div className="w-full grid grid-cols-2 gap-2 mt-2">
             <button
