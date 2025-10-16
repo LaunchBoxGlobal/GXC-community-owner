@@ -83,9 +83,13 @@ const LoginForm = () => {
 
             if (resendRes?.data?.success) {
               Cookies.set("userEmail", values.email);
-              enqueueSnackbar(resendRes.data.message, {
-                variant: "success",
-              });
+              enqueueSnackbar(
+                resendRes?.data?.message ||
+                  "Verification code has been sent on your email address",
+                {
+                  variant: "success",
+                }
+              );
               navigate("/verify-otp", {
                 state: {
                   email: values.email,
