@@ -106,15 +106,17 @@ const ChangeEmailForm = () => {
       </div>
 
       <div className="w-full mt-2 flex flex-col items-center gap-4">
-        <Link
-          to={redirect ? `${-1}?redirect=${redirect}` : -1}
+        <button
+          type="button"
+          onClick={() => navigate(-1)}
+          // to={redirect ? `${-1}?redirect=${redirect}` : -1}
           className="text-sm font-medium flex items-center gap-1 text-[var(--button-bg)]"
         >
           <div className="w-[18px] h-[18px] bg-[var(--button-bg)] rounded-full flex items-center justify-center">
             <RiArrowLeftSLine className="text-white text-base" />
           </div>
           Back
-        </Link>
+        </button>
       </div>
     </form>
   );
