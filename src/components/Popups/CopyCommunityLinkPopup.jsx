@@ -44,7 +44,7 @@ const CopyCommunityLinkPopup = () => {
               />
             </div>
             <h1 className="font-semibold text-[32px] leading-[1.3] mt-7 mb-6">
-              Your Community Has Been Created!
+              Your community has been created!
             </h1>
 
             <div className="w-full h-[50px] p-1 bg-[#f5f5f5] rounded-[12px] flex items-center justify-between pl-4">

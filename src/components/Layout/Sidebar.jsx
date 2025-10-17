@@ -24,6 +24,9 @@ const Sidebar = () => {
 
       if (res?.data?.success) {
         // console.log("Logout successful");
+        Cookies.remove("token");
+        Cookies.remove("page");
+        Cookies.remove("user");
       }
     } catch (error) {
       console.log("Logout error >>>", error?.response?.data || error.message);

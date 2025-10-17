@@ -2,21 +2,23 @@ import TextField from "../Common/TextField";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import Button from "../Common/Button";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { RiArrowLeftSLine } from "react-icons/ri";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { BASE_URL } from "../../data/baseUrl";
-const PAGETITLE = import.meta.env.VITE_PAGE_TITLE;
 import Cookies from "js-cookie";
 import { enqueueSnackbar } from "notistack";
+import { getToken } from "../../utils/getToken";
 
-const VerifyEmail = () => {
+const ChangeEmailForm = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
+  const [searchParams] = useSearchParams();
+  const redirect = searchParams?.get("redirect");
 
   useEffect(() => {
-    document.title = `Verify Email - GiveXChange`;
+    document.title = `Change Email - GiveXChange`;
   }, []);
 
   const formik = useFormik({
@@ -26,34 +28,34 @@ const VerifyEmail = () => {
     validationSchema: Yup.object({
       email: Yup.string()
         .email("Invalid email address")
-        .required("Email addres is required"),
+        .required("Email address is required"),
     }),
-    validateOnChange: true,
-    validateOnBlur: true,
     onSubmit: async (values, { resetForm }) => {
+      resetForm();
       setLoading(true);
 
       try {
         const res = await axios.post(
-          `${BASE_URL}/auth/forgot-password`,
-          values,
+          `${BASE_URL}/auth/resend-verification`,
+          { newEmail: values.email },
           {
             headers: {
               "Content-Type": "application/json",
+              Authorization: `Bearer ${getToken()}`,
             },
           }
         );
 
         if (res?.data?.success) {
           Cookies.set("ownerEmail", values.email);
-          Cookies.set("page", "/forgot-password");
+          Cookies.set("isOwnerEmailVerified", false);
           resetForm();
           enqueueSnackbar(res?.data?.message, {
             variant: "success",
           });
-          navigate("/verify-otp", {
+          navigate(`/verify-otp`, {
             state: {
-              page: "/forgot-password",
+              page: "/signup",
               email: values.email,
             },
           });
@@ -76,35 +78,37 @@ const VerifyEmail = () => {
     >
       <div className="w-full text-center">
         <h2 className="font-semibold text-[32px] leading-none mt-8 mb-3">
-          Forgot Password
+          Change Email Address
         </h2>
         <p className="text-[var(--secondary-color)]">
-          Enter your registered email address below
+          Enter your new email address below
         </p>
       </div>
 
       <div className="w-full flex flex-col items-start gap-4 mt-4">
-        <TextField
-          type="text"
-          name="email"
-          placeholder="Email Address"
-          value={formik.values.email}
-          onChange={formik.handleChange}
-          onBlur={formik.handleBlur}
-          error={formik.errors.email}
-          touched={formik.touched.email}
-          label={`Email Address`}
-        />
+        <div className="w-full">
+          <TextField
+            type="text"
+            name="email"
+            placeholder="Email Address"
+            value={formik.values.email}
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+            error={formik.errors.email}
+            touched={formik.touched.email}
+            label={"Email Address"}
+          />
+        </div>
 
         <div className="pt-2 w-full">
-          <Button type={"submit"} title={`Send`} isLoading={loading} />
+          <Button type={"submit"} title={`Update`} isLoading={loading} />
         </div>
       </div>
 
       <div className="w-full mt-2 flex flex-col items-center gap-4">
         <Link
-          to={`/login`}
-          className="text-sm font-medium flex items-center gap-1 text-[var(--primary-color)]"
+          to={redirect ? `${-1}?redirect=${redirect}` : -1}
+          className="text-sm font-medium flex items-center gap-1 text-[var(--button-bg)]"
         >
           <div className="w-[18px] h-[18px] bg-[var(--button-bg)] rounded-full flex items-center justify-center">
             <RiArrowLeftSLine className="text-white text-base" />
@@ -116,4 +120,4 @@ const VerifyEmail = () => {
   );
 };
 
-export default VerifyEmail;
+export default ChangeEmailForm;

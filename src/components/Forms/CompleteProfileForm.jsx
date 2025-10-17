@@ -18,6 +18,7 @@ import {
   CitySelect,
 } from "react-country-state-city";
 import "react-country-state-city/dist/react-country-state-city.css";
+import { parsePhoneNumberFromString } from "libphonenumber-js";
 
 const CompleteProfileForm = () => {
   const navigate = useNavigate();
@@ -69,14 +70,20 @@ const CompleteProfileForm = () => {
         .email("Invalid email address")
         .required("Email is required"),
       phoneNumber: Yup.string()
-        .matches(/^[0-9]{11}$/, "Phone number must contain 11 digits")
-        .required("Enter your phone number"),
+        .required("Phone number is required")
+        .test("is-valid-phone", "Invalid phone number", (value) => {
+          if (!value) return false;
+
+          const phone = parsePhoneNumberFromString(value);
+
+          return phone ? phone.isValid() : false;
+        }),
       location: Yup.string()
         .min(11, `Address cannot be less than 11 characters`)
         .max(150, `Address can not be more than 150 characters`)
         .required("Please enter your location"),
       zipcode: Yup.string()
-        .matches(/^[0-9]{5}$/, "Zip code must contain 5 digits")
+        .matches(/^[A-Za-z0-9\- ]{4,10}$/, "Please enter a valid zip code")
         .required("Enter your zip code"),
       city: Yup.string().required("Enter your city"),
       state: Yup.string().required("Enter your state"),
@@ -322,7 +329,7 @@ const CompleteProfileForm = () => {
             onBlur={formik.handleBlur}
             error={formik.errors.location}
             touched={formik.touched.location}
-            label="Address"
+            label="Suite / Apartment / Street"
           />
 
           {/* Buttons */}

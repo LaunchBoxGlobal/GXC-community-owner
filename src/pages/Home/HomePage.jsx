@@ -75,7 +75,7 @@ const HomePage = () => {
         Hello John Doe,
       </h1>
       <h2 className="text-[32px] font-semibold leading-none">
-        Welcome to Give X Change
+        Welcome to GiveXChange
       </h2>
 
       {fetchingStats ? (

@@ -19,16 +19,22 @@ import {
 import "react-country-state-city/dist/react-country-state-city.css";
 import Loader from "../../components/Loader/Loader";
 import { handleApiError } from "../../utils/handleApiError";
+import { parsePhoneNumberFromString } from "libphonenumber-js";
 
 const EditProfile = ({ togglePopup, showPopup, fetchUserProfile }) => {
   const [preview, setPreview] = useState(null);
   const navigate = useNavigate();
   const { user } = useAppContext();
   const [loading, setLoading] = useState(false);
+  const [fileError, setFileError] = useState(null);
+
+  const parsedPhone = parsePhoneNumberFromString(user?.phone || "");
+  const defaultCountry = parsedPhone ? parsedPhone.country : "US";
+  const defaultPhoneNumber = parsedPhone ? parsedPhone.nationalNumber : "";
 
   useEffect(() => {
     if (user?.profilePicture) {
-      setPreview(user.profilePictureUrl); // 👈 pre-fill preview
+      setPreview(user.profilePictureUrl);
     }
   }, [user, showPopup]);
 
@@ -67,8 +73,14 @@ const EditProfile = ({ togglePopup, showPopup, fetchUserProfile }) => {
         )
         .required("Last name is required"),
       phoneNumber: Yup.string()
-        .matches(/^[0-9]{11}$/, "Phone number must contain 11 digits")
-        .required("Enter your phone number"),
+        .required("Phone number is required")
+        .test("is-valid-phone", "Invalid phone number", (value) => {
+          if (!value) return false;
+
+          const phone = parsePhoneNumberFromString(value);
+
+          return phone ? phone.isValid() : false;
+        }),
       email: Yup.string()
         .email("Invalid email address")
         .required("Email is required"),
@@ -104,7 +116,7 @@ const EditProfile = ({ togglePopup, showPopup, fetchUserProfile }) => {
         .max(150, `Address can not be more than 150 characters`)
         .required("Please enter your location"),
       zipcode: Yup.string()
-        .matches(/^[0-9]{5}$/, "Zip code must contain 5 digits")
+        .matches(/^[A-Za-z0-9\- ]{4,10}$/, "Please enter a valid zip code")
         .required("Enter your zip code"),
     }),
     onSubmit: async (values, { resetForm }) => {
@@ -159,15 +171,6 @@ const EditProfile = ({ togglePopup, showPopup, fetchUserProfile }) => {
       } catch (error) {
         console.error("Update profile error:", error.response?.data);
         handleApiError(error, navigate);
-        // if (error?.response?.status === 401) {
-        //   enqueueSnackbar("Session expired, please login again.", {
-        //     variant: "error",
-        //   });
-        // } else {
-        //   enqueueSnackbar(error.response?.data?.message || error?.message, {
-        //     variant: "error",
-        //   });
-        // }
       } finally {
         setLoading(false);
       }
@@ -176,10 +179,32 @@ const EditProfile = ({ togglePopup, showPopup, fetchUserProfile }) => {
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
-    if (file) {
-      setPreview(URL.createObjectURL(file));
-      formik.setFieldValue("profileImage", file);
+    if (!file) return;
+
+    // ✅ Validate file type
+    const validTypes = ["image/png", "image/jpeg", "image/jpg"];
+    if (!validTypes.includes(file.type)) {
+      setFileError("Only PNG, JPG, or JPEG images are allowed.");
+      e.target.value = ""; // reset input
+      setPreview(null);
+      formik.setFieldValue("profileImage", null);
+      return;
     }
+
+    // ✅ Validate file size (2MB)
+    const maxSize = 2 * 1024 * 1024;
+    if (file.size > maxSize) {
+      setFileError("File size must be less than 2MB.");
+      e.target.value = "";
+      setPreview(null);
+      formik.setFieldValue("profileImage", null);
+      return;
+    }
+
+    // ✅ If valid — clear error, set preview, and update Formik
+    setFileError(null);
+    setPreview(URL.createObjectURL(file));
+    formik.setFieldValue("profileImage", file);
   };
 
   return (
@@ -202,38 +227,53 @@ const EditProfile = ({ togglePopup, showPopup, fetchUserProfile }) => {
             </div>
 
             <div className="w-full my-6">
-              <div className="w-full flex items-center justify-start gap-4">
-                <label
-                  htmlFor="profileImage"
-                  className="bg-[var(--secondary-bg)] text-slate-500 font-semibold text-base w-[100px] h-[100px] rounded-full flex items-center justify-center cursor-pointer border-2 border-gray-300 border-dashed overflow-hidden"
-                >
-                  {preview ? (
-                    <img
-                      src={preview}
-                      alt="Profile Preview"
-                      className="w-full h-full object-cover"
-                    />
-                  ) : (
-                    <FiPlus className="text-3xl" />
-                  )}
-                  <input
-                    type="file"
-                    id="profileImage"
-                    name="profileImage"
-                    accept="image/*"
-                    onChange={handleImageChange}
-                    className="hidden"
-                  />
-                </label>
-
-                <div className="">
+              <div className="w-full flex flex-col gap-2">
+                <div className="flex items-center justify-start gap-4">
                   <label
                     htmlFor="profileImage"
-                    className={`underline text-[15px] font-medium cursor-pointer text-[var(--primary-blue)]`}
+                    className={`bg-[var(--secondary-bg)] text-slate-500 font-semibold text-base w-[100px] h-[100px] rounded-full flex items-center justify-center cursor-pointer border-2 border-dashed overflow-hidden ${
+                      fileError ? "border-red-500" : "border-gray-300"
+                    }`}
                   >
-                    Upload Profile Picture
+                    {preview ? (
+                      <img
+                        src={preview}
+                        alt="Profile Preview"
+                        className="w-full h-full object-cover"
+                      />
+                    ) : (
+                      <FiPlus className="text-3xl" />
+                    )}
+                    <input
+                      type="file"
+                      id="profileImage"
+                      name="profileImage"
+                      accept="image/png, image/jpeg, image/jpg"
+                      onChange={handleImageChange}
+                      className="hidden"
+                    />
                   </label>
+
+                  <div>
+                    <label
+                      htmlFor="profileImage"
+                      className={`underline text-[15px] font-medium cursor-pointer ${
+                        fileError
+                          ? "text-red-500"
+                          : "text-[var(--primary-blue)] hover:opacity-80"
+                      }`}
+                    >
+                      Upload Profile Picture
+                    </label>
+                    {fileError && (
+                      <p className="text-red-500 text-xs font-medium mt-1">
+                        {fileError}
+                      </p>
+                    )}
+                  </div>
                 </div>
+
+                {/* 👇 Inline error message */}
               </div>
             </div>
 

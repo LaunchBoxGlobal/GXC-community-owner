@@ -66,7 +66,7 @@ const LoginForm = () => {
         ) {
           const newToken = apiRes.data.token;
           Cookies.set("token", newToken);
-          Cookies.set("token", newToken);
+          Cookies.set("user", JSON.stringify(res?.data?.data?.user));
           Cookies.set("page", "/login");
 
           try {

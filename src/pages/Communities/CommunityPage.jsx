@@ -170,24 +170,25 @@ const CommunityPage = () => {
         </div>
 
         <div className="w-full lg:w-[30%] flex items-center justify-between md:justify-end flex-wrap md:gap-10">
-          {community?.community?.memberCount && (
-            <div className="text-center space-y-1">
-              <h4>Members</h4>
-              <p className="font-semibold text-[var(--primary-color)] text-[24px] leading-none">
-                {community?.community?.memberCount > 0
-                  ? community?.community?.memberCount
-                  : 0}
-              </p>
-            </div>
-          )}
-          {community?.community?.productCount && (
-            <div className="text-center space-y-1">
-              <h4>Products</h4>
-              <p className="font-semibold text-[var(--primary-color)] text-[24px] leading-none">
-                {community?.community?.productCount || "0"}
-              </p>
-            </div>
-          )}
+          <div className="text-center space-y-1">
+            <h4>Members</h4>
+            <p className="font-semibold text-[var(--primary-color)] text-[24px] leading-none">
+              {community?.community?.memberCount &&
+              community?.community?.memberCount > 0
+                ? community?.community?.memberCount
+                : "0"}
+            </p>
+          </div>
+
+          <div className="text-center space-y-1">
+            <h4>Products</h4>
+            <p className="font-semibold text-[var(--primary-color)] text-[24px] leading-none">
+              {community?.community?.productCount &&
+              community?.community?.productCount > 0
+                ? community?.community?.productCount
+                : "0"}
+            </p>
+          </div>
           <div className="space-y-1.5 pt-1">
             <h4>
               {community?.community?.inviteLinkActive ? "Disable" : "Enable"}

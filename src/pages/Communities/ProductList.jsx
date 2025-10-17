@@ -109,7 +109,7 @@ const ProductList = ({ community }) => {
             })}
           </div>
         ) : (
-          <>no products</>
+          <div className="w-full text-center text-sm">No products found!</div>
         )}
       </div>
     </div>

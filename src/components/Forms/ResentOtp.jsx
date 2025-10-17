@@ -46,7 +46,6 @@ const ResentOtp = ({ email, page }) => {
         setTimer(60);
       }
     } catch (error) {
-      // console.error("verify email error:", error);
       enqueueSnackbar(error?.response?.data?.message || error.message, {
         variant: "error",
       });

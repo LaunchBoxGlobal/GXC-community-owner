@@ -15,7 +15,7 @@ const ForgetPasswordEmailVerifiedSuccessPopup = ({
               />
             </div>
             <h1 className="font-semibold text-[32px] leading-[1.3] mt-7 mb-6">
-              Email has been <br /> Verified Successfully
+              Email has been <br /> verified successfully
             </h1>
             <button
               type="button"

@@ -21,7 +21,7 @@ const VerifyOtp = () => {
   const [showPopup, setShowPopup] = useState(false);
   const [redirectParams, setRedirectParams] = useState(null);
   const { setShowEmailVerificationPopup } = useAppContext();
-  const userEmail = Cookies.get(`userEmail`);
+  const userEmail = Cookies.get(`ownerEmail`);
   const page = Cookies.get("page");
   const [showEmailVerificationStatus, setShowEmailVerificationStatus] =
     useState(false);
@@ -32,16 +32,16 @@ const VerifyOtp = () => {
   };
 
   useEffect(() => {
-    const isAuthenticated = !!Cookies.get("token");
-    const hasEmail = !!userEmail;
+    // const isAuthenticated = !!Cookies.get("token");
+    // const hasEmail = !!userEmail;
 
     // Redirect only if user is not authenticated AND no email in cookies
-    if (!isAuthenticated && !hasEmail) {
-      navigate("/login");
-    }
+    // if (!isAuthenticated && !hasEmail) {
+    //   navigate("/login");
+    // }
 
     document.title = `Verify OTP - GiveXChange`;
-  }, [navigate, userEmail]);
+  }, []);
 
   const formik = useFormik({
     initialValues: {
@@ -96,7 +96,7 @@ const VerifyOtp = () => {
 
           if (page === "/signup") {
             setShowEmailVerificationPopup(true);
-            Cookies.remove("userEmail");
+            Cookies.remove("ownerEmail");
             return;
           }
 
@@ -167,6 +167,22 @@ const VerifyOtp = () => {
     navigate(`/change-password`);
   };
 
+  const handleNavigateToChangeEmail = () => {
+    if (page === "/signup") {
+      navigate(`/change-email`, {
+        state: { page: "/signup" },
+      });
+    } else if (page === "/forgot-password") {
+      navigate(`/forgot-password`, {
+        state: { email: userEmail },
+      });
+    } else if (page === "/login") {
+      navigate(redirect ? redirect : "/");
+    } else {
+      navigate(redirect ? redirect : "/");
+    }
+  };
+
   return (
     <>
       <form
@@ -225,38 +241,18 @@ const VerifyOtp = () => {
           <button
             type="button"
             onClick={() => {
-              Cookies.remove("token");
-              Cookies.remove("user");
-              Cookies.remove("userEmail");
-              Cookies.remove("slug");
-              Cookies.remove("isOwnerEmailVerified");
-              navigate("/signup");
+              // Cookies.remove("token");
+              // Cookies.remove("user");
+              // Cookies.remove("userEmail");
+              // Cookies.remove("slug");
+              // Cookies.remove("isOwnerEmailVerified");
+              handleNavigateToChangeEmail();
             }}
             className="text-sm font-medium flex items-center gap-1 text-[var(--primary-color)]"
           >
             Change Email
           </button>
         </div>
-
-        {/* <div className="w-full mt-2 flex flex-col items-center gap-4">
-          <button
-            type="button"
-            onClick={() => {
-              navigate("/login");
-              Cookies.remove("token");
-              Cookies.remove("user");
-              Cookies.remove("userEmail");
-              Cookies.remove("slug");
-              Cookies.remove("isOwnerEmailVerified");
-            }}
-            className="text-sm font-medium flex items-center gap-1 text-[var(--primary-color)]"
-          >
-            <div className="w-[18px] h-[18px] bg-[var(--button-bg)] rounded-full flex items-center justify-center">
-              <RiArrowLeftSLine className="text-white text-base" />
-            </div>
-            Back
-          </button>
-        </div> */}
       </form>
 
       <EmailVerificationStatusPage
