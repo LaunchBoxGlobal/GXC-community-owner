@@ -11,7 +11,6 @@ import EmailVerificationStatusPage from "../../pages/Auth/EmailVerificationStatu
 import { useAppContext } from "../../context/AppContext";
 import CopyCommunityLinkPopup from "../Popups/CopyCommunityLinkPopup";
 import { enqueueSnackbar } from "notistack";
-import { RiArrowLeftSLine } from "react-icons/ri";
 import ForgetPasswordEmailVerifiedSuccessPopup from "../Popups/ForgetPasswordEmailVerifiedSuccessPopup";
 
 const VerifyOtp = () => {
@@ -20,7 +19,7 @@ const VerifyOtp = () => {
   const [loading, setLoading] = useState(false);
   const [showPopup, setShowPopup] = useState(false);
   const [redirectParams, setRedirectParams] = useState(null);
-  const { setShowEmailVerificationPopup } = useAppContext();
+  const { setShowEmailVerificationPopup, setUser } = useAppContext();
   const userEmail = Cookies.get(`ownerEmail`);
   const page = Cookies.get("page");
   const [showEmailVerificationStatus, setShowEmailVerificationStatus] =
@@ -32,14 +31,15 @@ const VerifyOtp = () => {
   };
 
   useEffect(() => {
-    // const isAuthenticated = !!Cookies.get("token");
-    // const hasEmail = !!userEmail;
+    const userCookie = Cookies.get("user")
+      ? JSON.parse(Cookies.get("user"))
+      : null;
+    if (userCookie?.emailVerified) {
+      navigate("/complete-profile", { replace: true });
+    }
+  }, [navigate]);
 
-    // Redirect only if user is not authenticated AND no email in cookies
-    // if (!isAuthenticated && !hasEmail) {
-    //   navigate("/login");
-    // }
-
+  useEffect(() => {
     document.title = `Verify OTP - GiveXChange`;
   }, []);
 
@@ -85,13 +85,16 @@ const VerifyOtp = () => {
 
         if (res?.data?.success) {
           resetForm();
-          const user = Cookies.get("user")
+          const userCookie = Cookies.get("user")
             ? JSON.parse(Cookies.get("user"))
             : null;
-          if (user) {
-            user.emailVerified = true;
-            Cookies.set("user", JSON.stringify(user));
+
+          if (userCookie) {
+            userCookie.emailVerified = true;
+            Cookies.set("user", JSON.stringify(userCookie));
+            setUser(userCookie); // 👈 trigger re-render across app
           }
+
           Cookies.set("isOwnerEmailVerified", true);
 
           if (page === "/signup") {
@@ -103,7 +106,7 @@ const VerifyOtp = () => {
           if (page === "/forgot-password") {
             Cookies.set("otp", otp);
             setShowEmailVerificationStatus(true);
-            return; // ✅ stop navigation here
+            return;
           }
 
           if (page === "/login") {
@@ -112,7 +115,6 @@ const VerifyOtp = () => {
             return;
           }
 
-          // default for other pages
           navigate("/");
         }
       } catch (error) {

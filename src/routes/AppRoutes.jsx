@@ -28,28 +28,28 @@ import WalletPage from "../pages/Wallet/WalletPage";
 import MemberDetails from "../pages/Members/MemberDetails";
 import ChangePasswordPage from "../pages/Settings/ChangePasswordPage";
 import UserProfilePage from "../pages/Profile/UserProfilePage";
+import { useAppContext } from "../context/AppContext";
 
 // --- Helpers ---
 const getUser = () => {
+  const { user } = useAppContext();
   const userCookie = Cookies.get("user");
   return userCookie ? JSON.parse(userCookie) : null;
 };
 
 const getToken = () => Cookies.get("token");
 
-const isAuthenticated = () => !!getToken();
-const isEmailVerified = () => getUser()?.emailVerified === true;
-
 // --- Private Route ---
 const PrivateRoute = ({ element }) => {
-  const token = getToken();
-  const user = getUser();
+  // const token = getToken();
+  // const user = getUser();
+  const { user, token } = useAppContext();
 
   // 1️⃣ Not logged in → go to login
   if (!token) return <Navigate to="/login" replace />;
 
-  // 2️⃣ Logged in but email not verified → go to verify otp
-  if (token && user && !user.emailVerified) {
+  // 2️⃣ Logged in but email not verified → verify otp
+  if (token && user && user.emailVerified == false) {
     return <Navigate to="/verify-otp" replace />;
   }
 
@@ -59,16 +59,17 @@ const PrivateRoute = ({ element }) => {
 
 // --- Public Route ---
 const PublicRoute = ({ element }) => {
-  const token = getToken();
-  const user = getUser();
+  // const token = getToken();
+  // const user = getUser();
+  const { user, token } = useAppContext();
 
   // 1️⃣ Logged in & verified → dashboard
-  if (token && user?.emailVerified) {
+  if (token && user?.emailVerified == true) {
     return <Navigate to="/" replace />;
   }
 
   // 2️⃣ Logged in but not verified → verify otp
-  if (token && !user?.emailVerified) {
+  if (token && user?.emailVerified == false) {
     return <Navigate to="/verify-otp" replace />;
   }
 

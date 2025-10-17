@@ -3,13 +3,24 @@ import { FiPlus } from "react-icons/fi";
 
 const AuthImageUpload = ({ name, setFieldValue, error }) => {
   const [preview, setPreview] = useState(null);
+  const [fileError, setFileError] = useState("");
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
-    if (file) {
-      setPreview(URL.createObjectURL(file));
-      setFieldValue(name, file);
+    if (!file) return;
+
+    const allowedTypes = ["image/png", "image/jpeg", "image/jpg"];
+
+    if (!allowedTypes.includes(file.type)) {
+      setFileError("Only PNG, JPG, and JPEG images are allowed");
+      setPreview(null);
+      setFieldValue(name, null);
+      return;
     }
+
+    setFileError("");
+    setPreview(URL.createObjectURL(file));
+    setFieldValue(name, file);
   };
 
   return (
@@ -36,16 +47,21 @@ const AuthImageUpload = ({ name, setFieldValue, error }) => {
         />
       </label>
 
-      <div className="">
+      <div>
         <label
           htmlFor="profileImage"
           className={`underline text-[15px] font-medium cursor-pointer ${
-            !error ? "text-[var(--primary-blue)]" : "text-red-500"
+            !error && !fileError ? "text-[var(--primary-blue)]" : "text-red-500"
           }`}
         >
           Upload Profile Picture
         </label>
-        {error && <span className="text-xl text-red-500 font-medium">*</span>}
+
+        {(error || fileError) && (
+          <p className="text-xs text-red-500 mt-1">
+            {fileError || "* Required field"}
+          </p>
+        )}
       </div>
     </div>
   );
