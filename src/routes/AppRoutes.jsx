@@ -34,8 +34,6 @@ import { useAppContext } from "../context/AppContext";
 const PrivateRoute = ({ element }) => {
   const token = Cookies.get("ownerToken") ? Cookies.get("ownerToken") : null;
   const { user } = useAppContext();
-  console.log(user);
-  console.log(token);
 
   // 1️⃣ Not logged in → go to login
   if (!token) return <Navigate to="/login" replace />;
@@ -53,8 +51,6 @@ const PrivateRoute = ({ element }) => {
 const PublicRoute = ({ element }) => {
   const token = Cookies.get("ownerToken") ? Cookies.get("ownerToken") : null;
   const { user } = useAppContext();
-  console.log(user);
-  console.log(token);
 
   // 1️⃣ Logged in & verified → dashboard
   if (token && user?.emailVerified == true) {
