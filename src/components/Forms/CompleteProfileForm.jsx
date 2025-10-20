@@ -22,7 +22,9 @@ import { parsePhoneNumberFromString } from "libphonenumber-js";
 
 const CompleteProfileForm = () => {
   const navigate = useNavigate();
-  const userData = Cookies.get("user") ? JSON.parse(Cookies.get("user")) : null;
+  const userData = Cookies.get("owner")
+    ? JSON.parse(Cookies.get("owner"))
+    : null;
   const [loading, setLoading] = useState(false);
   const [showPopup, setShowPopup] = useState(false);
   Cookies.remove("userEmail");
@@ -142,8 +144,8 @@ const CompleteProfileForm = () => {
           variant: "error",
         });
         if (error?.response?.status === 401) {
-          Cookies.remove("token");
-          Cookies.remove("user");
+          Cookies.remove("ownerToken");
+          Cookies.remove("owner");
           navigate("/login");
         }
       } finally {

@@ -17,23 +17,28 @@ const Sidebar = () => {
         {},
         {
           headers: {
-            Authorization: `Bearer ${Cookies.get("token")}`,
+            Authorization: `Bearer ${Cookies.get("ownerToken")}`,
           },
         }
       );
 
       if (res?.data?.success) {
         // console.log("Logout successful");
-        Cookies.remove("token");
+        Cookies.remove("ownerToken");
         Cookies.remove("page");
-        Cookies.remove("user");
+        Cookies.remove("owner");
+        Cookies.remove("isOwnerEmailVerified");
+        Cookies.remove("slug");
       }
     } catch (error) {
       console.log("Logout error >>>", error?.response?.data || error.message);
       handleApiError(error, navigate);
     } finally {
-      Cookies.remove("user");
-      Cookies.remove("token");
+      Cookies.remove("ownerToken");
+      Cookies.remove("page");
+      Cookies.remove("owner");
+      Cookies.remove("isOwnerEmailVerified");
+      Cookies.remove("slug");
       navigate("/login");
     }
   };

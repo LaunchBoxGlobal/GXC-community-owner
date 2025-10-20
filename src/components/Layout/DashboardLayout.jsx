@@ -46,8 +46,8 @@ const DashboardLayout = ({ pages }) => {
       setUser(user);
 
       if (!user?.emailVerified) {
-        Cookies.remove("token");
-        Cookies.remove("user");
+        Cookies.remove("ownerToken");
+        Cookies.remove("owner");
         navigate("/login");
       }
     } catch (error) {

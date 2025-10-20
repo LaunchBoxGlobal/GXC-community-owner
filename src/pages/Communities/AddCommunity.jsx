@@ -98,8 +98,8 @@ const AddCommunity = ({
           variant: "error",
         });
         if (error?.response?.status === 401) {
-          Cookies.remove("token");
-          Cookies.remove("user");
+          Cookies.remove("ownerToken");
+          Cookies.remove("owner");
           navigate("/login");
         }
       } finally {

@@ -31,8 +31,8 @@ const VerifyOtp = () => {
   };
 
   useEffect(() => {
-    const userCookie = Cookies.get("user")
-      ? JSON.parse(Cookies.get("user"))
+    const userCookie = Cookies.get("owner")
+      ? JSON.parse(Cookies.get("owner"))
       : null;
     if (userCookie?.emailVerified) {
       navigate("/complete-profile", { replace: true });
@@ -85,14 +85,14 @@ const VerifyOtp = () => {
 
         if (res?.data?.success) {
           resetForm();
-          const userCookie = Cookies.get("user")
-            ? JSON.parse(Cookies.get("user"))
+          const userCookie = Cookies.get("owner")
+            ? JSON.parse(Cookies.get("owner"))
             : null;
 
           if (userCookie) {
             userCookie.emailVerified = true;
-            Cookies.set("user", JSON.stringify(userCookie));
-            setUser(userCookie); // 👈 trigger re-render across app
+            Cookies.set("owner", JSON.stringify(userCookie));
+            setUser(userCookie);
           }
 
           Cookies.set("isOwnerEmailVerified", true);
@@ -243,11 +243,6 @@ const VerifyOtp = () => {
           <button
             type="button"
             onClick={() => {
-              // Cookies.remove("token");
-              // Cookies.remove("user");
-              // Cookies.remove("userEmail");
-              // Cookies.remove("slug");
-              // Cookies.remove("isOwnerEmailVerified");
               handleNavigateToChangeEmail();
             }}
             className="text-sm font-medium flex items-center gap-1 text-[var(--primary-color)]"

@@ -157,7 +157,7 @@ const EditProfile = ({ togglePopup, showPopup, fetchUserProfile }) => {
               },
             }
           );
-          console.log("Image uploaded:", imageRes.data);
+          // console.log("Image uploaded:", imageRes.data);
         }
 
         if (profileRes?.data?.success) {
@@ -420,7 +420,7 @@ const EditProfile = ({ togglePopup, showPopup, fetchUserProfile }) => {
                 onBlur={formik.handleBlur}
                 error={formik.errors.location}
                 touched={formik.touched.location}
-                label="Address"
+                label="Suite / Apartment / Street"
               />
 
               <div className="w-full">

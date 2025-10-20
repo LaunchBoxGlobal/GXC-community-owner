@@ -39,7 +39,7 @@ const ChangePassword = () => {
     validateOnChange: true,
     validateOnBlur: true,
     onSubmit: async (values, { resetForm }) => {
-      const userEmail = Cookies.get("userEmail");
+      const userEmail = Cookies.get("ownerEmail");
       const userCode = Cookies.get("otp");
       if (!userEmail) {
         enqueueSnackbar("email not found", {

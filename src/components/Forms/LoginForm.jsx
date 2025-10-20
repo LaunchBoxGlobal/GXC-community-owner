@@ -50,8 +50,8 @@ const LoginForm = () => {
         );
 
         if (res?.data?.success) {
-          Cookies.set("token", res?.data?.data?.token);
-          Cookies.set("user", JSON.stringify(res?.data?.data?.user));
+          Cookies.set("ownerToken", res?.data?.data?.token);
+          Cookies.set("owner", JSON.stringify(res?.data?.data?.user));
           resetForm();
           navigate("/");
         }
@@ -65,8 +65,8 @@ const LoginForm = () => {
           apiRes?.data?.token
         ) {
           const newToken = apiRes.data.token;
-          Cookies.set("token", newToken);
-          Cookies.set("user", JSON.stringify(res?.data?.data?.user));
+          Cookies.set("ownerToken", newToken);
+          Cookies.set("owner", JSON.stringify(res?.data?.data?.user));
           Cookies.set("page", "/login");
 
           try {

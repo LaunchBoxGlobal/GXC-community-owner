@@ -10,9 +10,12 @@ export const handleApiError = (error, navigate) => {
       enqueueSnackbar("Your session has expired. Please log in again.", {
         variant: "error",
       });
-      Cookies.remove("token");
-      Cookies.remove("user");
-      localStorage.removeItem("token");
+      localStorage.removeItem("ownerToken");
+      Cookies.remove("ownerToken");
+      Cookies.remove("owner");
+      Cookies.remove("page");
+      Cookies.remove("isOwnerEmailVerified");
+      Cookies.remove("slug");
       navigate("/login");
       return;
     } else if (status === 403) {

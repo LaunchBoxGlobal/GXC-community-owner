@@ -15,9 +15,6 @@ const SignUpForm = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [slugError, setSlugError] = useState(null);
-  const isOwnerEmailVerified = Cookies.get("isOwnerEmailVerified")
-    ? Cookies.get("isOwnerEmailVerified")
-    : null;
 
   useEffect(() => {
     document.title = `Sign up - GiveXChange`;
@@ -139,8 +136,8 @@ const SignUpForm = () => {
         });
 
         if (res?.data?.success) {
-          Cookies.set("token", res?.data?.data?.token);
-          Cookies.set("user", JSON.stringify(res?.data?.data?.user));
+          Cookies.set("ownerToken", res?.data?.data?.token);
+          Cookies.set("owner", JSON.stringify(res?.data?.data?.user));
           Cookies.set("ownerEmail", values.email);
           Cookies.set("slug", values.urlSlug);
           Cookies.set("isOwnerEmailVerified", false);

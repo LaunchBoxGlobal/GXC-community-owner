@@ -30,20 +30,12 @@ import ChangePasswordPage from "../pages/Settings/ChangePasswordPage";
 import UserProfilePage from "../pages/Profile/UserProfilePage";
 import { useAppContext } from "../context/AppContext";
 
-// --- Helpers ---
-const getUser = () => {
-  const { user } = useAppContext();
-  const userCookie = Cookies.get("user");
-  return userCookie ? JSON.parse(userCookie) : null;
-};
-
-const getToken = () => Cookies.get("token");
-
 // --- Private Route ---
 const PrivateRoute = ({ element }) => {
-  // const token = getToken();
-  // const user = getUser();
-  const { user, token } = useAppContext();
+  const token = Cookies.get("ownerToken") ? Cookies.get("ownerToken") : null;
+  const { user } = useAppContext();
+  console.log(user);
+  console.log(token);
 
   // 1️⃣ Not logged in → go to login
   if (!token) return <Navigate to="/login" replace />;
@@ -59,9 +51,10 @@ const PrivateRoute = ({ element }) => {
 
 // --- Public Route ---
 const PublicRoute = ({ element }) => {
-  // const token = getToken();
-  // const user = getUser();
-  const { user, token } = useAppContext();
+  const token = Cookies.get("ownerToken") ? Cookies.get("ownerToken") : null;
+  const { user } = useAppContext();
+  console.log(user);
+  console.log(token);
 
   // 1️⃣ Logged in & verified → dashboard
   if (token && user?.emailVerified == true) {

@@ -9,15 +9,15 @@ export const AppProvider = ({ children }) => {
   const [showEmailVerificationPopup, setShowEmailVerificationPopup] =
     useState(false);
   const [showCommunityLinkPopup, setShowCommunityLinkPopup] = useState(false);
-  const [token, setToken] = useState(Cookies.get("token") || null);
+  const [token, setToken] = useState(Cookies.get("ownerToken") || null);
 
   const handleShowPaymentModal = () => {
     setShowPaymentModal((prev) => !prev);
   };
 
   useEffect(() => {
-    const tokenCookie = Cookies.get("token");
-    const userCookie = Cookies.get("user");
+    const tokenCookie = Cookies.get("ownerToken");
+    const userCookie = Cookies.get("owner");
     if (tokenCookie) setToken(tokenCookie);
     if (userCookie) setUser(JSON.parse(userCookie));
   }, []);
@@ -25,20 +25,20 @@ export const AppProvider = ({ children }) => {
   // Keep cookies and state in sync
   const updateUser = (newUser) => {
     if (newUser) {
-      Cookies.set("user", JSON.stringify(newUser));
+      Cookies.set("owner", JSON.stringify(newUser));
       setUser(newUser);
     } else {
-      Cookies.remove("user");
+      Cookies.remove("owner");
       setUser(null);
     }
   };
 
   const updateToken = (newToken) => {
     if (newToken) {
-      Cookies.set("token", newToken);
+      Cookies.set("ownerToken", newToken);
       setToken(newToken);
     } else {
-      Cookies.remove("token");
+      Cookies.remove("ownerToken");
       setToken(null);
     }
   };
