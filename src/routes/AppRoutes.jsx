@@ -52,12 +52,12 @@ const PublicRoute = ({ element }) => {
   const { user } = useAppContext();
 
   // 1️⃣ Logged in & verified → dashboard
-  if (token && user?.emailVerified == true) {
+  if (token && user && user?.emailVerified == true) {
     return <Navigate to="/" replace />;
   }
 
   // 2️⃣ Logged in but not verified → verify otp
-  if (token && user?.emailVerified == false) {
+  if (token && user && user?.emailVerified == false) {
     return <Navigate to="/verify-otp" replace />;
   }
 

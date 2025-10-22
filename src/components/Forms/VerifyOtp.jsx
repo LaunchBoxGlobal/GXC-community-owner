@@ -20,7 +20,9 @@ const VerifyOtp = () => {
   const [showPopup, setShowPopup] = useState(false);
   const [redirectParams, setRedirectParams] = useState(null);
   const { setShowEmailVerificationPopup, setUser } = useAppContext();
-  const userEmail = Cookies.get(`ownerEmail`);
+  const userEmail = Cookies.get(`ownerEmail`)
+    ? Cookies.get(`ownerEmail`)
+    : null;
   const page = Cookies.get("page");
   const [showEmailVerificationStatus, setShowEmailVerificationStatus] =
     useState(false);
@@ -61,7 +63,7 @@ const VerifyOtp = () => {
     onSubmit: async (values, { resetForm }) => {
       const otp = values.otp.join("");
       if (!userEmail) {
-        enqueueSnackbar("Email not found", {
+        enqueueSnackbar("Something went wrong!", {
           variant: "error",
         });
         return;
