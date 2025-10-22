@@ -30,7 +30,6 @@ import ChangePasswordPage from "../pages/Settings/ChangePasswordPage";
 import UserProfilePage from "../pages/Profile/UserProfilePage";
 import { useAppContext } from "../context/AppContext";
 
-// --- Private Route ---
 const PrivateRoute = ({ element }) => {
   const token = Cookies.get("ownerToken") ? Cookies.get("ownerToken") : null;
   const { user } = useAppContext();
@@ -39,7 +38,7 @@ const PrivateRoute = ({ element }) => {
   if (!token) return <Navigate to="/login" replace />;
 
   // 2️⃣ Logged in but email not verified → verify otp
-  if (token && user && user.emailVerified == false) {
+  if (token && user.emailVerified == false) {
     return <Navigate to="/verify-otp" replace />;
   }
 

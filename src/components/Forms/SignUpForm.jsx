@@ -18,6 +18,19 @@ const SignUpForm = () => {
 
   useEffect(() => {
     document.title = `Sign up - GiveXChange`;
+    const token = Cookies.get("ownerToken");
+    const owner = Cookies.get("owner")
+      ? JSON.parse(Cookies.get("owner"))
+      : null;
+
+    console.log("token >>> ", token);
+    console.log("owner >>> ", owner);
+
+    if (!token) return;
+    if (!owner) return;
+
+    if (owner && !owner?.emailVerified)
+      navigate("/verify-otp", { replace: true });
   }, []);
 
   const checkSlugAvailability = async (slug) => {
