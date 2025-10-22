@@ -38,7 +38,7 @@ const PrivateRoute = ({ element }) => {
   if (!token) return <Navigate to="/login" replace />;
 
   // 2️⃣ Logged in but email not verified → verify otp
-  if (token && user.emailVerified == false) {
+  if (token && user && user.emailVerified == false) {
     return <Navigate to="/verify-otp" replace />;
   }
 
