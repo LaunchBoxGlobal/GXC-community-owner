@@ -34,7 +34,7 @@ const VerifyOtp = () => {
     const userCookie = Cookies.get("owner")
       ? JSON.parse(Cookies.get("owner"))
       : null;
-    if (userCookie?.emailVerified) {
+    if (userCookie && userCookie?.emailVerified) {
       navigate("/complete-profile", { replace: true });
     }
   }, [navigate]);

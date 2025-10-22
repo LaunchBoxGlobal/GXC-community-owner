@@ -45,11 +45,11 @@ const DashboardLayout = ({ pages }) => {
 
       setUser(user);
 
-      if (!user?.emailVerified) {
-        Cookies.remove("ownerToken");
-        Cookies.remove("owner");
-        navigate("/login");
-      }
+      // if (user && !user?.emailVerified) {
+      //   Cookies.remove("ownerToken");
+      //   Cookies.remove("owner");
+      //   navigate("/login");
+      // }
     } catch (error) {
       handleApiError(error, navigate);
     }

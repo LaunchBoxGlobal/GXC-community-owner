@@ -23,9 +23,6 @@ const SignUpForm = () => {
       ? JSON.parse(Cookies.get("owner"))
       : null;
 
-    console.log("token >>> ", token);
-    console.log("owner >>> ", owner);
-
     if (!token) return;
     if (!owner) return;
 
