@@ -53,6 +53,7 @@ const CompleteProfileForm = () => {
     },
     validationSchema: Yup.object({
       firstName: Yup.string()
+        .trim("First can not start or end with spaces")
         .min(3, "First name must contain at least 3 characters")
         .max(10, "First name must be 10 characters or less")
         .matches(
@@ -61,6 +62,7 @@ const CompleteProfileForm = () => {
         )
         .required("First name is required"),
       lastName: Yup.string()
+        .trim("Last name can not start or end with spaces")
         .min(3, "Last name must contain at least 3 characters")
         .max(10, "Last name must be 10 characters or less")
         .matches(
@@ -69,6 +71,7 @@ const CompleteProfileForm = () => {
         )
         .required("Last name is required"),
       email: Yup.string()
+        .trim("Email address can not start or end with spaces")
         .email("Invalid email address")
         .required("Email is required"),
       phoneNumber: Yup.string()
@@ -81,10 +84,12 @@ const CompleteProfileForm = () => {
           return phone ? phone.isValid() : false;
         }),
       location: Yup.string()
-        .min(11, `Address cannot be less than 11 characters`)
-        .max(150, `Address can not be more than 150 characters`)
+        .trim("Address can not start or end with spaces")
+        .min(1, `Address can not be less than 1 characters`)
+        .max(30, `Address can not be more than 30 characters`)
         .required("Please enter your location"),
       zipcode: Yup.string()
+        .trim("Zip code can not start or end with spaces")
         .matches(/^[A-Za-z0-9\- ]{4,10}$/, "Please enter a valid zip code")
         .required("Enter your zip code"),
       city: Yup.string().required("Enter your city"),
@@ -100,15 +105,15 @@ const CompleteProfileForm = () => {
         const profileRes = await axios.put(
           `${BASE_URL}/auth/profile`,
           {
-            firstName: values.firstName,
-            lastName: values.lastName,
-            email: values.email,
-            address: values.location,
+            firstName: values.firstName.trim(),
+            lastName: values.lastName.trim(),
+            email: values.email.trim(),
+            address: values.location.trim(),
             phone: values.phoneNumber,
-            zipcode: values.zipcode,
-            city: values.city,
-            state: values.state,
-            country: values.country,
+            zipcode: values.zipcode.trim(),
+            city: values.city.trim(),
+            state: values.state.trim(),
+            country: values.country.trim(),
           },
           {
             headers: { Authorization: `Bearer ${getToken()}` },
@@ -139,7 +144,7 @@ const CompleteProfileForm = () => {
           Cookies.remove("page");
         }
       } catch (error) {
-        console.error("complete profile error:", error);
+        // console.error("complete profile error:", error);
         enqueueSnackbar(error.response?.data?.message || error?.message, {
           variant: "error",
         });

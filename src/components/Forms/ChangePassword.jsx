@@ -22,6 +22,7 @@ const ChangePassword = () => {
     },
     validationSchema: Yup.object({
       password: Yup.string()
+        .trim("Password can not start or end with spaces")
         .min(8, "Password must be at least 8 characters")
         .max(25, "Password cannot be more than 25 characters")
         .matches(/[A-Z]/, "Password must contain at least one uppercase letter")
@@ -56,9 +57,9 @@ const ChangePassword = () => {
       try {
         setLoading(true);
         const res = await axios.post(`${BASE_URL}/auth/reset-password`, {
-          email: userEmail,
-          code: userCode,
-          password: values?.password,
+          email: userEmail.trim(),
+          code: userCode.trim(),
+          password: values?.password.trim(),
         });
 
         if (res?.data?.success) {

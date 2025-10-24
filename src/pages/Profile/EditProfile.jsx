@@ -57,6 +57,7 @@ const EditProfile = ({ togglePopup, showPopup, fetchUserProfile }) => {
     },
     validationSchema: Yup.object({
       firstName: Yup.string()
+        .trim("First name can not start or end with spaces")
         .min(3, "First name must contain at least 3 characters")
         .max(10, "First name must be 10 characters or less")
         .matches(
@@ -65,6 +66,7 @@ const EditProfile = ({ togglePopup, showPopup, fetchUserProfile }) => {
         )
         .required("First name is required"),
       lastName: Yup.string()
+        .trim("Last name can not start or end with spaces")
         .min(3, "Last name must contain at least 3 characters")
         .max(10, "Last name must be 10 characters or less")
         .matches(
@@ -82,10 +84,12 @@ const EditProfile = ({ togglePopup, showPopup, fetchUserProfile }) => {
           return phone ? phone.isValid() : false;
         }),
       email: Yup.string()
+        .trim("Email address can not start or end with spaces")
         .email("Invalid email address")
         .required("Email is required"),
       profileImage: Yup.mixed().nullable(),
       city: Yup.string()
+        .trim("City name not start or end with spaces")
         .min(3, "City name cannot be less than 3 characters")
         .max(15, "City name cannot be more than 15 characters")
         .matches(
@@ -95,8 +99,9 @@ const EditProfile = ({ togglePopup, showPopup, fetchUserProfile }) => {
         .required("Enter your city"),
 
       state: Yup.string()
-        .min(3, "State cannot be less than 3 characters")
-        .max(15, "State cannot be more than 15 characters")
+        .trim("State can not start or end with spaces")
+        .min(3, "State can not be less than 3 characters")
+        .max(15, "State can not be more than 15 characters")
         .matches(
           /^[A-Za-z ]+$/,
           "State name must contain only letters and spaces"
@@ -104,18 +109,21 @@ const EditProfile = ({ togglePopup, showPopup, fetchUserProfile }) => {
         .required("Enter your state"),
 
       country: Yup.string()
-        .min(3, "Country name cannot be less than 3 characters")
-        .max(15, "Country name cannot be more than 15 characters")
+        .trim("AddCountryres can not start or end with spaces")
+        .min(3, "Country name can not be less than 3 characters")
+        .max(15, "Country name can not be more than 15 characters")
         .matches(
           /^[A-Za-z ]+$/,
           "Country name must contain only letters and spaces"
         )
         .required("Enter your country"),
       location: Yup.string()
-        .min(11, `Address cannot be less than 11 characters`)
-        .max(150, `Address can not be more than 150 characters`)
+        .trim("Address can not start or end with spaces")
+        .min(1, `Address cannot be less than 1 characters`)
+        .max(30, `Address can not be more than 30 characters`)
         .required("Please enter your location"),
       zipcode: Yup.string()
+        .trim("Zip code can not start or end with spaces")
         .matches(/^[A-Za-z0-9\- ]{4,10}$/, "Please enter a valid zip code")
         .required("Enter your zip code"),
     }),
@@ -424,7 +432,7 @@ const EditProfile = ({ togglePopup, showPopup, fetchUserProfile }) => {
               />
 
               <div className="w-full">
-                <button type="submit" className="button">
+                <button type="submit" disabled={loading} className="button">
                   {loading ? <Loader /> : "Update Profile"}
                 </button>
               </div>

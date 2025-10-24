@@ -69,8 +69,8 @@ const EditCommunity = ({
         )
         .required("Slug is required"),
       description: Yup.string()
-        .min(30, `Description can not be less than 30 characters`)
-        .max(500, `Description can not be more than 500 characters`)
+        .min(11, `Description can not be less than 11 characters`)
+        .max(150, `Description can not be more than 150 characters`)
         .required("Description is required"),
     }),
     onSubmit: async (values, { resetForm }) => {
@@ -82,9 +82,9 @@ const EditCommunity = ({
         const communityRes = await axios.put(
           `${BASE_URL}/communities/${community?.id}`,
           {
-            name: values.name,
-            slug: values.urlSlug,
-            description: values.description,
+            name: values.name.trim(),
+            slug: values.urlSlug.trim(),
+            description: values.description.trim(),
           },
           {
             headers: {

@@ -7,7 +7,6 @@ import { RiArrowLeftSLine } from "react-icons/ri";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { BASE_URL } from "../../data/baseUrl";
-const PAGETITLE = import.meta.env.VITE_PAGE_TITLE;
 import Cookies from "js-cookie";
 import { enqueueSnackbar } from "notistack";
 
@@ -25,6 +24,7 @@ const VerifyEmail = () => {
     },
     validationSchema: Yup.object({
       email: Yup.string()
+        .trim("Email address can not start or end with spaces")
         .email("Invalid email address")
         .required("Email addres is required"),
     }),
@@ -36,7 +36,7 @@ const VerifyEmail = () => {
       try {
         const res = await axios.post(
           `${BASE_URL}/auth/forgot-password`,
-          values,
+          { email: values.email.trim() },
           {
             headers: {
               "Content-Type": "application/json",
@@ -45,7 +45,7 @@ const VerifyEmail = () => {
         );
 
         if (res?.data?.success) {
-          Cookies.set("ownerEmail", values.email);
+          Cookies.set("ownerEmail", values.email.trim());
           Cookies.set("page", "/forgot-password");
           resetForm();
           enqueueSnackbar(res?.data?.message, {
@@ -59,7 +59,7 @@ const VerifyEmail = () => {
           });
         }
       } catch (error) {
-        console.error("verify email error:", error);
+        // console.error("verify email error:", error);
         enqueueSnackbar(error.response?.data?.message || error?.message, {
           variant: "error",
         });

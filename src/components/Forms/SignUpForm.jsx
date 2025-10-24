@@ -64,6 +64,7 @@ const SignUpForm = () => {
     },
     validationSchema: Yup.object({
       firstName: Yup.string()
+        .trim("First name cannot start or end with spaces")
         .min(3, "First name must contain at least 3 characters")
         .max(10, "First name must be 10 characters or less")
         .matches(
@@ -72,6 +73,7 @@ const SignUpForm = () => {
         )
         .required("First name is required"),
       lastName: Yup.string()
+        .trim("Last name cannot start or end with spaces")
         .min(3, "Last name must contain at least 3 characters")
         .max(10, "Last name must be 10 characters or less")
         .matches(
@@ -80,10 +82,12 @@ const SignUpForm = () => {
         )
         .required("Last name is required"),
       communityName: Yup.string()
+        .trim("Community name cannot start or end with spaces")
         .min(3, "Community name must contain atleast 3 characters")
         .max(35, "Community name must be 35 characters or less")
         .required("Community name is required"),
       urlSlug: Yup.string()
+        .trim("Slug can not start or end with spaces")
         .min(3, "Slug can not be less than 3 characters")
         .max(50, "Slug can not be more than 50 characters")
         .matches(
@@ -92,10 +96,12 @@ const SignUpForm = () => {
         )
         .required("Slug is required"),
       description: Yup.string()
+        .trim("Description cannot start or end with spaces")
         .min(11, `Description can not be less than 11 characters`)
         .max(150, `Description can not be more than 150 characters`)
         .required("Description is required"),
       email: Yup.string()
+        .trim("Email address can not start or end with spaces")
         .email("Invalid email address")
         .matches(
           /^(?![._-])([a-zA-Z0-9._%+-]{1,64})@([a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}$/,
@@ -107,6 +113,7 @@ const SignUpForm = () => {
         )
         .required("Email address is required"),
       password: Yup.string()
+        .trim("Password can not start or end with spaces")
         .min(8, "Password must be at least 8 characters")
         .max(25, "Password cannot be more than 25 characters")
         .matches(/[A-Z]/, "Password must contain at least one uppercase letter")
@@ -130,13 +137,13 @@ const SignUpForm = () => {
       try {
         setLoading(true);
         const formData = new FormData();
-        formData.append("firstName", values.firstName);
-        formData.append("lastName", values.lastName);
-        formData.append("email", values.email);
-        formData.append("communityName", values.communityName);
-        formData.append("slug", values.urlSlug);
-        formData.append("communityDescription", values.description);
-        formData.append("password", values.password);
+        formData.append("firstName", values.firstName.trim());
+        formData.append("lastName", values.lastName.trim());
+        formData.append("email", values.email.trim());
+        formData.append("communityName", values.communityName.trim());
+        formData.append("slug", values.urlSlug.trim());
+        formData.append("communityDescription", values.description.trim());
+        formData.append("password", values.password.trim());
         formData.append("userType", "community_owner");
 
         const res = await axios.post(`${BASE_URL}/auth/register`, formData, {
@@ -148,8 +155,8 @@ const SignUpForm = () => {
         if (res?.data?.success) {
           Cookies.set("ownerToken", res?.data?.data?.token);
           Cookies.set("owner", JSON.stringify(res?.data?.data?.user));
-          Cookies.set("ownerEmail", values.email);
-          Cookies.set("slug", values.urlSlug);
+          Cookies.set("ownerEmail", values.email.trim());
+          Cookies.set("slug", values.urlSlug.trim());
           Cookies.set("isOwnerEmailVerified", false);
           resetForm();
           Cookies.set("page", "/signup");

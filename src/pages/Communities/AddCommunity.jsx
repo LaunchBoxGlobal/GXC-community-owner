@@ -75,9 +75,9 @@ const AddCommunity = ({
         const communityRes = await axios.post(
           `${BASE_URL}/communities/create`,
           {
-            name: values.name,
-            slug: values.urlSlug,
-            description: values.description,
+            name: values.name.trim(),
+            slug: values.urlSlug.trim(),
+            description: values.description.trim(),
           },
           {
             headers: {

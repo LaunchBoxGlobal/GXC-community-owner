@@ -38,8 +38,8 @@ const LoginForm = () => {
         const res = await axios.post(
           `${BASE_URL}/auth/login`,
           {
-            email: values?.email,
-            password: values?.password,
+            email: values?.email.trim(),
+            password: values?.password.trim(),
             userType: "community_owner",
           },
           {

@@ -27,6 +27,7 @@ const ChangeEmailForm = () => {
     },
     validationSchema: Yup.object({
       email: Yup.string()
+        .trim("Email address can not start or end with spaces")
         .email("Invalid email address")
         .required("Email address is required"),
     }),
@@ -37,7 +38,7 @@ const ChangeEmailForm = () => {
       try {
         const res = await axios.post(
           `${BASE_URL}/auth/resend-verification`,
-          { newEmail: values.email },
+          { newEmail: values.email.trim() },
           {
             headers: {
               "Content-Type": "application/json",
