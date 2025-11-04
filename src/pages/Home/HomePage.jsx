@@ -45,13 +45,10 @@ const HomePage = () => {
         }
       );
 
-      console.log("onboarding res >>> ", res?.data);
+      // console.log("onboarding res >>> ", res?.data);
       if (res?.data?.success && res?.data?.data?.url) {
         window.open(res.data.data.url, "_blank", "noopener,noreferrer");
       }
-      // handleCheckStripeAccountStatus();
-
-      //   console.log("create stripe account >>> ", res?.data);
     } catch (error) {
       console.error("create stripe account error >>> ", error);
       handleApiError(error, navigate);
@@ -70,41 +67,11 @@ const HomePage = () => {
       if (res?.data?.success) {
         navigate("/");
       } else {
-        // enqueueSnackbar("Please connect your stripe account.", {
-        //   variant: "error",
-        //   autoHideDuration: 2000,
-        // });
         handleCreateStripeAccount();
       }
     } catch (error) {
       console.log("handleCheckStripeAccountStatus error >>> ", error);
       handleApiError(error, navigate);
-    }
-  };
-
-  const handleCheckStripeStatus = async () => {
-    setCheckStripeAccountStatus(true);
-    try {
-      const res = await axios.get(`${BASE_URL}/seller/stripe/status`, {
-        headers: {
-          Authorization: `Bearer ${getToken()}`,
-        },
-      });
-      const data = res?.data?.data;
-      // console.log("seller stripe status >>> ", res?.data?.data);
-      if (!data?.hasStripeAccount) {
-        enqueueSnackbar("Please connect your stripe account.", {
-          variant: "error",
-        });
-        handleCreateStripeAccount();
-        return;
-      } else {
-        navigate("/");
-      }
-    } catch (error) {
-      handleApiError(error, navigate);
-    } finally {
-      setCheckStripeAccountStatus(false);
     }
   };
 
@@ -150,7 +117,6 @@ const HomePage = () => {
     fetchStats();
     fetchCommunities();
     handleCheckStripeAccountStatus();
-    handleCheckStripeStatus();
   }, []);
   return (
     <main className="w-full p-5 rounded-[10px] bg-white custom-shadow min-h-[78.6vh]">
