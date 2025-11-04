@@ -1,5 +1,11 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import Cookies from "js-cookie";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import { BASE_URL } from "../data/baseUrl";
+import { getToken } from "../utils/getToken";
+import { enqueueSnackbar } from "notistack";
+import { handleApiError } from "../utils/handleApiError";
 const AppContext = createContext();
 
 export const AppProvider = ({ children }) => {
@@ -10,6 +16,7 @@ export const AppProvider = ({ children }) => {
     useState(false);
   const [showCommunityLinkPopup, setShowCommunityLinkPopup] = useState(false);
   const [token, setToken] = useState(Cookies.get("ownerToken") || null);
+  const navigate = useNavigate();
 
   const handleShowPaymentModal = () => {
     setShowPaymentModal((prev) => !prev);
@@ -51,6 +58,27 @@ export const AppProvider = ({ children }) => {
     setShowPaymentModal(false);
     setShowSuccessModal(false);
   };
+
+  const handleCheckStripeAccountStatus = async () => {
+    try {
+      const res = await axios.get(`${BASE_URL}/seller/stripe/return`, {
+        headers: {
+          Authorization: `Bearer ${getToken()}`,
+        },
+      });
+      if (res?.data?.success) {
+        navigate("/");
+      } else {
+        navigate("/");
+        enqueueSnackbar("Account could not be created!", {
+          variant: "error",
+        });
+      }
+    } catch (error) {
+      console.log("handleCheckStripeAccountStatus error >>> ", error);
+      handleApiError(error, navigate);
+    }
+  };
   return (
     <AppContext.Provider
       value={{
@@ -69,6 +97,7 @@ export const AppProvider = ({ children }) => {
         setShowCommunityLinkPopup,
         updateUser,
         updateToken,
+        handleCheckStripeAccountStatus,
       }}
     >
       {children}

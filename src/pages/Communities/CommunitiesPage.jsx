@@ -8,6 +8,7 @@ import { BASE_URL } from "../../data/baseUrl";
 import { getToken } from "../../utils/getToken";
 import { handleApiError } from "../../utils/handleApiError";
 import { IoClose } from "react-icons/io5";
+import Loader from "../../components/Loader/Loader";
 
 const CommunitiesPage = () => {
   const [showAddCommunityPopup, setShowAddCommunityPopup] = useState(false);
@@ -18,6 +19,57 @@ const CommunitiesPage = () => {
   const [total, setTotal] = useState(null);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
+  const [checkStripeAccountStatus, setCheckStripeAccountStatus] =
+    useState(false);
+
+  const handleCreateStripeAccount = async () => {
+    setCheckStripeAccountStatus(true);
+    try {
+      const res = await axios.post(
+        `${BASE_URL}/seller/stripe/onboarding`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${getToken()}`,
+          },
+        }
+      );
+
+      console.log("onboarding res >>> ", res?.data);
+      if (res?.data?.success && res?.data?.data?.url) {
+        window.open(res.data.data.url, "_blank", "noopener,noreferrer");
+      }
+      // handleCheckStripeAccountStatus();
+
+      //   console.log("create stripe account >>> ", res?.data);
+    } catch (error) {
+      console.error("create stripe account error >>> ", error);
+      handleApiError(error, navigate);
+    } finally {
+      setCheckStripeAccountStatus(false);
+    }
+  };
+
+  const handleCheckStripeAccountStatus = async () => {
+    setCheckStripeAccountStatus(true);
+    try {
+      const res = await axios.get(`${BASE_URL}/seller/stripe/return`, {
+        headers: {
+          Authorization: `Bearer ${getToken()}`,
+        },
+      });
+      if (res?.data?.success) {
+        setShowAddCommunityPopup((prev) => !prev);
+      } else {
+        handleCreateStripeAccount();
+      }
+    } catch (error) {
+      console.log("handleCheckStripeAccountStatus error >>> ", error);
+      handleApiError(error, navigate);
+    } finally {
+      setCheckStripeAccountStatus(false);
+    }
+  };
 
   const fetchCommunities = async (query = "") => {
     setLoading(true);
@@ -68,7 +120,7 @@ const CommunitiesPage = () => {
   return (
     <main className="w-full p-5 rounded-[10px] bg-[var(--white-bg)] custom-shadow min-h-[78vh]">
       <div className="w-full grid grid-cols-1 lg:grid-cols-2">
-        <div>
+        <div className="lg:pt-4">
           <h3 className="text-[32px] font-semibold leading-none">
             Communities
           </h3>
@@ -100,10 +152,11 @@ const CommunitiesPage = () => {
           <div className="min-w-[201px]">
             <button
               type="button"
-              onClick={toggleCommunityPopup}
+              disabled={checkStripeAccountStatus}
+              onClick={handleCheckStripeAccountStatus}
               className="button"
             >
-              Add New Community
+              {checkStripeAccountStatus ? <Loader /> : "Add New Community"}
             </button>
           </div>
         </div>

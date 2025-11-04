@@ -29,6 +29,7 @@ import MemberDetails from "../pages/Members/MemberDetails";
 import ChangePasswordPage from "../pages/Settings/ChangePasswordPage";
 import UserProfilePage from "../pages/Profile/UserProfilePage";
 import { useAppContext } from "../context/AppContext";
+import SellerStripeSuccess from "../pages/Auth/SellerStripeSuccess";
 
 const PrivateRoute = ({ element }) => {
   const token = Cookies.get("ownerToken") ? Cookies.get("ownerToken") : null;
@@ -111,6 +112,19 @@ const AppRoutes = () => {
             element={
               <AuthLayout>
                 <CompleteProfileForm />
+              </AuthLayout>
+            }
+          />
+        }
+      />
+
+      <Route
+        path="/seller/stripe/success"
+        element={
+          <PrivateRoute
+            element={
+              <AuthLayout>
+                <SellerStripeSuccess />
               </AuthLayout>
             }
           />
