@@ -10,6 +10,8 @@ import Loader from "../../components/Loader/Loader";
 import { handleApiError } from "../../utils/handleApiError";
 import { useNavigate } from "react-router-dom";
 import { enqueueSnackbar } from "notistack";
+import { MdPayments } from "react-icons/md";
+import { PermissionModal } from "./StripeAccountPermissionModal";
 
 const HomePage = () => {
   if (
@@ -22,18 +24,42 @@ const HomePage = () => {
     Cookies.remove("verifyEmail");
   }
 
+  const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [communities, setCommunities] = useState(null);
   const [fetchingStats, setFetchingStats] = useState(false);
   const [stats, setStats] = useState(null);
   const [statsError, setStatsError] = useState(null);
   const [communitiesError, setCommunitiesError] = useState(null);
-  const [checkStripeAcountStatus, setCheckStripeAccountStatus] =
-    useState(false);
-  const navigate = useNavigate();
+
+  const [createStripe, setCreateStripe] = useState(false);
+  const [showConfirmationModal, setShowConfirmationModal] = useState(false);
+
+  const handleCheckStripeAccountStatus = async () => {
+    try {
+      const res = await axios.get(`${BASE_URL}/seller/stripe/return`, {
+        headers: {
+          Authorization: `Bearer ${getToken()}`,
+        },
+      });
+
+      if (res?.data?.success) {
+        navigate("/");
+      } else {
+        setShowConfirmationModal(true);
+      }
+    } catch (error) {
+      if (error?.status === 404) {
+        setShowConfirmationModal(true);
+        return;
+      }
+      console.log("handleCheckStripeAccountStatus error >>> ", error);
+      handleApiError(error, navigate);
+    }
+  };
 
   const handleCreateStripeAccount = async () => {
-    setCheckStripeAccountStatus(true);
+    setCreateStripe(true);
     try {
       const res = await axios.post(
         `${BASE_URL}/seller/stripe/onboarding`,
@@ -45,33 +71,16 @@ const HomePage = () => {
         }
       );
 
-      // console.log("onboarding res >>> ", res?.data);
       if (res?.data?.success && res?.data?.data?.url) {
         window.open(res.data.data.url, "_blank", "noopener,noreferrer");
+        setShowConfirmationModal(false);
       }
     } catch (error) {
       console.error("create stripe account error >>> ", error);
       handleApiError(error, navigate);
     } finally {
-      setCheckStripeAccountStatus(false);
-    }
-  };
-
-  const handleCheckStripeAccountStatus = async () => {
-    try {
-      const res = await axios.get(`${BASE_URL}/seller/stripe/return`, {
-        headers: {
-          Authorization: `Bearer ${getToken()}`,
-        },
-      });
-      if (res?.data?.success) {
-        navigate("/");
-      } else {
-        handleCreateStripeAccount();
-      }
-    } catch (error) {
-      console.log("handleCheckStripeAccountStatus error >>> ", error);
-      handleApiError(error, navigate);
+      setCreateStripe(false);
+      setShowConfirmationModal(false);
     }
   };
 
@@ -160,6 +169,13 @@ const HomePage = () => {
           </div>
         )}
       </div>
+
+      <PermissionModal
+        handleCreateStripeAccount={handleCreateStripeAccount}
+        loading={createStripe}
+        showConfirmationModal={showConfirmationModal}
+        setShowConfirmationModal={setShowConfirmationModal}
+      />
     </main>
   );
 };

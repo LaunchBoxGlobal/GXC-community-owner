@@ -3,8 +3,6 @@ import { useNavigate } from "react-router-dom";
 import { useAppContext } from "../../context/AppContext";
 import Cookies from "js-cookie";
 
-const PAGETITLE = import.meta.env.VITE_PAGE_TITLE;
-
 const CopyCommunityLinkPopup = () => {
   const slug = Cookies.get("slug");
   const navigate = useNavigate();
@@ -12,7 +10,7 @@ const CopyCommunityLinkPopup = () => {
   const [copied, setCopied] = useState(false);
 
   useEffect(() => {
-    document.title = `Account verified - ${PAGETITLE}`;
+    document.title = `Account verified - GiveXChange`;
   }, []);
 
   const handleCopyLink = async () => {
@@ -43,13 +41,19 @@ const CopyCommunityLinkPopup = () => {
                 className="w-[31px] h-[23px]"
               />
             </div>
-            <h1 className="font-semibold text-[32px] leading-[1.3] mt-7 mb-6">
+            <h1 className="font-semibold text-[32px] leading-[1.3] mt-7 mb-2">
               Your community has been created!
             </h1>
 
-            <div className="w-full h-[50px] p-1 bg-[#f5f5f5] rounded-[12px] flex items-center justify-between pl-4">
+            <p className="text-[#565656] leading-[1.2] overflow-hidden text-ellipsis">
+              Members can join the community using the link below. However, they
+              won't be able to list products until the Stripe account setup is
+              completed in the next step.
+            </p>
+
+            <div className="w-full h-[50px] p-1 bg-[#f5f5f5] rounded-[12px] flex items-center justify-between pl-4 mt-5">
               <p className="text-[#565656] leading-none overflow-hidden text-ellipsis">
-                www.thegivexchange/community/{slug}
+                www.thegivexchange.com/community/{slug}
               </p>
               <button
                 type="button"

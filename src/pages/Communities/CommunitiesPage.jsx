@@ -9,6 +9,7 @@ import { getToken } from "../../utils/getToken";
 import { handleApiError } from "../../utils/handleApiError";
 import { IoClose } from "react-icons/io5";
 import Loader from "../../components/Loader/Loader";
+import { PermissionModal } from "../Home/StripeAccountPermissionModal";
 
 const CommunitiesPage = () => {
   const [showAddCommunityPopup, setShowAddCommunityPopup] = useState(false);
@@ -21,9 +22,11 @@ const CommunitiesPage = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [checkStripeAccountStatus, setCheckStripeAccountStatus] =
     useState(false);
+  const [createStripe, setCreateStripe] = useState(false);
+  const [showConfirmationModal, setShowConfirmationModal] = useState(false);
 
   const handleCreateStripeAccount = async () => {
-    setCheckStripeAccountStatus(true);
+    setCreateStripe(true);
     try {
       const res = await axios.post(
         `${BASE_URL}/seller/stripe/onboarding`,
@@ -35,18 +38,14 @@ const CommunitiesPage = () => {
         }
       );
 
-      console.log("onboarding res >>> ", res?.data);
       if (res?.data?.success && res?.data?.data?.url) {
         window.open(res.data.data.url, "_blank", "noopener,noreferrer");
       }
-      // handleCheckStripeAccountStatus();
-
-      //   console.log("create stripe account >>> ", res?.data);
     } catch (error) {
-      console.error("create stripe account error >>> ", error);
       handleApiError(error, navigate);
     } finally {
-      setCheckStripeAccountStatus(false);
+      setCreateStripe(false);
+      setShowConfirmationModal(false);
     }
   };
 
@@ -58,13 +57,17 @@ const CommunitiesPage = () => {
           Authorization: `Bearer ${getToken()}`,
         },
       });
+
+      console.log("return status >> ", res?.data);
       if (res?.data?.success) {
         setShowAddCommunityPopup((prev) => !prev);
       } else {
-        handleCreateStripeAccount();
+        setShowConfirmationModal(true);
       }
     } catch (error) {
-      console.log("handleCheckStripeAccountStatus error >>> ", error);
+      if (error?.status === 404) {
+        setShowConfirmationModal(true);
+      }
       handleApiError(error, navigate);
     } finally {
       setCheckStripeAccountStatus(false);
@@ -178,6 +181,13 @@ const CommunitiesPage = () => {
         setTotal={setTotal}
         communities={communities}
         setCommunities={setCommunities}
+      />
+
+      <PermissionModal
+        handleCreateStripeAccount={handleCreateStripeAccount}
+        loading={createStripe}
+        showConfirmationModal={showConfirmationModal}
+        setShowConfirmationModal={setShowConfirmationModal}
       />
     </main>
   );

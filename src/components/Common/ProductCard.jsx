@@ -10,11 +10,19 @@ const ProductCard = ({ product }) => {
           <div className="w-full md:max-w-[290px] h-[420px] bg-white rounded-[20px] p-3 custom-shadow">
             <div className="w-full relative">
               <div className="w-full h-[276px] bg-[#EAEAEA] rounded-[15px] flex items-center justify-center">
-                <img
-                  src={product?.images[0]?.imageUrl}
-                  alt="image placeholder"
-                  className="w-full h-full object-cover rounded-[15px]"
-                />
+                {product?.images?.length > 0 ? (
+                  <img
+                    src={product?.images[0]?.imageUrl}
+                    alt="image placeholder"
+                    className="w-full h-full object-cover rounded-[15px]"
+                  />
+                ) : (
+                  <img
+                    src={`/image-placeholder.png`}
+                    alt="image placeholder"
+                    className="w-14 h-14 object-cover rounded-[15px]"
+                  />
+                )}
               </div>
             </div>
 

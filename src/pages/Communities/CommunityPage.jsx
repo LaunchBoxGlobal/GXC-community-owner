@@ -10,6 +10,7 @@ import { handleApiError } from "../../utils/handleApiError";
 import PageLoader from "../../components/Loader/PageLoader";
 import { enqueueSnackbar } from "notistack";
 import EditCommunity from "./EditCommunity";
+import Loader from "../../components/Loader/Loader";
 
 const CommunityPage = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -26,6 +27,54 @@ const CommunityPage = () => {
 
   const tabFromUrl = searchParams.get("tab") || "products";
   const [activeTab, setActiveTab] = useState(tabFromUrl);
+  const [showInvitationButton, setShowInvitationButton] = useState(false);
+  const [createStripe, setCreateStripe] = useState(false);
+
+  const handleCheckStripeAccountStatus = async () => {
+    try {
+      const res = await axios.get(`${BASE_URL}/seller/stripe/return`, {
+        headers: {
+          Authorization: `Bearer ${getToken()}`,
+        },
+      });
+
+      if (res?.data?.success) {
+        setShowInvitationButton(true);
+      } else {
+        setShowInvitationButton(false);
+      }
+    } catch (error) {
+      if (error?.status === 404) {
+        setShowInvitationButton(false);
+        return;
+      }
+      handleApiError(error, navigate);
+    }
+  };
+
+  const handleCreateStripeAccount = async () => {
+    setCreateStripe(true);
+    try {
+      const res = await axios.post(
+        `${BASE_URL}/seller/stripe/onboarding`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${getToken()}`,
+          },
+        }
+      );
+
+      if (res?.data?.success && res?.data?.data?.url) {
+        window.open(res.data.data.url, "_blank", "noopener,noreferrer");
+      }
+    } catch (error) {
+      console.error("create stripe account error >>> ", error);
+      handleApiError(error, navigate);
+    } finally {
+      setCreateStripe(false);
+    }
+  };
 
   const fetchCommunityDetails = async (showLoader = true) => {
     if (showLoader) setLoading(true);
@@ -48,6 +97,7 @@ const CommunityPage = () => {
   };
 
   useEffect(() => {
+    handleCheckStripeAccountStatus();
     fetchCommunityDetails();
   }, []);
 
@@ -132,24 +182,38 @@ const CommunityPage = () => {
     <main className="w-full p-5 rounded-[10px] bg-white custom-shadow">
       <div className="w-full flex items-center justify-between flex-col md:flex-row gap-5">
         <h2 className="page-heading whitespace-nowrap">Community</h2>
-        <div className="flex items-center justify-center md:justify-end gap-3 w-full lg:w-[80%]">
-          <button
-            type="button"
-            disabled={loading || enableDisableLoading}
-            onClick={() => setShowEditCommunityPopup(true)}
-            className="button px-3 md:px-5 max-w-[190px] disabled:cursor-not-allowed"
-          >
-            Edit Community
-          </button>
-          <button
-            type="button"
-            disabled={!community?.community?.inviteLinkActive || loading}
-            onClick={() => setShowCopyLinkPopup(true)}
-            className="button px-3 md:px-5 max-w-[160px] disabled:cursor-not-allowed"
-          >
-            Invite Members
-          </button>
-        </div>
+        {showInvitationButton ? (
+          <div className="flex items-center justify-center md:justify-end gap-3 w-full lg:w-[80%]">
+            <button
+              type="button"
+              disabled={loading || enableDisableLoading}
+              onClick={() => setShowEditCommunityPopup(true)}
+              className="button px-3 md:px-5 max-w-[190px] disabled:cursor-not-allowed"
+            >
+              Edit Community
+            </button>
+
+            <button
+              type="button"
+              disabled={!community?.community?.inviteLinkActive || loading}
+              onClick={() => setShowCopyLinkPopup(true)}
+              className="button px-3 md:px-5 max-w-[160px] disabled:cursor-not-allowed"
+            >
+              Invite Members
+            </button>
+          </div>
+        ) : (
+          <div className="flex items-center justify-center md:justify-end gap-3 w-full lg:w-[80%]">
+            <button
+              type="button"
+              disabled={createStripe}
+              onClick={() => handleCreateStripeAccount()}
+              className="button px-3 md:px-5 max-w-[220px] disabled:cursor-not-allowed"
+            >
+              {createStripe ? <Loader /> : "Create Stripe Account"}
+            </button>
+          </div>
+        )}
       </div>
 
       <div className="w-full bg-white custom-shadow rounded-lg md:rounded-xl lg:rounded-[24px] p-7 mt-5 flex flex-wrap overflow-hidden items-center justify-between gap-y-5">
