@@ -18,7 +18,7 @@ const ChangeEmailForm = () => {
   const redirect = searchParams?.get("redirect");
 
   useEffect(() => {
-    document.title = `Change Email - GiveXChange`;
+    document.title = `Change Email - giveXchange`;
   }, []);
 
   const formik = useFormik({

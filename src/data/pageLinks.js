@@ -51,8 +51,8 @@ export const PAGE_LINKS = [
     iconAltTag: "reports",
   },
   {
-    title: "Wallet",
-    page: "/wallet",
+    title: "Transaction History",
+    page: "/transaction-history",
     icon: "/wallet-icon.png",
     iconWidth: 17,
     iconHeight: 17,

@@ -33,7 +33,7 @@ const CompleteProfileForm = () => {
   const togglePopup = () => setShowPopup((prev) => !prev);
 
   useEffect(() => {
-    document.title = `Complete Profile - GiveXChange`;
+    document.title = `Complete Profile - giveXchange`;
   }, []);
 
   const formik = useFormik({

@@ -122,7 +122,7 @@ const HomePage = () => {
     }
   };
   useEffect(() => {
-    document.title = "GiveXChange";
+    document.title = "giveXchange";
     fetchStats();
     fetchCommunities();
     handleCheckStripeAccountStatus();
@@ -133,7 +133,7 @@ const HomePage = () => {
         Hello John Doe,
       </h1>
       <h2 className="text-[32px] font-semibold leading-none">
-        Welcome to GiveXChange
+        Welcome to giveXchange
       </h2>
 
       {fetchingStats ? (

@@ -17,7 +17,7 @@ const SignUpForm = () => {
   const [slugError, setSlugError] = useState(null);
 
   useEffect(() => {
-    document.title = `Sign up - GiveXChange`;
+    document.title = `Sign up - giveXchange`;
     const token = Cookies.get("ownerToken");
     const owner = Cookies.get("owner")
       ? JSON.parse(Cookies.get("owner"))

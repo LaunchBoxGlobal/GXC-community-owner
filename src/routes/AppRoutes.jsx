@@ -266,7 +266,7 @@ const AppRoutes = () => {
       />
 
       <Route
-        path="/wallet"
+        path="/transaction-history"
         element={
           <PrivateRoute element={<DashboardLayout pages={<WalletPage />} />} />
         }

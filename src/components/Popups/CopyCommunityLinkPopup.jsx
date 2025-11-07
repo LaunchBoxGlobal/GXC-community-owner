@@ -10,12 +10,12 @@ const CopyCommunityLinkPopup = () => {
   const [copied, setCopied] = useState(false);
 
   useEffect(() => {
-    document.title = `Account verified - GiveXChange`;
+    document.title = `Account verified - giveXchange`;
   }, []);
 
   const handleCopyLink = async () => {
     try {
-      const link = `invite.app.thegivexchange.com/${slug}`;
+      const link = `invite.app.thegiveXchange.com/${slug}`;
       await navigator.clipboard.writeText(link);
       setCopied(true);
 
@@ -53,7 +53,7 @@ const CopyCommunityLinkPopup = () => {
 
             <div className="w-full h-[50px] p-1 bg-[#f5f5f5] rounded-[12px] flex items-center justify-between pl-4 mt-5">
               <p className="text-[#565656] leading-none overflow-hidden text-ellipsis">
-                www.thegivexchange.com/community/{slug}
+                www.thegiveXchange.com/community/{slug}
               </p>
               <button
                 type="button"

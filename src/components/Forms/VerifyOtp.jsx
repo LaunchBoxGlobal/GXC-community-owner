@@ -42,7 +42,7 @@ const VerifyOtp = () => {
   }, [navigate]);
 
   useEffect(() => {
-    document.title = `Verify OTP - GiveXChange`;
+    document.title = `Verify OTP - giveXchange`;
   }, []);
 
   const formik = useFormik({

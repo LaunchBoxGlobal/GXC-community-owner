@@ -2,7 +2,7 @@ import axios from "axios";
 import Cookies from "js-cookie";
 
 const api = axios.create({
-  baseURL: `https://stg-api.app.thegivexchange.com/api`,
+  baseURL: `https://stg-api.app.thegiveXchange.com/api`,
 });
 
 api.interceptors.request.use((config) => {

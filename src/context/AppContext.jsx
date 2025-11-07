@@ -75,8 +75,8 @@ export const AppProvider = ({ children }) => {
         });
       }
     } catch (error) {
-      console.log("handleCheckStripeAccountStatus error >>> ", error);
-      handleApiError(error, navigate);
+      // console.log("handleCheckStripeAccountStatus error >>> ", error);
+      // handleApiError(error, navigate);
     }
   };
   return (

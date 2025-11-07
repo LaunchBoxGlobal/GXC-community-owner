@@ -25,7 +25,7 @@ const CommunityLinkCopy = ({
           </div>
 
           <div className="w-full bg-[#F5F5F5] rounded-[12px] min-h-[49px] py-2.5 flex items-center px-5 my-8">
-            <p className="">invite.app.thegivexchange.com/{slug}</p>
+            <p className="">invite.app.thegiveXchange.com/{slug}</p>
           </div>
 
           <button
@@ -33,7 +33,7 @@ const CommunityLinkCopy = ({
             className="button"
             onClick={() => {
               navigator.clipboard.writeText(
-                `invite.app.thegivexchange.com/${slug}`
+                `invite.app.thegiveXchange.com/${slug}`
               );
 
               setCopyLinkPopup(true);

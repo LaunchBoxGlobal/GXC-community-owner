@@ -7,7 +7,7 @@ import { AppProvider } from "./context/AppContext.jsx";
 import { UserProvider } from "./context/useContext.jsx";
 
 createRoot(document.getElementById("root")).render(
-  <StrictMode>
+  <>
     <BrowserRouter>
       <AppProvider>
         <UserProvider>
@@ -15,5 +15,5 @@ createRoot(document.getElementById("root")).render(
         </UserProvider>
       </AppProvider>
     </BrowserRouter>
-  </StrictMode>
+  </>
 );
