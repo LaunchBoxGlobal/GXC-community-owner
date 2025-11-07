@@ -4,6 +4,8 @@ import axios from "axios";
 import { BASE_URL } from "../../data/baseUrl";
 import { getToken } from "../../utils/getToken";
 import { enqueueSnackbar } from "notistack";
+import ImageSlider from "./ImageSlider";
+import { IoClose } from "react-icons/io5";
 
 const ReportDetailsModal = ({
   reportDetails,
@@ -14,6 +16,8 @@ const ReportDetailsModal = ({
     reportDetails?.reportedUser?.isBanned || false
   );
   const [loading, setLoading] = useState(false);
+  const [showImageModal, setShowImageModal] = useState(false);
+  const [initialSlide, setInitialSlide] = useState(0);
 
   const toggleBanStatus = async () => {
     setLoading(true);
@@ -114,7 +118,21 @@ const ReportDetailsModal = ({
             <div className="w-full border mt-3" />
             <div className="w-full mt-4">
               <h4 className="font-medium">Images</h4>
-              {/* You can render images here if needed */}
+              <div className="w-full mt-1.5 flex items-center gap-1.5">
+                {reportDetails?.images?.map((image, i) => {
+                  return (
+                    <img
+                      src={image}
+                      key={i}
+                      onClick={() => {
+                        setShowImageModal(true);
+                        setInitialSlide(i); // ✅ New: store which image was clicked
+                      }}
+                      className="w-[56px] h-[56px] object-cover rounded-2xl cursor-pointer"
+                    />
+                  );
+                })}
+              </div>
             </div>
           </>
         )}
@@ -159,8 +177,42 @@ const ReportDetailsModal = ({
           </div>
         </div>
       </div>
+      <ImageViewModal
+        reportDetails={reportDetails}
+        showImageModal={showImageModal}
+        setShowImageModal={setShowImageModal}
+        initialSlide={initialSlide}
+      />
     </div>
   );
 };
 
 export default ReportDetailsModal;
+
+export const ImageViewModal = ({
+  reportDetails,
+  showImageModal,
+  setShowImageModal,
+  initialSlide,
+}) => {
+  return (
+    showImageModal && (
+      <div className="fixed inset-0 z-50 bg-[rgba(0,0,0,0.5)] flex items-center justify-center px-4">
+        <button
+          type="button"
+          onClick={() => setShowImageModal(false)}
+          className="absolute top-5 right-5 text-white text-3xl font-bold z-50"
+        >
+          <IoClose />
+        </button>
+
+        <div className="max-w-[1200px] w-full h-[90vh] flex items-center justify-center">
+          <ImageSlider
+            images={reportDetails?.images}
+            initialSlide={initialSlide}
+          />
+        </div>
+      </div>
+    )
+  );
+};
