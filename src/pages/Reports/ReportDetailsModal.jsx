@@ -145,7 +145,7 @@ const ReportDetailsModal = ({
             <div className="inline-flex items-center gap-2 mt-1.5">
               <img
                 src={
-                  reportDetails?.reportedUser?.profilePictureUrl ||
+                  reportDetails?.reportedUser?.profilePicture ||
                   "/profile-icon.png"
                 }
                 alt=""

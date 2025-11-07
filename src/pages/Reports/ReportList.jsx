@@ -55,14 +55,14 @@ const ReportList = ({ reports }) => {
                     <div className="inline-flex items-center gap-2">
                       <img
                         src={
-                          report?.reportedUser?.profilePictureUrl
-                            ? report?.reportedUser?.profilePictureUrl
+                          report?.reportedUser?.profilePicture
+                            ? report?.reportedUser?.profilePicture
                             : "/profile-icon.png"
                         }
                         alt=""
                         width={43}
                         height={43}
-                        className="rounded-full object-cover"
+                        className="rounded-full object-cover max-h-[43px] max-w-[43px]"
                       />
                       <p className="">{report?.reportedUser?.name}</p>
                     </div>
@@ -71,14 +71,14 @@ const ReportList = ({ reports }) => {
                     <div className="inline-flex items-center gap-2">
                       <img
                         src={
-                          report?.reporter?.profilePictureUrl
-                            ? report?.reporter?.profilePictureUrl
+                          report?.reporter?.profilePicture
+                            ? report?.reporter?.profilePicture
                             : "/profile-icon.png"
                         }
                         alt=""
                         width={43}
                         height={43}
-                        className="rounded-full object-cover"
+                        className="rounded-full object-cover h-[43px] max-h-[43px] w-[43px] max-w-[43px]"
                       />
                       <p className="">{report?.reporter?.name}</p>
                     </div>
