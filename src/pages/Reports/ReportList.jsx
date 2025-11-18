@@ -28,7 +28,7 @@ const ReportList = ({ reports }) => {
               Reported User
             </th>
             <th scope="col" class="px-6 py-4 text-sm font-medium">
-              Community
+              Reason
             </th>
             <th scope="col" class="px-6 py-4 text-sm font-medium">
               Date
@@ -50,7 +50,7 @@ const ReportList = ({ reports }) => {
                   class="bg-white border-b border-gray-200 text-sm"
                 >
                   <td class="px-6 py-3">{report?.id}</td>
-                  <td class="px-6 py-3">{report?.title}</td>
+
                   <td class="px-6 py-3">
                     <div className="inline-flex items-center gap-2">
                       <img
@@ -83,6 +83,7 @@ const ReportList = ({ reports }) => {
                       <p className="">{report?.reporter?.name}</p>
                     </div>
                   </td>
+                  <td class="px-6 py-3">{report?.title}</td>
                   <td class="px-6 py-3">{formatDate(report?.createdAt)}</td>
                   <td class="px-6 py-3">
                     <button
