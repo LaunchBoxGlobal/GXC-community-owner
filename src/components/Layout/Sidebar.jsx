@@ -84,9 +84,8 @@ const Sidebar = () => {
                   alt={link?.iconAltTag}
                   width={link?.iconWidth}
                   height={link?.iconHeight}
-                  // Apply invert/brightness filter when active (to turn green icon white)
                   className={`transition duration-300 group-hover:invert group-hover:brightness-0 ${
-                    isActive ? "invert brightness-0" : ""
+                    isActive ? "invert brightness-0" : "brightness-0 opacity-70"
                   }`}
                 />
                 <span>{link?.title}</span>

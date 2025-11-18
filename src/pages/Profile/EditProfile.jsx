@@ -29,8 +29,6 @@ const EditProfile = ({ togglePopup, showPopup, fetchUserProfile }) => {
   const [fileError, setFileError] = useState(null);
 
   const parsedPhone = parsePhoneNumberFromString(user?.phone || "");
-  const defaultCountry = parsedPhone ? parsedPhone.country : "US";
-  const defaultPhoneNumber = parsedPhone ? parsedPhone.nationalNumber : "";
 
   useEffect(() => {
     if (user?.profilePicture) {
@@ -44,7 +42,6 @@ const EditProfile = ({ togglePopup, showPopup, fetchUserProfile }) => {
       firstName: user?.firstName || "",
       lastName: user?.lastName || "",
       email: user?.email || "",
-      // description: user?.description || "",
       profileImage: null,
       phoneNumber: user?.phone || "",
       city: user?.city || "",
@@ -333,33 +330,30 @@ const EditProfile = ({ togglePopup, showPopup, fetchUserProfile }) => {
               <div className="w-full grid grid-cols-2 gap-3">
                 <div className="w-full flex flex-col gap-1">
                   <label className="text-sm font-medium">Country</label>
-                  <CountrySelect
-                    defaultValue={{
-                      id: 233,
-                      name: "United States",
-                      iso2: "US",
-                      iso3: "USA",
-                    }}
-                    disabled={true}
-                    containerClassName="w-full"
-                    inputClassName={`w-full border h-[39px] px-[15px] rounded-[8px] outline-none bg-[var(--secondary-bg)] ${
-                      formik.touched.country && formik.errors.country
-                        ? "border-red-500"
-                        : "border-gray-200"
-                    } disabled:cursor-not-allowed`}
-                    placeHolder="Select Country"
-                    onChange={(val) => {
-                      formik.setFieldValue("country", val.name);
-                      formik.setFieldValue("countryId", val.id);
-                      formik.setFieldValue("state", "");
-                      formik.setFieldValue("city", "");
-                    }}
-                    // defaultValue={
-                    //   formik.values.country
-                    //     ? { name: formik.values.country }
-                    //     : null
-                    // }
-                  />
+                  <div className="w-full pointer-events-none">
+                    <CountrySelect
+                      defaultValue={{
+                        id: 233,
+                        name: "United States",
+                        iso2: "US",
+                        iso3: "USA",
+                      }}
+                      disabled={true}
+                      containerClassName="w-full"
+                      inputClassName={`w-full border h-[39px] px-[15px] rounded-[8px] outline-none bg-[var(--secondary-bg)] ${
+                        formik.touched.country && formik.errors.country
+                          ? "border-red-500"
+                          : "border-gray-200"
+                      } disabled:cursor-not-allowed`}
+                      placeHolder="Select Country"
+                      onChange={(val) => {
+                        formik.setFieldValue("country", val.name);
+                        formik.setFieldValue("countryId", val.id);
+                        formik.setFieldValue("state", "");
+                        formik.setFieldValue("city", "");
+                      }}
+                    />
+                  </div>
                   {formik.touched.country && formik.errors.country && (
                     <p className="text-red-500 text-xs">
                       {formik.errors.country}

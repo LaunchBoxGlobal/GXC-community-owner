@@ -201,31 +201,33 @@ const CompleteProfileForm = () => {
           <div className="grid grid-cols-2 gap-4">
             <div className="w-full flex flex-col gap-1">
               <label className="text-sm font-medium">Country</label>
-              <CountrySelect
-                defaultValue={{
-                  id: 233,
-                  name: "United States",
-                  iso2: "US",
-                  iso3: "USA",
-                }}
-                disabled={true}
-                containerClassName="w-full"
-                inputClassName={`w-full border h-[39px] px-[15px] rounded-[8px] outline-none disabled:cursor-not-allowed 
+              <div className="w-full pointer-events-none">
+                <CountrySelect
+                  defaultValue={{
+                    id: 233,
+                    name: "United States",
+                    iso2: "US",
+                    iso3: "USA",
+                  }}
+                  disabled={true}
+                  containerClassName="w-full"
+                  inputClassName={`w-full border h-[39px] px-[15px] rounded-[8px] outline-none disabled:cursor-not-allowed 
         ${
           formik.touched.country && formik.errors.country
             ? "border-red-500"
             : "border-gray-200"
         }
       `}
-                placeHolder="Select Country"
-                onChange={(val) => {
-                  formik.setFieldValue("country", val.name);
-                  formik.setFieldValue("countryId", val.id);
-                  formik.setFieldValue("state", "");
-                  formik.setFieldValue("stateId", "");
-                  formik.setFieldValue("city", "");
-                }}
-              />
+                  placeHolder="Select Country"
+                  onChange={(val) => {
+                    formik.setFieldValue("country", val.name);
+                    formik.setFieldValue("countryId", val.id);
+                    formik.setFieldValue("state", "");
+                    formik.setFieldValue("stateId", "");
+                    formik.setFieldValue("city", "");
+                  }}
+                />
+              </div>
               {formik.touched.country && formik.errors.country && (
                 <p className="text-red-500 text-xs">{formik.errors.country}</p>
               )}
