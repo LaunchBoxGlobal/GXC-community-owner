@@ -17,36 +17,8 @@ const RecentCommunitiesList = ({
   toggleCommunityPopup,
   handleCloseSuccessPopup,
   communities,
-  setCommunities,
   loading,
-  setLoading,
 }) => {
-  // const [loading, setLoading] = useState(false);
-  // const [communities, setCommunities] = useState(null);
-
-  const fetchCommunities = async () => {
-    setLoading(true);
-    try {
-      const endpoint = `${BASE_URL}/communities/my-communities`;
-
-      const res = await axios.get(endpoint, {
-        headers: { Authorization: `Bearer ${getToken()}` },
-      });
-
-      // console.log(res?.data?.data);
-
-      setCommunities(res?.data?.data?.communities || []);
-    } catch (error) {
-      handleApiError(error, navigate);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  // useEffect(() => {
-  //   fetchCommunities();
-  // }, []);
-
   return (
     <div className="w-full">
       <AddCommunity

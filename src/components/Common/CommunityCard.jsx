@@ -3,7 +3,9 @@ import { Link } from "react-router-dom";
 
 const CommunityCard = ({ community }) => {
   return (
-    <Link to={`/communities/details/${community?.slug}`}>
+    <Link
+      to={`/communities/details/${community?.slug}/${community?.id}?activeTab=products`}
+    >
       <div className="w-full bg-white p-5 rounded-[20px] custom-shadow overflow-hidden">
         <div className="w-full flex items-center justify-between gap-4">
           <div className="flex items-center gap-2">
@@ -13,11 +15,6 @@ const CommunityCard = ({ community }) => {
               </p>
             </div>
           </div>
-          {/* <div>
-            <button type="button">
-              <HiOutlineDotsVertical className="text-2xl" />
-            </button>
-          </div> */}
         </div>
 
         <div className="w-full my-4 min-h-[100px]">

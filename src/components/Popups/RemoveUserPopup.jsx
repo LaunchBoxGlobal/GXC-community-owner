@@ -42,7 +42,7 @@ const RemoveUserPopup = ({
         }
       );
 
-      console.log("Block user response >>> ", res?.data);
+      // console.log("Block user response >>> ", res?.data);
       if (res?.data?.success) {
         // enqueueSnackbar(res?.data?.message, {
         //   variant: "success",
@@ -87,7 +87,7 @@ const RemoveUserPopup = ({
           </div>
 
           <h2 className="text-[24px] font-semibold leading-[1.3] text-center">
-            Remove Member
+            Remove member
           </h2>
           <p className="text-[var(--secondary-color)] text-center leading-[1.3]">
             Are you sure you want to remove this member?

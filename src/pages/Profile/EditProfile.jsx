@@ -49,8 +49,8 @@ const EditProfile = ({ togglePopup, showPopup, fetchUserProfile }) => {
       phoneNumber: user?.phone || "",
       city: user?.city || "",
       state: user?.state || "",
-      country: user?.country || "",
-      countryId: "",
+      country: "United States",
+      countryId: 233,
       stateId: "",
       zipcode: user?.zipcode || "",
       location: user?.address || "",
@@ -334,12 +334,19 @@ const EditProfile = ({ togglePopup, showPopup, fetchUserProfile }) => {
                 <div className="w-full flex flex-col gap-1">
                   <label className="text-sm font-medium">Country</label>
                   <CountrySelect
+                    defaultValue={{
+                      id: 233,
+                      name: "United States",
+                      iso2: "US",
+                      iso3: "USA",
+                    }}
+                    disabled={true}
                     containerClassName="w-full"
                     inputClassName={`w-full border h-[39px] px-[15px] rounded-[8px] outline-none bg-[var(--secondary-bg)] ${
                       formik.touched.country && formik.errors.country
                         ? "border-red-500"
                         : "border-gray-200"
-                    }`}
+                    } disabled:cursor-not-allowed`}
                     placeHolder="Select Country"
                     onChange={(val) => {
                       formik.setFieldValue("country", val.name);
@@ -347,11 +354,11 @@ const EditProfile = ({ togglePopup, showPopup, fetchUserProfile }) => {
                       formik.setFieldValue("state", "");
                       formik.setFieldValue("city", "");
                     }}
-                    defaultValue={
-                      formik.values.country
-                        ? { name: formik.values.country }
-                        : null
-                    }
+                    // defaultValue={
+                    //   formik.values.country
+                    //     ? { name: formik.values.country }
+                    //     : null
+                    // }
                   />
                   {formik.touched.country && formik.errors.country && (
                     <p className="text-red-500 text-xs">

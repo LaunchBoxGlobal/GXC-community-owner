@@ -85,7 +85,7 @@ const BanUserPopup = ({
             />
           </div>
           <h2 className="text-[24px] font-semibold leading-[1.3] text-center">
-            Block Member
+            Block member
           </h2>
           <p className="text-[var(--secondary-color)] text-center leading-[1.3]">
             Are you sure you want to block this member?

@@ -48,8 +48,8 @@ const CompleteProfileForm = () => {
       zipcode: "",
       city: "",
       state: "",
-      country: "",
-      countryId: "", // store id separately
+      country: "United States",
+      countryId: 233,
       stateId: "",
     },
     validationSchema: completeProfileValidationSchema,
@@ -202,8 +202,15 @@ const CompleteProfileForm = () => {
             <div className="w-full flex flex-col gap-1">
               <label className="text-sm font-medium">Country</label>
               <CountrySelect
+                defaultValue={{
+                  id: 233,
+                  name: "United States",
+                  iso2: "US",
+                  iso3: "USA",
+                }}
+                disabled={true}
                 containerClassName="w-full"
-                inputClassName={`w-full border h-[39px] px-[15px] rounded-[8px] outline-none 
+                inputClassName={`w-full border h-[39px] px-[15px] rounded-[8px] outline-none disabled:cursor-not-allowed 
         ${
           formik.touched.country && formik.errors.country
             ? "border-red-500"

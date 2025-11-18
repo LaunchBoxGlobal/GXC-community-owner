@@ -227,7 +227,7 @@ const AppRoutes = () => {
       />
 
       <Route
-        path="/communities/details/:slug"
+        path="/communities/details/:slug/:communityId"
         element={
           <PrivateRoute
             element={<DashboardLayout pages={<CommunityPage />} />}
@@ -273,7 +273,7 @@ const AppRoutes = () => {
       />
 
       <Route
-        path="/settings"
+        path="/settings/:settingsTab"
         element={
           <PrivateRoute
             element={
@@ -285,7 +285,7 @@ const AppRoutes = () => {
         }
       />
 
-      <Route
+      {/* <Route
         path="/settings/change-password"
         element={
           <PrivateRoute
@@ -296,7 +296,7 @@ const AppRoutes = () => {
             }
           />
         }
-      />
+      /> */}
 
       <Route
         path="/profile"

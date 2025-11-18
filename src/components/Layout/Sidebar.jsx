@@ -3,7 +3,6 @@ import { PAGE_LINKS } from "../../data/pageLinks";
 import Cookies from "js-cookie";
 import axios from "axios";
 import { BASE_URL } from "../../data/baseUrl";
-import { FiLogOut } from "react-icons/fi";
 import { handleApiError } from "../../utils/handleApiError";
 
 const Sidebar = () => {
@@ -43,24 +42,39 @@ const Sidebar = () => {
     }
   };
 
+  const navigateToLink = (page, title) => {
+    if (page === "/settings") {
+      navigate("/settings/notifications");
+    } else {
+      navigate(page);
+    }
+  };
+
   return (
-    <div className="w-full h-full rounded-[10px] py-6 px-2 lg:px-5 flex flex-col items-start gap-y-6 bg-[#fff] custom-shadow">
+    <div className="w-full h-full rounded-[10px] py-6 px-2 lg:px-5 flex flex-col items-start gap-y-6 bg-[#fff] custom-shadow relative overflow-hidden">
       <div>
         <img
           src="/logo.svg"
           alt="logo"
-          className="max-w-[144px] object-contain"
+          className="w-full max-w-[144px] object-contain"
         />
       </div>
       <ul className="w-full flex flex-col gap-y-2">
         {PAGE_LINKS?.map((link, index) => {
+          const isSettings = link.page === "/settings";
+          const isActive = isSettings
+            ? location.pathname.startsWith("/settings")
+            : location.pathname === link.page ||
+              location.pathname.startsWith(link.page + "/");
+
           return (
             <li className={`w-full text-black h-[49px]`} key={index}>
-              <Link
-                to={link?.page}
+              <button
+                type="button"
+                // to={link?.page}
+                onClick={() => navigateToLink(link.page, link.title)}
                 className={`text-sm flex items-center gap-x-2.5 font-medium w-full h-[49px] px-4 rounded-[12px] outline-none ${
-                  location?.pathname === link?.page ||
-                  location?.pathname.startsWith(link?.page + "/")
+                  isActive
                     ? "bg-[var(--button-bg)] text-white"
                     : "bg-transparent text-black hover:bg-[var(--button-bg)] hover:text-white transition-all duration-300 group"
                 }`}
@@ -70,30 +84,25 @@ const Sidebar = () => {
                   alt={link?.iconAltTag}
                   width={link?.iconWidth}
                   height={link?.iconHeight}
+                  // Apply invert/brightness filter when active (to turn green icon white)
                   className={`transition duration-300 group-hover:invert group-hover:brightness-0 ${
-                    (location?.pathname === link?.page ||
-                      location?.pathname.startsWith(link?.page + "/")) &&
-                    "invert brightness-0"
+                    isActive ? "invert brightness-0" : ""
                   }`}
                 />
-
-                <span className="">{link?.title}</span>
-              </Link>
+                <span>{link?.title}</span>
+              </button>
             </li>
           );
         })}
-
-        <button
-          type="button"
-          onClick={() => handleLogout()}
-          className={`text-sm flex items-center gap-x-2.5 font-medium w-full h-[49px] px-4 rounded-[12px] outline-none 
-                    bg-transparent text-black hover:bg-[var(--button-bg)] hover:text-white transition-all duration-300 group"
-                }`}
-        >
-          <FiLogOut className="text-xl leading-none" />
-          Logout
-        </button>
       </ul>
+
+      <button
+        type="button"
+        onClick={handleLogout}
+        className={`absolute bottom-6 group text-sm font-medium w-full h-[49px] max-w-[145px] px-4 rounded-[12px] outline-none bg-[var(--button-bg)] text-white text-center`}
+      >
+        Logout
+      </button>
     </div>
   );
 };

@@ -32,6 +32,7 @@ const UserProfilePage = () => {
   };
 
   useEffect(() => {
+    document.title = "My Profile - giveXchange";
     fetchUserProfile();
   }, []);
 

@@ -40,6 +40,7 @@ const MemberDetails = () => {
   };
 
   useEffect(() => {
+    document.title = "Member Details - giveXchange";
     fetchMemberDetails();
   }, []);
 

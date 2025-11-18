@@ -8,6 +8,8 @@ import { useDebounce } from "use-debounce";
 import axios from "axios";
 import { getToken } from "../../utils/getToken";
 import Loader from "../../components/Loader/Loader";
+import { LuSearch } from "react-icons/lu";
+import { IoClose } from "react-icons/io5";
 
 const ProductList = ({ community }) => {
   // Query params
@@ -36,10 +38,12 @@ const ProductList = ({ community }) => {
 
     setLoading(true);
     try {
-      const baseUrl =
-        listType === "blocked"
-          ? `${BASE_URL}/communities/${community?.id}/products`
-          : `${BASE_URL}/communities/${community?.id}/products`;
+      // const baseUrl =
+      //   listType === "blocked"
+      //     ? `${BASE_URL}/communities/${community?.id}/products`
+      //     : `${BASE_URL}/communities/${community?.id}/products`;
+
+      const baseUrl = `${BASE_URL}/communities/${community?.id}/products`;
 
       const query = new URLSearchParams({
         page,
@@ -55,42 +59,43 @@ const ProductList = ({ community }) => {
       setProducts(data.products || []);
       setTotal(data.pagination?.total || 0);
       setTotalPages(data.pagination?.totalPages || 1);
-      // setMemberCount(data.pagination?.total || 0);
     } catch (error) {
       handleApiError(error, navigate);
     } finally {
       setLoading(false);
-      // setOpenActions(null);
     }
   };
 
-  // Fetch when dependencies change
   useEffect(() => {
     if (!community) return;
     fetchProducts();
   }, [listType, page, debouncedSearch, community]);
 
-  // Keep URL in sync with listType & page
   useEffect(() => {
-    setSearchParams({
+    const currentParams = Object.fromEntries(searchParams.entries());
+
+    const newParams = {
+      ...currentParams,
       type: listType,
       page,
       limit,
       ...(debouncedSearch && { search: debouncedSearch }),
-    });
-  }, [listType, page, limit, debouncedSearch]);
+    };
+
+    setSearchParams(newParams);
+  }, [listType, page, limit, debouncedSearch, searchParams, setSearchParams]);
 
   if (loading) {
     return (
-      <div className="w-full pt-10 flex items-center justify-center">
+      <div className="w-full pt-20 flex items-center justify-center">
         <Loader />
       </div>
     );
   }
 
   return (
-    <div className="w-full">
-      <div className="w-full">
+    <div className="w-full mt-6">
+      <div className="w-full flex items-center justify-between gap-5">
         <h3 className="page-heading">
           Products{" "}
           {products?.length > 0 ? (
@@ -99,6 +104,28 @@ const ProductList = ({ community }) => {
             `(0)`
           )}
         </h3>
+        <div className="w-full md:max-w-[252px]">
+          <div className="h-[49px] pl-[15px] pr-[10px] rounded-[8px] bg-white custom-shadow flex items-center gap-2">
+            <LuSearch className="text-xl text-[var(--secondary-color)]" />
+            <input
+              type="text"
+              placeholder="Search products..."
+              disabled={total <= 0}
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="w-full outline-none border-none bg-transparent disabled:cursor-not-allowed"
+            />
+            {searchTerm && (
+              <button
+                type="button"
+                onClick={() => setSearchTerm("")}
+                className="bg-gray-100 w-4 h-4 rounded-full"
+              >
+                <IoClose className="text-gray-900 text-sm" />
+              </button>
+            )}
+          </div>
+        </div>
       </div>
 
       <div className="w-full mt-6">

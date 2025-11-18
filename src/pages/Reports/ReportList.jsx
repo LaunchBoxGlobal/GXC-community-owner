@@ -13,7 +13,7 @@ const ReportList = ({ reports }) => {
   return (
     <div class="relative overflow-x-auto bg-white mt-7 min-h-[70vh]">
       <table class="w-full text-sm text-left rtl:text-right text-gray-500">
-        <thead class="text-gray-700 bg-[#4E9D4B26] rounded-[12px]">
+        <thead class="text-gray-700 light-green-bg rounded-[12px]">
           <tr className="rounded-[12px]">
             <th
               scope="col"
@@ -62,7 +62,7 @@ const ReportList = ({ reports }) => {
                         alt=""
                         width={43}
                         height={43}
-                        className="rounded-full object-cover max-h-[43px] max-w-[43px]"
+                        className="rounded-full object-cover w-[43px] h-[43px] max-h-[43px] max-w-[43px]"
                       />
                       <p className="">{report?.reportedUser?.name}</p>
                     </div>

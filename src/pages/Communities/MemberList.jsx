@@ -96,13 +96,19 @@ const MemberList = ({ communityId, setMemberCount, community }) => {
 
   // Keep URL in sync with listType & page
   useEffect(() => {
-    setSearchParams({
+    const currentParams = Object.fromEntries(searchParams.entries());
+
+    // Merge new params while keeping existing ones (like activeTab)
+    const newParams = {
+      ...currentParams,
       type: listType,
       page,
       limit,
       ...(debouncedSearch && { search: debouncedSearch }),
-    });
-  }, [listType, page, limit, debouncedSearch]);
+    };
+
+    setSearchParams(newParams);
+  }, [listType, page, limit, debouncedSearch, searchParams, setSearchParams]);
 
   // Pagination Handlers
   const handleNext = () => {
@@ -123,7 +129,7 @@ const MemberList = ({ communityId, setMemberCount, community }) => {
       <div className="w-full flex items-center justify-between flex-wrap gap-5">
         <h2 className="page-heading whitespace-nowrap">Members</h2>
         <div className="w-full md:max-w-[252px]">
-          <div className="border h-[49px] pl-[15px] pr-[10px] rounded-[8px] bg-white border-[#D9D9D9] flex items-center gap-2">
+          <div className="h-[49px] pl-[15px] pr-[10px] rounded-[8px] bg-white custom-shadow flex items-center gap-2">
             <LuSearch className="text-xl text-[var(--secondary-color)]" />
             <input
               type="text"
@@ -145,127 +151,128 @@ const MemberList = ({ communityId, setMemberCount, community }) => {
           </div>
         </div>
       </div>
-
-      {/* Filter Buttons */}
-      <div className="w-full my-4 space-x-3">
-        <button
-          type="button"
-          onClick={() => {
-            setListType("active");
-            setPage(1);
-          }}
-          className={`px-5 py-3 rounded-lg text-xs lg:text-sm font-medium ${
-            listType === "active"
-              ? "bg-[var(--button-bg)] text-white"
-              : "bg-[#E6E6E6] text-black"
-          }`}
-        >
-          Active Members
-        </button>
-        <button
-          type="button"
-          onClick={() => {
-            setListType("blocked");
-            setPage(1);
-          }}
-          className={`px-5 py-3 rounded-lg text-xs lg:text-sm font-medium ${
-            listType === "blocked"
-              ? "bg-[var(--button-bg)] text-white"
-              : "bg-[#E6E6E6] text-black"
-          }`}
-        >
-          Blocked Members
-        </button>
-      </div>
-
-      {/* Members List */}
-      {loading ? (
-        <div className="w-full flex justify-center">
-          <Loader />
+      <div className="w-full mt-5 bg-white custom-shadow rounded-[12px] p-5">
+        {/* Filter Buttons */}
+        <div className="w-full mb-4 space-x-3">
+          <button
+            type="button"
+            onClick={() => {
+              setListType("active");
+              setPage(1);
+            }}
+            className={`px-5 py-3 rounded-lg text-xs lg:text-sm font-medium ${
+              listType === "active"
+                ? "bg-[var(--button-bg)] text-white"
+                : "bg-[#E6E6E6] text-black"
+            }`}
+          >
+            Active Members
+          </button>
+          <button
+            type="button"
+            onClick={() => {
+              setListType("blocked");
+              setPage(1);
+            }}
+            className={`px-5 py-3 rounded-lg text-xs lg:text-sm font-medium ${
+              listType === "blocked"
+                ? "bg-[var(--button-bg)] text-white"
+                : "bg-[#E6E6E6] text-black"
+            }`}
+          >
+            Blocked Members
+          </button>
         </div>
-      ) : (
-        <>
-          {(listType === "active" ? members : bannedMembers)?.length > 0 ? (
-            <div className="w-full bg-white mt-6 px-5 pb-5 pt-2 rounded-[8px] lg:rounded-[24px] custom-shadow">
-              {(listType === "active" ? members : bannedMembers).map(
-                (member, i) => (
-                  <MemberCard
-                    key={i}
-                    member={member}
-                    index={i}
-                    setShowRemoveUserPopup={setShowRemoveUserPopup}
-                    setShowBlockUserPopup={setShowBlockUserPopup}
-                    toggleActionsDropdown={toggleActionsDropdown}
-                    openActions={openActions}
-                    total={total}
-                    getMembers={getMembers}
-                    isBlocked={listType === "blocked"}
-                    communityId={communityId}
-                    userId={userId}
-                  />
-                )
-              )}
-            </div>
-          ) : (
-            <div className="w-full text-center">
-              <p className="text-sm">No members found!</p>
-            </div>
-          )}
-        </>
-      )}
 
-      {/* Pagination */}
-      {totalPages > 1 && (
-        <div className="w-full mt-5 flex justify-end">
-          <nav aria-label="Page navigation example">
-            <ul className="inline-flex items-center space-x-1 text-base h-[50px] bg-[#E6E6E6] rounded-[12px] px-2">
-              <li>
-                <button
-                  onClick={handlePrev}
-                  disabled={page === 1}
-                  className={`flex items-center px-4 h-10 font-medium rounded-s-[12px] ${
-                    page === 1
-                      ? "opacity-50 cursor-not-allowed"
-                      : "hover:text-[var(--button-bg)]"
-                  }`}
-                >
-                  <MdKeyboardArrowLeft className="text-2xl" />
-                  Previous
-                </button>
-              </li>
+        {/* Members List */}
+        {loading ? (
+          <div className="w-full flex justify-center">
+            <Loader />
+          </div>
+        ) : (
+          <>
+            {(listType === "active" ? members : bannedMembers)?.length > 0 ? (
+              <div className="w-full bg-white">
+                {(listType === "active" ? members : bannedMembers).map(
+                  (member, i) => (
+                    <MemberCard
+                      key={i}
+                      member={member}
+                      index={i}
+                      setShowRemoveUserPopup={setShowRemoveUserPopup}
+                      setShowBlockUserPopup={setShowBlockUserPopup}
+                      toggleActionsDropdown={toggleActionsDropdown}
+                      openActions={openActions}
+                      total={total}
+                      getMembers={getMembers}
+                      isBlocked={listType === "blocked"}
+                      communityId={communityId}
+                      userId={userId}
+                    />
+                  )
+                )}
+              </div>
+            ) : (
+              <div className="w-full text-center min-h-[40vh] pt-10">
+                <p className="text-sm">No members found!</p>
+              </div>
+            )}
+          </>
+        )}
 
-              {[...Array(totalPages)].map((_, i) => (
-                <li key={i}>
+        {/* Pagination */}
+        {totalPages > 1 && (
+          <div className="w-full mt-5 flex justify-end">
+            <nav aria-label="Page navigation example">
+              <ul className="inline-flex items-center space-x-1 text-base h-[50px] bg-[#E6E6E6] rounded-[12px] px-2">
+                <li>
                   <button
-                    onClick={() => handlePageClick(i + 1)}
-                    className={`flex items-center justify-center px-4 h-10 rounded-[12px] ${
-                      page === i + 1
-                        ? "bg-[var(--button-bg)] text-white"
-                        : "text-gray-900 hover:text-[var(--button-bg)]"
+                    onClick={handlePrev}
+                    disabled={page === 1}
+                    className={`flex items-center px-4 h-10 font-medium rounded-s-[12px] ${
+                      page === 1
+                        ? "opacity-50 cursor-not-allowed"
+                        : "hover:text-[var(--button-bg)]"
                     }`}
                   >
-                    {i + 1}
+                    <MdKeyboardArrowLeft className="text-2xl" />
+                    Previous
                   </button>
                 </li>
-              ))}
 
-              <li>
-                <button
-                  onClick={handleNext}
-                  disabled={page === totalPages}
-                  className={`flex items-center px-4 h-10 font-medium rounded-e-[12px] ${
-                    page === totalPages
-                      ? "opacity-50 cursor-not-allowed"
-                      : "hover:text-[var(--button-bg)]"
-                  }`}
-                >
-                  Next <MdKeyboardArrowRight className="text-2xl" />
-                </button>
-              </li>
-            </ul>
-          </nav>
-        </div>
-      )}
+                {[...Array(totalPages)].map((_, i) => (
+                  <li key={i}>
+                    <button
+                      onClick={() => handlePageClick(i + 1)}
+                      className={`flex items-center justify-center px-4 h-10 rounded-[12px] ${
+                        page === i + 1
+                          ? "bg-[var(--button-bg)] text-white"
+                          : "text-gray-900 hover:text-[var(--button-bg)]"
+                      }`}
+                    >
+                      {i + 1}
+                    </button>
+                  </li>
+                ))}
+
+                <li>
+                  <button
+                    onClick={handleNext}
+                    disabled={page === totalPages}
+                    className={`flex items-center px-4 h-10 font-medium rounded-e-[12px] ${
+                      page === totalPages
+                        ? "opacity-50 cursor-not-allowed"
+                        : "hover:text-[var(--button-bg)]"
+                    }`}
+                  >
+                    Next <MdKeyboardArrowRight className="text-2xl" />
+                  </button>
+                </li>
+              </ul>
+            </nav>
+          </div>
+        )}
+      </div>
 
       {/* Popups */}
       <RemoveUserPopup

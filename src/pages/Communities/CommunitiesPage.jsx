@@ -1,7 +1,7 @@
 import { LuSearch } from "react-icons/lu";
 import RecentCommunitiesList from "../Home/RecentCommunitiesList";
-import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useState, useEffect, useCallback, useRef } from "react";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import Cookies from "js-cookie";
 import axios from "axios";
 import { BASE_URL } from "../../data/baseUrl";
@@ -10,32 +10,105 @@ import { handleApiError } from "../../utils/handleApiError";
 import { IoClose } from "react-icons/io5";
 import Loader from "../../components/Loader/Loader";
 import { PermissionModal } from "../Home/StripeAccountPermissionModal";
+import Pagination from "../../components/Common/Pagination";
 
 const CommunitiesPage = () => {
+  const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const page = Number(searchParams.get("page")) || 1;
+  const LIMIT = 9;
+
+  const [communities, setCommunities] = useState([]);
+  const [pagination, setPagination] = useState(null);
+  const [total, setTotal] = useState(0);
+  const [loading, setLoading] = useState(true);
+  const [searchTerm, setSearchTerm] = useState("");
   const [showAddCommunityPopup, setShowAddCommunityPopup] = useState(false);
   const [communityUrl, setCommunityUrl] = useState(null);
   const [showSuccessPopup, setShowSuccessPopup] = useState(false);
-  const navigate = useNavigate();
-  const [communities, setCommunities] = useState([]);
-  const [total, setTotal] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [searchTerm, setSearchTerm] = useState("");
   const [checkStripeAccountStatus, setCheckStripeAccountStatus] =
     useState(false);
   const [createStripe, setCreateStripe] = useState(false);
   const [showConfirmationModal, setShowConfirmationModal] = useState(false);
 
+  const firstRender = useRef(true);
+
+  // ---------------------------------------------
+  // 🔹 Fetch Communities
+  // ---------------------------------------------
+  const fetchCommunities = useCallback(
+    async (query = "", currentPage = page) => {
+      setLoading(true);
+      try {
+        const res = await axios.get(`${BASE_URL}/communities/my-communities`, {
+          params: {
+            page: currentPage,
+            limit: LIMIT,
+            ...(query && { search: query }),
+          },
+          headers: { Authorization: `Bearer ${getToken()}` },
+        });
+
+        const data = res?.data?.data || {};
+        setCommunities(data.communities || []);
+        setPagination(data.pagination);
+        setTotal(data.pagination?.total || 0);
+      } catch (error) {
+        handleApiError(error, navigate);
+      } finally {
+        setLoading(false);
+      }
+    },
+    [navigate]
+  );
+
+  // ---------------------------------------------
+  // ✅ Initial fetch on mount or page change
+  // ---------------------------------------------
+  useEffect(() => {
+    document.title = "Communities - giveXchange";
+    fetchCommunities(searchTerm, page);
+  }, [page, fetchCommunities]);
+
+  // ---------------------------------------------
+  // ✅ Debounced search
+  // ---------------------------------------------
+  useEffect(() => {
+    if (firstRender.current) {
+      firstRender.current = false;
+      return; // skip debounce on first render
+    }
+
+    const timeout = setTimeout(() => {
+      fetchCommunities(searchTerm, 1); // always reset to page 1 on search
+      const params = new URLSearchParams();
+      params.set("page", 1);
+      navigate(`?${params.toString()}`);
+    }, 500);
+
+    return () => clearTimeout(timeout);
+  }, [searchTerm, fetchCommunities, navigate]);
+
+  // ---------------------------------------------
+  // ✅ Pagination handler
+  // ---------------------------------------------
+  const handlePageChange = (newPage) => {
+    if (!pagination || newPage < 1 || newPage > pagination.totalPages) return;
+    const params = new URLSearchParams();
+    params.set("page", newPage);
+    navigate(`?${params.toString()}`);
+  };
+
+  // ---------------------------------------------
+  // ✅ Stripe onboarding handlers
+  // ---------------------------------------------
   const handleCreateStripeAccount = async () => {
     setCreateStripe(true);
     try {
       const res = await axios.post(
         `${BASE_URL}/seller/stripe/onboarding`,
         {},
-        {
-          headers: {
-            Authorization: `Bearer ${getToken()}`,
-          },
-        }
+        { headers: { Authorization: `Bearer ${getToken()}` } }
       );
 
       if (res?.data?.success && res?.data?.data?.url) {
@@ -53,75 +126,58 @@ const CommunitiesPage = () => {
     setCheckStripeAccountStatus(true);
     try {
       const res = await axios.get(`${BASE_URL}/seller/stripe/return`, {
-        headers: {
-          Authorization: `Bearer ${getToken()}`,
-        },
+        headers: { Authorization: `Bearer ${getToken()}` },
       });
 
-      console.log("return status >> ", res?.data);
       if (res?.data?.success) {
-        setShowAddCommunityPopup((prev) => !prev);
+        setShowAddCommunityPopup(true);
       } else {
         setShowConfirmationModal(true);
       }
     } catch (error) {
-      if (error?.status === 404) {
-        setShowConfirmationModal(true);
-      }
+      if (error?.status === 404) setShowConfirmationModal(true);
       handleApiError(error, navigate);
     } finally {
       setCheckStripeAccountStatus(false);
     }
   };
 
-  const fetchCommunities = async (query = "") => {
-    setLoading(true);
-    try {
-      const endpoint = query
-        ? `${BASE_URL}/communities/my-communities?search=${encodeURIComponent(
-            query
-          )}`
-        : `${BASE_URL}/communities/my-communities`;
-
-      const res = await axios.get(endpoint, {
-        headers: { Authorization: `Bearer ${getToken()}` },
-      });
-
-      setCommunities(res?.data?.data?.communities || []);
-      setTotal(res?.data?.data?.pagination?.total || 0);
-    } catch (error) {
-      handleApiError(error, navigate);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    const delayDebounce = setTimeout(() => {
-      fetchCommunities(searchTerm);
-    }, 500);
-
-    return () => clearTimeout(delayDebounce);
-  }, [searchTerm]);
-
-  const toggleCommunityPopup = () => {
-    setShowAddCommunityPopup((prev) => !prev);
-  };
-
   const handleCloseSuccessPopup = () => {
     setShowSuccessPopup(false);
     setShowAddCommunityPopup(false);
-    navigate(`/communities/details/${communityUrl}`);
+    if (communityUrl) navigate(`/communities/details/${communityUrl}`);
     Cookies.remove("slug");
   };
 
-  // 🔹 Initial fetch
-  useEffect(() => {
-    fetchCommunities();
-  }, []);
+  // ✅ Render page numbers dynamically
+  const renderPageNumbers = () => {
+    if (!pagination) return null;
+    const { totalPages } = pagination;
+    const pages = [];
+
+    for (let i = 1; i <= totalPages; i++) {
+      pages.push(
+        <li key={i}>
+          <button
+            onClick={() => handlePageChange(i)}
+            aria-current={i === page ? "page" : undefined}
+            className={`flex items-center justify-center px-4 h-10 leading-tight font-medium rounded-[12px] ${
+              i === page
+                ? "text-white bg-[var(--button-bg)] font-medium"
+                : "text-gray-600 hover:bg-[var(--button-bg)] hover:text-white"
+            } text-sm`}
+          >
+            {i}
+          </button>
+        </li>
+      );
+    }
+    return pages;
+  };
 
   return (
     <main className="w-full p-5 rounded-[10px] bg-[var(--white-bg)] custom-shadow min-h-[78vh]">
+      {/* Header */}
       <div className="w-full grid grid-cols-1 lg:grid-cols-2">
         <div className="lg:pt-4">
           <h3 className="text-[32px] font-semibold leading-none">
@@ -129,10 +185,10 @@ const CommunitiesPage = () => {
           </h3>
         </div>
 
-        {/* search & add new community */}
         <div className="w-full lg:max-w-1/2 flex flex-wrap mt-5 justify-end gap-4">
+          {/* Search input */}
           <div className="w-full md:max-w-[252px]">
-            <div className="border h-[49px] pl-[15px] pr-[10px] rounded-[8px] bg-white border-[#D9D9D9] flex items-center justify-start gap-2">
+            <div className="h-[49px] pl-[15px] pr-[10px] rounded-[8px] bg-white flex items-center gap-2 custom-shadow">
               <LuSearch className="text-xl text-[var(--secondary-color)]" />
               <input
                 type="text"
@@ -152,6 +208,8 @@ const CommunitiesPage = () => {
               )}
             </div>
           </div>
+
+          {/* Add new community button */}
           <div className="min-w-[201px]">
             <button
               type="button"
@@ -165,6 +223,7 @@ const CommunitiesPage = () => {
         </div>
       </div>
 
+      {/* Community list */}
       <RecentCommunitiesList
         showAddCommunityPopup={showAddCommunityPopup}
         setShowAddCommunityPopup={setShowAddCommunityPopup}
@@ -172,17 +231,22 @@ const CommunitiesPage = () => {
         setCommunityUrl={setCommunityUrl}
         showSuccessPopup={showSuccessPopup}
         setShowSuccessPopup={setShowSuccessPopup}
-        toggleCommunityPopup={toggleCommunityPopup}
+        toggleCommunityPopup={() => setShowAddCommunityPopup((prev) => !prev)}
         handleCloseSuccessPopup={handleCloseSuccessPopup}
-        // fetchCommunities={fetchCommunities}
         loading={loading}
-        setLoading={setLoading}
         total={total}
-        setTotal={setTotal}
         communities={communities}
         setCommunities={setCommunities}
       />
 
+      <Pagination
+        handlePageChange={handlePageChange}
+        renderPageNumbers={renderPageNumbers}
+        pagination={pagination}
+        page={page}
+      />
+
+      {/* Stripe permission modal */}
       <PermissionModal
         handleCreateStripeAccount={handleCreateStripeAccount}
         loading={createStripe}

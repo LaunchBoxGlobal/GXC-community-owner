@@ -36,7 +36,10 @@ const HomePageStats = ({ stats }) => {
     <div className="w-full mt-5 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
       {DASHBOARD_STATS?.map((st, i) => {
         return (
-          <div className="w-full bg-[var(--light-green)] p-4 sm:p-5 rounded-[20px] flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+          <div
+            key={i}
+            className="w-full light-green-bg p-4 sm:p-5 rounded-[20px] flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4"
+          >
             {/* --- Left Section --- */}
             <div className="flex-1">
               <p className="text-[#565656] font-medium text-xs sm:text-sm">

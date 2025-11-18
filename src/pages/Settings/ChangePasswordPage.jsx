@@ -17,10 +17,12 @@ const ChangePasswordPage = () => {
 
   const formik = useFormik({
     initialValues: {
+      currentPassword: "",
       password: "",
       confirmPassword: "",
     },
     validationSchema: Yup.object({
+      currentPassword: Yup.string().required("Enter your current password"),
       password: Yup.string()
         .min(8, "Password must be at least 8 characters")
         .max(25, "Password cannot be more than 25 characters")
@@ -31,7 +33,7 @@ const ChangePasswordPage = () => {
           /[@$!%*?&^#_.-]/,
           "Password must contain at least one special character"
         )
-        .required("Password is required"),
+        .required("Enter your new password"),
       confirmPassword: Yup.string()
         .oneOf([Yup.ref("password"), null], "Passwords do not match")
         .required("Confirm password is required"),
@@ -41,7 +43,7 @@ const ChangePasswordPage = () => {
         setLoading(true);
         const res = await axios.post(
           `${BASE_URL}/auth/change-password`,
-          { password: values?.password },
+          { password: values?.password, oldPassword: values.currentPassword },
           {
             headers: {
               "Content-Type": "application/json",
@@ -77,21 +79,42 @@ const ChangePasswordPage = () => {
     <div className="w-full">
       <h1 className="font-semibold text-[24px]">Change Password</h1>
 
-      <form onSubmit={formik.handleSubmit} className="w-full mt-5">
+      <div className="w-full border my-4" />
+
+      <form
+        onSubmit={formik.handleSubmit}
+        className="w-full mt-5 grid grid-cols-1 lg:grid-cols-2 gap-5"
+      >
+        <div className="w-full gap-5">
+          <div className="">
+            <PasswordField
+              name="currentPassword"
+              placeholder="Current Password"
+              value={formik.values.currentPassword}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              error={formik.errors.currentPassword}
+              touched={formik.touched.currentPassword}
+              label={"Current Password"}
+            />
+          </div>
+        </div>
         <div className="w-full gap-5">
           <div className="">
             <PasswordField
               name="password"
-              placeholder="Password"
+              placeholder="New Password"
               value={formik.values.password}
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
               error={formik.errors.password}
               touched={formik.touched.password}
+              label={"New Password"}
             />
           </div>
         </div>
-        <div className="w-full gap-5 mt-5">
+        <div className="hidden lg:block w-full"></div>
+        <div className="w-full gap-5">
           <div className="">
             <PasswordField
               name="confirmPassword"
@@ -101,11 +124,12 @@ const ChangePasswordPage = () => {
               onBlur={formik.handleBlur}
               error={formik.errors.confirmPassword}
               touched={formik.touched.confirmPassword}
+              label={"Confirm Password"}
             />
           </div>
         </div>
-
-        <div className="w-full flex justify-end mt-5">
+        <div className="hidden lg:block w-full"></div>
+        <div className="w-full flex justify-end">
           <button
             type="submit"
             className="bg-[var(--button-bg)] button max-w-[150px]"

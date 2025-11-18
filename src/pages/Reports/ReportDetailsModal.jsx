@@ -22,7 +22,7 @@ const ReportDetailsModal = ({
   const toggleBanStatus = async () => {
     setLoading(true);
     try {
-      const action = isBanned ? "unban" : "ban"; // decide API endpoint
+      const action = isBanned ? "unban" : "ban";
       const res = await axios.post(
         `${BASE_URL}/communities/${reportDetails?.communityId}/members/${reportDetails?.reportedUser?.id}/${action}`,
         {},
@@ -34,7 +34,7 @@ const ReportDetailsModal = ({
       );
 
       if (res?.data?.success) {
-        setIsBanned(!isBanned); // update UI instantly
+        setIsBanned(!isBanned);
         enqueueSnackbar(
           isBanned
             ? "User has been unbanned successfully."
@@ -126,7 +126,7 @@ const ReportDetailsModal = ({
                       key={i}
                       onClick={() => {
                         setShowImageModal(true);
-                        setInitialSlide(i); // ✅ New: store which image was clicked
+                        setInitialSlide(i);
                       }}
                       className="w-[56px] h-[56px] object-cover rounded-2xl cursor-pointer"
                     />
@@ -151,7 +151,7 @@ const ReportDetailsModal = ({
                 alt=""
                 width={35}
                 height={35}
-                className="rounded-full object-cover"
+                className="rounded-full object-cover w-[35px] h-[35px]"
               />
               <p className="text-[17px] font-medium">
                 {reportDetails?.reportedUser?.name}

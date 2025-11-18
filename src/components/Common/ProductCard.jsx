@@ -1,29 +1,27 @@
-import { IoIosStar } from "react-icons/io";
 import { Link } from "react-router-dom";
-import { IoStar } from "react-icons/io5";
+import { LazyLoadImage } from "react-lazy-load-image-component";
+import "react-lazy-load-image-component/src/effects/blur.css";
 
 const ProductCard = ({ product }) => {
   return (
     <>
       {product?.status === "active" && (
         <Link to={`/products/${product?.title}?productId=${product?.id}`}>
-          <div className="w-full md:max-w-[290px] h-[420px] bg-white rounded-[20px] p-3 custom-shadow">
-            <div className="w-full relative">
-              <div className="w-full h-[276px] bg-[#EAEAEA] rounded-[15px] flex items-center justify-center">
-                {product?.images?.length > 0 ? (
-                  <img
-                    src={product?.images[0]?.imageUrl}
-                    alt="image placeholder"
-                    className="w-full h-full object-cover rounded-[15px]"
-                  />
-                ) : (
-                  <img
-                    src={`/image-placeholder.png`}
-                    alt="image placeholder"
-                    className="w-14 h-14 object-cover rounded-[15px]"
-                  />
-                )}
-              </div>
+          <div className="w-full bg-white rounded-[20px] p-3 custom-shadow">
+            <div className="w-full h-[276px] bg-[#EAEAEA] rounded-[15px] overflow-hidden relative">
+              {/* <img
+                src={product?.images[0]?.imageUrl}
+                effect="blur"
+                alt="product"
+                className="absolute inset-0 w-full h-full object-cover"
+              /> */}
+
+              <LazyLoadImage
+                src={product?.images[0]?.imageUrl}
+                effect="blur"
+                alt="product"
+                className="w-full min-h-full object-cover"
+              />
             </div>
 
             <div className="w-full mt-4">
@@ -51,10 +49,11 @@ const ProductCard = ({ product }) => {
               <div className="flex items-center justify-start gap-2">
                 <div className="w-[38px] h-[38px] border-2 p-0.5 border-[var(--button-bg)] rounded-full">
                   {product?.seller?.profilePictureUrl ? (
-                    <img
+                    <LazyLoadImage
                       src={product?.seller?.profilePictureUrl}
+                      effect="blur"
                       alt="profile"
-                      className="w-full h-full rounded-full object-cover"
+                      className="w-[38px] h-[31px] rounded-full object-cover"
                     />
                   ) : (
                     <img

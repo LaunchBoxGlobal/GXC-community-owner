@@ -5,7 +5,10 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { BASE_URL } from "../../data/baseUrl";
 import ReportList from "./ReportList";
-import Loader from "../../components/Loader/Loader";
+import PageLoader from "../../components/Loader/PageLoader";
+import Pagination from "./Pagination";
+import { LuSearch } from "react-icons/lu";
+import { IoClose } from "react-icons/io5";
 
 const ReportsPage = () => {
   const navigate = useNavigate();
@@ -14,24 +17,35 @@ const ReportsPage = () => {
   const [searchParams] = useSearchParams();
   const LIMIT = 10;
   const page = Number(searchParams.get("page")) || 1;
-
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [debouncedSearch, setDebouncedSearch] = useState("");
+  const [total, setTotal] = useState(0);
+
+  // 🔹 Debounce effect for searchTerm
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedSearch(searchTerm);
+    }, 500); // wait 500ms after user stops typing
+
+    return () => clearTimeout(handler);
+  }, [searchTerm]);
 
   const fetchReports = async () => {
     setLoading(true);
     try {
       const res = await axios.get(
-        `${BASE_URL}/reports/communities/user-reports?limit=${LIMIT}&page=${page}`,
+        `${BASE_URL}/reports/communities/user-reports?limit=${LIMIT}&page=${page}&search=${debouncedSearch}`,
         {
           headers: {
             Authorization: `Bearer ${getToken()}`,
           },
         }
       );
-      console.log("user reports >>> ", res?.data);
       setReports(res?.data?.data?.reports);
       setPagination(res?.data?.data?.pagination);
+      setTotal(res?.data?.data?.pagination?.total || 0);
     } catch (error) {
       setError(
         error?.response?.data?.message ||
@@ -44,9 +58,11 @@ const ReportsPage = () => {
     }
   };
 
+  // 🔹 Fetch reports when page changes or searchTerm (debounced) updates
   useEffect(() => {
+    document.title = "Reports - giveXchange";
     fetchReports();
-  }, [page]);
+  }, [page, debouncedSearch]);
 
   // Handle pagination click
   const handlePageChange = (newPage) => {
@@ -71,7 +87,7 @@ const ReportsPage = () => {
               i === page
                 ? "text-white bg-[var(--button-bg)] font-medium"
                 : "text-gray-600 hover:bg-[var(--button-bg)] hover:text-white"
-            }`}
+            } text-sm`}
           >
             {i}
           </button>
@@ -80,14 +96,6 @@ const ReportsPage = () => {
     }
     return pages;
   };
-
-  if (loading) {
-    return (
-      <div className="w-full min-h-[70vh] relative flex items-center justify-center">
-        <Loader />
-      </div>
-    );
-  }
 
   if (error) {
     return (
@@ -98,53 +106,56 @@ const ReportsPage = () => {
   }
 
   return (
-    <div className="w-full relative bg-white p-5 lg:p-7 rounded-[12px] lg:rounded-[24px] custom-shadow">
-      <h2 className="page-heading">Reports</h2>
+    <div className="w-full relative bg-white p-5 lg:p-7 rounded-[12px] min-h-[80vh] lg:rounded-[24px] custom-shadow">
+      <div className="w-full relative flex items-center justify-between gap-5">
+        <h2 className="page-heading">Reports</h2>
 
-      <ReportList reports={reports} />
-
-      {/* Pagination */}
-      {pagination && pagination.totalPages > 1 && (
-        <nav
-          aria-label="Page navigation"
-          className="flex justify-end w-full mt-10"
-        >
-          <ul className="inline-flex items-center gap-2 px-2 -space-x-px text-base h-[58px] bg-[#E6E6E6BD] rounded-[12px]">
-            {/* Previous Button */}
-            <li>
+        <div className="w-full md:max-w-[252px]">
+          <div className="h-[49px] pl-[15px] pr-[10px] rounded-[8px] bg-white custom-shadow flex items-center gap-2">
+            <LuSearch className="text-xl text-[var(--secondary-color)]" />
+            <input
+              type="text"
+              placeholder="Search reports..."
+              disabled={loading}
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="w-full outline-none border-none bg-transparent disabled:cursor-not-allowed"
+            />
+            {searchTerm && (
               <button
-                onClick={() => handlePageChange(page - 1)}
-                disabled={page <= 1}
-                className={`flex items-center justify-center px-4 h-10 ms-0 leading-tight font-medium rounded-[12px] ${
-                  page <= 1
-                    ? "text-gray-400 cursor-not-allowed"
-                    : "text-gray-600 hover:bg-[var(--button-bg)] hover:text-white"
-                }`}
+                type="button"
+                onClick={() => setSearchTerm("")}
+                className="bg-gray-100 w-4 h-4 rounded-full flex items-center justify-center"
               >
-                Previous
+                <IoClose className="text-gray-900 text-sm" />
               </button>
-            </li>
+            )}
+          </div>
+        </div>
+      </div>
 
-            {/* Page Numbers */}
-            {renderPageNumbers()}
-
-            {/* Next Button */}
-            <li>
-              <button
-                onClick={() => handlePageChange(page + 1)}
-                disabled={page >= pagination.totalPages}
-                className={`flex items-center justify-center px-4 h-10 leading-tight font-medium rounded-[12px] ${
-                  page >= pagination.totalPages
-                    ? "text-gray-400 cursor-not-allowed"
-                    : "text-gray-600 hover:bg-[var(--button-bg)] hover:text-white"
-                }`}
-              >
-                Next
-              </button>
-            </li>
-          </ul>
-        </nav>
+      {loading ? (
+        <PageLoader />
+      ) : (
+        <>
+          {total <= 0 ? (
+            <div className="w-full min-h-[50vh] relative flex items-center justify-center">
+              <p className="text-sm font-medium text-gray-500">
+                No reports found!
+              </p>
+            </div>
+          ) : (
+            <ReportList reports={reports} />
+          )}
+        </>
       )}
+
+      <Pagination
+        pagination={pagination}
+        renderPageNumbers={renderPageNumbers}
+        handlePageChange={handlePageChange}
+        page={page}
+      />
     </div>
   );
 };
