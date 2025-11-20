@@ -157,7 +157,6 @@ const CommunityPage = () => {
     return <PageLoader />;
   }
 
-  // --- Handle Error State ---
   if (errorMsg) {
     return (
       <main className="w-full bg-white custom-shadow rounded-[10px] p-7 mt-5 min-h-[70vh] flex flex-col items-center justify-center text-center">
