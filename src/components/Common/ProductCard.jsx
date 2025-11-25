@@ -9,13 +9,6 @@ const ProductCard = ({ product }) => {
         <Link to={`/products/${product?.title}?productId=${product?.id}`}>
           <div className="w-full bg-white rounded-[20px] p-3 custom-shadow">
             <div className="w-full h-[276px] bg-[#EAEAEA] rounded-[15px] overflow-hidden relative">
-              {/* <img
-                src={product?.images[0]?.imageUrl}
-                effect="blur"
-                alt="product"
-                className="absolute inset-0 w-full h-full object-cover"
-              /> */}
-
               <LazyLoadImage
                 src={product?.images[0]?.imageUrl}
                 effect="blur"

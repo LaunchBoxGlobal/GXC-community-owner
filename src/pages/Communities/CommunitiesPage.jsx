@@ -11,6 +11,7 @@ import { IoClose } from "react-icons/io5";
 import Loader from "../../components/Loader/Loader";
 import { PermissionModal } from "../Home/StripeAccountPermissionModal";
 import Pagination from "../../components/Common/Pagination";
+import { enqueueSnackbar } from "notistack";
 
 const CommunitiesPage = () => {
   const navigate = useNavigate();
@@ -129,10 +130,33 @@ const CommunitiesPage = () => {
         headers: { Authorization: `Bearer ${getToken()}` },
       });
 
-      if (res?.data?.success) {
+      if (res?.data?.data?.accountStatus === "active") {
         setShowAddCommunityPopup(true);
-      } else {
+      } else if (res?.data?.data?.accountStatus === "not_connected") {
         setShowConfirmationModal(true);
+      } else if (res?.data?.data?.accountStatus === "pending") {
+        enqueueSnackbar(
+          "Your stripe account is pending for approval. Please wait until the acount is approved",
+          { variant: "error" }
+        );
+      } else if (
+        res?.data?.data?.accountStatus === "restricted" ||
+        res?.data?.data?.accountStatus === "disabled"
+      ) {
+        enqueueSnackbar(
+          `Your stripe account is ${
+            res?.data?.data?.accountStatus === "restricted"
+              ? "restricted."
+              : res?.data?.data?.accountStatus === "disabled"
+              ? "disabled."
+              : "incomplete."
+          }`,
+          { variant: "error" }
+        );
+      } else {
+        enqueueSnackbar("Something went wrong. Try again.", {
+          variant: "error",
+        });
       }
     } catch (error) {
       if (error?.status === 404) setShowConfirmationModal(true);

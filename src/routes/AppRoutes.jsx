@@ -31,6 +31,7 @@ import UserProfilePage from "../pages/Profile/UserProfilePage";
 import { useAppContext } from "../context/AppContext";
 import SellerStripeSuccess from "../pages/Auth/SellerStripeSuccess";
 import UserDetailsPage from "../pages/Wallet/UserDetailsPage";
+import NotificationsPage from "../pages/Notifications/NotificationsPage";
 
 const PrivateRoute = ({ element }) => {
   const token = Cookies.get("ownerToken") ? Cookies.get("ownerToken") : null;
@@ -313,6 +314,15 @@ const AppRoutes = () => {
         element={
           <PrivateRoute
             element={<DashboardLayout pages={<UserProfilePage />} />}
+          />
+        }
+      />
+
+      <Route
+        path="/notifications"
+        element={
+          <PrivateRoute
+            element={<DashboardLayout pages={<NotificationsPage />} />}
           />
         }
       />

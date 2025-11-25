@@ -4,6 +4,7 @@ import Cookies from "js-cookie";
 import axios from "axios";
 import { BASE_URL } from "../../data/baseUrl";
 import { handleApiError } from "../../utils/handleApiError";
+import { getToken } from "../../utils/getToken";
 
 const Sidebar = () => {
   const navigate = useNavigate();
@@ -16,7 +17,7 @@ const Sidebar = () => {
         {},
         {
           headers: {
-            Authorization: `Bearer ${Cookies.get("ownerToken")}`,
+            Authorization: `Bearer ${getToken()}`,
           },
         }
       );
@@ -28,16 +29,18 @@ const Sidebar = () => {
         Cookies.remove("owner");
         Cookies.remove("isOwnerEmailVerified");
         Cookies.remove("slug");
+        localStorage.removeItem("ownerfcmToken");
       }
     } catch (error) {
       console.log("Logout error >>>", error?.response?.data || error.message);
-      handleApiError(error, navigate);
+      // handleApiError(error, navigate);
     } finally {
       Cookies.remove("ownerToken");
       Cookies.remove("page");
       Cookies.remove("owner");
       Cookies.remove("isOwnerEmailVerified");
       Cookies.remove("slug");
+      localStorage.removeItem("ownerfcmToken");
       navigate("/login");
     }
   };

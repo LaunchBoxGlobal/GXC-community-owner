@@ -67,7 +67,7 @@ export const requestNotificationPermission = async () => {
 export const listenForMessages = (callback) => {
   onMessage(messaging, (payload) => {
     // console.log("Message received in foreground: ", payload);
-    enqueueSnackbar("Message received", JSON.stringify(payload));
+    // enqueueSnackbar("Message received", JSON.stringify(payload));
     if (callback) callback(payload);
   });
 };

@@ -5,17 +5,20 @@ import {
   requestNotificationPermission,
 } from "./notifications";
 import AppRoutes from "./routes/AppRoutes";
-import { enqueueSnackbar, SnackbarProvider } from "notistack";
+import { SnackbarProvider } from "notistack";
 
 function App() {
   useEffect(() => {
     requestNotificationPermission();
-
     listenForMessages((payload) => {
       const title = payload.notification?.title || "New Notification";
       const body = payload.notification?.body || "";
+      // const icon = payload.notification?.icon || "/logo.png";
 
-      enqueueSnackbar(`${title}\n\n${body}`);
+      new Notification(title, {
+        body,
+        icon,
+      });
     });
   }, []);
 

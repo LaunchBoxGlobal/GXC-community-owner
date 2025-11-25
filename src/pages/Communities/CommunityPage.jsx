@@ -40,7 +40,7 @@ const CommunityPage = () => {
         },
       });
 
-      if (res?.data?.success) {
+      if (res?.data?.data?.accountStatus === "active") {
         setShowInvitationButton(true);
       } else {
         setShowInvitationButton(false);

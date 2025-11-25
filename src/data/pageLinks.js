@@ -32,6 +32,14 @@ export const PAGE_LINKS = [
     iconAltTag: "wallet icon",
   },
   {
+    title: "Notifications",
+    page: "/notifications",
+    icon: "/notification-icon.png",
+    iconWidth: 17,
+    iconHeight: 17,
+    iconAltTag: "wallet icon",
+  },
+  {
     title: "Settings",
     page: "/settings",
     icon: "/settings-icon.png",
