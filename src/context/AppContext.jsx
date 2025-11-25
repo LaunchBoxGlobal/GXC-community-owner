@@ -79,6 +79,29 @@ export const AppProvider = ({ children }) => {
       // handleApiError(error, navigate);
     }
   };
+
+  const fetchUserProfile = async () => {
+    try {
+      const res = await axios.get(`${BASE_URL}/auth/profile`, {
+        headers: {
+          Authorization: `Bearer ${getToken()}`,
+        },
+      });
+
+      const user = res?.data?.data?.user;
+
+      setUser(user);
+
+      // if (user && !user?.emailVerified) {
+      //   Cookies.remove("ownerToken");
+      //   Cookies.remove("owner");
+      //   navigate("/login");
+      // }
+    } catch (error) {
+      handleApiError(error, navigate);
+    }
+  };
+
   return (
     <AppContext.Provider
       value={{
@@ -90,6 +113,7 @@ export const AppProvider = ({ children }) => {
         user,
         setUser,
         token,
+        fetchUserProfile,
         setToken,
         showEmailVerificationPopup,
         setShowEmailVerificationPopup,

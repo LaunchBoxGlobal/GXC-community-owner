@@ -30,6 +30,7 @@ const CommunityPage = () => {
   const [activeTab, setActiveTab] = useState(tabFromUrl);
   const [showInvitationButton, setShowInvitationButton] = useState(false);
   const [createStripe, setCreateStripe] = useState(false);
+  const [isCommunitySuspended, setIsCommunitySuspended] = useState(null);
 
   const handleCheckStripeAccountStatus = async () => {
     try {
@@ -85,6 +86,7 @@ const CommunityPage = () => {
         headers: { Authorization: `Bearer ${getToken()}` },
       });
       setCommunity(res?.data?.data);
+      setIsCommunitySuspended(res?.data?.data?.community?.isDeactivatedByAdmin);
     } catch (error) {
       console.error("Error fetching community:", error);
       setErrorMsg(
@@ -172,6 +174,8 @@ const CommunityPage = () => {
     );
   }
 
+  console.log(isCommunitySuspended);
+
   // --- Main Content ---
   return (
     <main className="w-full p-5 rounded-[10px] min-h-[80vh] bg-white custom-shadow">
@@ -185,27 +189,36 @@ const CommunityPage = () => {
         createStripe={createStripe}
         handleCreateStripeAccount={handleCreateStripeAccount}
         showInvitationButton={showInvitationButton}
+        isCommunitySuspended={isCommunitySuspended}
       />
 
       {/* tabs */}
 
-      <CommunityTabs activeTab={activeTab} setActiveTab={setActiveTab} />
+      {isCommunitySuspended ? (
+        <div className=" min-h-[80vh] bg-white custom-shadow rounded-[12px] flex items-center justify-center mt-6">
+          <p className="text-sm">This community has been suspended by admin.</p>
+        </div>
+      ) : (
+        <>
+          <CommunityTabs activeTab={activeTab} setActiveTab={setActiveTab} />
 
-      <div className="w-full mt-6 min-h-[30vh]">
-        {activeTab === "products" ? (
-          <ProductList
-            count={community?.community?.productCount}
-            community={community?.community}
-          />
-        ) : (
-          <MemberList
-            communityId={community?.community?.id}
-            count={community?.community?.memberCount}
-            setMemberCount={setMemberCount}
-            community={community}
-          />
-        )}
-      </div>
+          <div className="w-full mt-6 min-h-[30vh]">
+            {activeTab === "products" ? (
+              <ProductList
+                count={community?.community?.productCount}
+                community={community?.community}
+              />
+            ) : (
+              <MemberList
+                communityId={community?.community?.id}
+                count={community?.community?.memberCount}
+                setMemberCount={setMemberCount}
+                community={community}
+              />
+            )}
+          </div>
+        </>
+      )}
 
       <CommunityLinkCopy
         copyLinkPopup={copyLinkPopup}

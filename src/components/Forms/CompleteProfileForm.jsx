@@ -20,6 +20,7 @@ import {
 import "react-country-state-city/dist/react-country-state-city.css";
 import { parsePhoneNumberFromString } from "libphonenumber-js";
 import { completeProfileValidationSchema } from "../../schema/completeProfileValidationSchema";
+import { requestNotificationPermission } from "../../notifications";
 
 const CompleteProfileForm = () => {
   const navigate = useNavigate();
@@ -98,6 +99,7 @@ const CompleteProfileForm = () => {
           Cookies.remove(`verifyEmail`);
           Cookies.remove("signupEmail");
           Cookies.remove("page");
+          requestNotificationPermission();
           // handleCheckStripeStatus();
         }
       } catch (error) {
@@ -307,12 +309,16 @@ const CompleteProfileForm = () => {
 
           {/* Buttons */}
           <div className="pt-2 flex items-center justify-between">
-            <Link
-              to={`/`}
+            <button
+              type="button"
+              onClick={() => {
+                requestNotificationPermission();
+                navigate("/");
+              }}
               className="text-sm font-medium flex items-center gap-1 text-black"
             >
               Skip
-            </Link>
+            </button>
             <div className="w-full max-w-[110px]">
               <Button type="submit" title="Save" isLoading={loading} />
             </div>

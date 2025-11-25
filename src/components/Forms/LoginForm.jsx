@@ -10,6 +10,7 @@ import { BASE_URL } from "../../data/baseUrl";
 const PAGETITLE = import.meta.env.VITE_PAGE_TITLE;
 import Cookies from "js-cookie";
 import { enqueueSnackbar } from "notistack";
+import { requestNotificationPermission } from "../../notifications";
 
 const LoginForm = () => {
   const navigate = useNavigate();
@@ -52,6 +53,7 @@ const LoginForm = () => {
         if (res?.data?.success) {
           Cookies.set("ownerToken", res?.data?.data?.token);
           Cookies.set("owner", JSON.stringify(res?.data?.data?.user));
+          requestNotificationPermission();
           resetForm();
           navigate("/");
         }

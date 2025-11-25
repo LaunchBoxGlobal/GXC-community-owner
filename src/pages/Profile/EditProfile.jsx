@@ -152,7 +152,7 @@ const EditProfile = ({ togglePopup, showPopup, fetchUserProfile }) => {
           const formData = new FormData();
           formData.append("profilePicture", values.profileImage);
 
-          const imageRes = await axios.post(
+          await axios.post(
             `${BASE_URL}/auth/upload-profile-picture`,
             formData,
             {

@@ -1,7 +1,15 @@
+import axios from "axios";
 import { useFormik } from "formik";
 import * as Yup from "yup";
+import { BASE_URL } from "../../data/baseUrl";
+import { getToken } from "../../utils/getToken";
+import { enqueueSnackbar } from "notistack";
+import { useState } from "react";
+import Loader from "../../components/Loader/Loader";
 
 const SupportPage = () => {
+  const [loading, setLoading] = useState(false);
+
   const formik = useFormik({
     initialValues: {
       description: "",
@@ -12,8 +20,43 @@ const SupportPage = () => {
         .max(1500, "Description must be 1500 characters or less")
         .required("Description is required"),
     }),
-    onSubmit: (values) => {
-      alert(JSON.stringify(values, null, 2));
+    onSubmit: async (values, { resetForm }) => {
+      setLoading(true);
+
+      try {
+        // const formData = new FormData();
+        // formData.append("description", values.description);
+
+        // Append images only if available
+        // values.images.forEach((img) => {
+        //   formData.append("images", img);
+        // });
+        // formData,
+
+        const response = await axios.post(
+          `${BASE_URL}/reports/bugs`,
+          { description: values.description },
+          {
+            headers: {
+              Authorization: `Bearer ${getToken()}`,
+              // "Content-Type": "multipart/form-data",
+            },
+          }
+        );
+
+        if (response.data.success) {
+          // setIsReportSubmitted(true);
+          resetForm();
+          enqueueSnackbar(
+            response?.data?.message || "Your report has been submitted.",
+            { variant: "success" }
+          );
+        }
+      } catch (error) {
+        handleApiError(error, navigate);
+      } finally {
+        setLoading(false);
+      }
     },
   });
   return (
@@ -44,7 +87,7 @@ const SupportPage = () => {
 
         <div className="w-full mt-2 flex justify-end">
           <button type="submit" className="button max-w-[160px]">
-            Send
+            {loading ? <Loader /> : "Send"}
           </button>
         </div>
       </form>

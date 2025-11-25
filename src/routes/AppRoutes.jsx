@@ -30,6 +30,7 @@ import ChangePasswordPage from "../pages/Settings/ChangePasswordPage";
 import UserProfilePage from "../pages/Profile/UserProfilePage";
 import { useAppContext } from "../context/AppContext";
 import SellerStripeSuccess from "../pages/Auth/SellerStripeSuccess";
+import UserDetailsPage from "../pages/Wallet/UserDetailsPage";
 
 const PrivateRoute = ({ element }) => {
   const token = Cookies.get("ownerToken") ? Cookies.get("ownerToken") : null;
@@ -269,6 +270,15 @@ const AppRoutes = () => {
         path="/transaction-history"
         element={
           <PrivateRoute element={<DashboardLayout pages={<WalletPage />} />} />
+        }
+      />
+
+      <Route
+        path="/transaction-history/member/:userId"
+        element={
+          <PrivateRoute
+            element={<DashboardLayout pages={<UserDetailsPage />} />}
+          />
         }
       />
 

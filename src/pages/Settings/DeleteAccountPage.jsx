@@ -1,14 +1,46 @@
 import { useState } from "react";
 import { useAppContext } from "../../context/AppContext";
 import VerifyOtpForAccountDeletionModal from "./VerifyOtpForAccountDeletionModal";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import { BASE_URL } from "../../data/baseUrl";
+import { getToken } from "../../utils/getToken";
+import { handleApiError } from "../../utils/handleApiError";
+import Loader from "../../components/Loader/Loader";
 
 const DeleteAccountPage = () => {
+  const navigate = useNavigate();
   const { user } = useAppContext();
   const [showModal, setShowModal] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const handleCloseModal = () => {
     setShowModal((prev) => !prev);
   };
+
+  const handleSendOtp = async () => {
+    setLoading(true);
+    try {
+      const res = await axios.post(
+        `${BASE_URL}/auth/request-delete-account`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${getToken()}`,
+          },
+        }
+      );
+
+      if (res?.data?.success) {
+        setShowModal(true);
+      }
+    } catch (error) {
+      handleApiError(error, navigate);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <div className="w-full relative pt-2">
       <h2 className="text-[24px] font-semibold leading-none">Delete Account</h2>
@@ -26,10 +58,10 @@ const DeleteAccountPage = () => {
         <div className="">
           <button
             type="button"
-            onClick={() => handleCloseModal()}
+            onClick={() => handleSendOtp()}
             className="button min-w-[150px]"
           >
-            Send
+            {loading ? <Loader /> : "Send"}
           </button>
         </div>
       </div>
@@ -37,6 +69,7 @@ const DeleteAccountPage = () => {
       <VerifyOtpForAccountDeletionModal
         showModal={showModal}
         onClose={handleCloseModal}
+        handleSendOtp={handleSendOtp}
       />
     </div>
   );

@@ -11,6 +11,11 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import { PermissionModal } from "./StripeAccountPermissionModal";
 import { useAppContext } from "../../context/AppContext";
 import Pagination from "../../components/Common/Pagination";
+import {
+  listenForMessages,
+  requestNotificationPermission,
+} from "../../notifications";
+import { enqueueSnackbar } from "notistack";
 
 const HomePage = () => {
   const navigate = useNavigate();

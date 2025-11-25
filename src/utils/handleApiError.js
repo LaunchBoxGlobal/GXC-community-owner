@@ -74,6 +74,21 @@ export const handleApiError = (error, navigate) => {
   if (error?.response) {
     const status = error.response.status;
 
+    // ----------------- 400 -----------------
+    if (status === 400) {
+      if (shouldShowError("errOther")) {
+        markErrorShown("errOther");
+
+        enqueueSnackbar(
+          error?.response?.data?.message ||
+            error?.message ||
+            "Invalid request. Please check your input.",
+          { variant: "error" }
+        );
+      }
+      return;
+    }
+
     // ----------------- 401 -----------------
     if (status === 401) {
       // If logout already triggered, ignore all further 401s
