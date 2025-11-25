@@ -103,7 +103,7 @@ const NotificationsPage = () => {
               type="checkbox"
               checked={orderAlert}
               disabled={updatingField === "orderAlert"}
-              onChange={() => handleToggle("orderAlert")}
+              onChange={() => handleToggle("orderNotify")}
               className="sr-only peer"
             />
 
