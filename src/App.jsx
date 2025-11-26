@@ -17,7 +17,7 @@ function App() {
 
       new Notification(title, {
         body,
-        icon,
+        // icon,
       });
     });
   }, []);
