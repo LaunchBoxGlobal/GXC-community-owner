@@ -9,7 +9,7 @@ import { SnackbarProvider } from "notistack";
 
 function App() {
   useEffect(() => {
-    requestNotificationPermission();
+    // requestNotificationPermission();
     listenForMessages((payload) => {
       const title = payload.notification?.title || "New Notification";
       const body = payload.notification?.body || "";
