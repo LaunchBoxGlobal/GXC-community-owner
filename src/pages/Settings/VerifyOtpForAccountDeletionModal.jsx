@@ -1,18 +1,20 @@
-import React, { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useAppContext } from "../../context/AppContext";
 import axios from "axios";
 import { enqueueSnackbar } from "notistack";
 import { BASE_URL } from "../../data/baseUrl";
 import { getToken } from "../../utils/getToken";
+import Cookies from "js-cookie";
+import { useNavigate } from "react-router-dom";
 
 const VerifyOtpForAccountDeletionModal = ({ onClose, showModal }) => {
   const { user } = useAppContext();
+  const navigate = useNavigate();
   const [otp, setOtp] = useState(Array(6).fill(""));
   const [timer, setTimer] = useState(60);
   const inputsRef = useRef([]);
   const [loading, setLoading] = useState(false);
   const [resending, setResending] = useState(false);
-  const [errorMessage, setErrorMessage] = useState(null);
 
   useEffect(() => {
     if (showModal) {
@@ -91,20 +93,6 @@ const VerifyOtpForAccountDeletionModal = ({ onClose, showModal }) => {
     }
   };
 
-  // Resend OTP API
-  const handleResend = async () => {
-    try {
-      setResending(true);
-      await axios.post(`${BASE_URL}/auth/resend-otp`, { email: user?.email });
-      enqueueSnackbar("OTP resent successfully", { variant: "success" });
-      setTimer(60);
-    } catch (error) {
-      enqueueSnackbar("Failed to resend OTP", { variant: "error" });
-    } finally {
-      setResending(false);
-    }
-  };
-
   // Verify OTP API
   const handleVerify = async () => {
     const otpCode = otp.join("");
@@ -133,7 +121,14 @@ const VerifyOtpForAccountDeletionModal = ({ onClose, showModal }) => {
           res?.data?.message || "Your account has been deleted successfully.",
           { variant: "success" }
         );
+        Cookies.remove("ownerToken");
+        Cookies.remove("page");
+        Cookies.remove("owner");
+        Cookies.remove("isOwnerEmailVerified");
+        Cookies.remove("slug");
+        localStorage.removeItem("ownerfcmToken");
         onClose?.();
+        navigate("/login");
       }
     } catch (error) {
       console.log(error);
