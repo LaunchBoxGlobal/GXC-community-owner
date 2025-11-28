@@ -29,7 +29,9 @@ const Sidebar = () => {
         Cookies.remove("owner");
         Cookies.remove("isOwnerEmailVerified");
         Cookies.remove("slug");
+        Cookies.remove("invitation-link");
         localStorage.removeItem("ownerfcmToken");
+        localStorage.removeItem("ownerBrowserDeviceId");
       }
     } catch (error) {
       console.log("Logout error >>>", error?.response?.data || error.message);
@@ -40,7 +42,9 @@ const Sidebar = () => {
       Cookies.remove("owner");
       Cookies.remove("isOwnerEmailVerified");
       Cookies.remove("slug");
+      Cookies.remove("invitation-link");
       localStorage.removeItem("ownerfcmToken");
+      localStorage.removeItem("ownerBrowserDeviceId");
       navigate("/login");
     }
   };

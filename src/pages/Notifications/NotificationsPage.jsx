@@ -24,7 +24,7 @@ const NotificationsPage = () => {
 
       const data = res.data?.data?.notifications || [];
 
-      console.log(res?.data?.data?.notifications);
+      // console.log(res?.data?.data?.notifications);
 
       setNotifications(data);
       setUnreadCount(data.filter((n) => !n.read).length);

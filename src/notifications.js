@@ -3,9 +3,20 @@ import { getToken, onMessage } from "firebase/messaging";
 import axios from "axios";
 import Cookies from "js-cookie";
 import { enqueueSnackbar } from "notistack";
+import { v4 as uuidv4 } from "uuid";
 
 const VAPID_KEY =
   "BM6D1oVjxWpWP9wym2P2KEc3oqRh_f540clMC9TssC2tFBN5HsVT9D1rj-vKafvhnIAT9bUsBG2-A0Z32VsVBQI";
+
+// --- New Function to get or create Device ID ---
+const getOrCreateDeviceId = () => {
+  let deviceId = localStorage.getItem("ownerBrowserDeviceId");
+  if (!deviceId) {
+    deviceId = uuidv4();
+    localStorage.setItem("ownerBrowserDeviceId", deviceId);
+  }
+  return deviceId;
+};
 
 export const requestNotificationPermission = async () => {
   // console.log("Requesting notification permission...");
@@ -39,12 +50,13 @@ export const requestNotificationPermission = async () => {
       console.log("New token detected — sending to backend");
 
       const deviceInfo = navigator.userAgent;
+      const browserDeviceId = getOrCreateDeviceId();
 
       await axios.post(
         "https://dev-api.app.thegivexchange.com/api/auth/update-fcm",
         {
           token: currentToken,
-          deviceInfo,
+          deviceInfo: browserDeviceId,
         },
         {
           headers: {
