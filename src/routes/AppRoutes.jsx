@@ -229,7 +229,7 @@ const AppRoutes = () => {
       />
 
       <Route
-        path="/communities/details/:slug"
+        path="/communities/details/:slug/:communityId"
         element={
           <PrivateRoute
             element={<DashboardLayout pages={<CommunityPage />} />}
