@@ -5,12 +5,14 @@ import { getToken } from "../../utils/getToken";
 import Loader from "../../components/Loader/Loader";
 
 const NotificationsPage = () => {
-  const [open, setOpen] = useState(false);
+  // Removed unused 'open' state
   const [notifications, setNotifications] = useState([]);
   const [loading, setLoading] = useState(false);
   const [unreadCount, setUnreadCount] = useState(0);
+  const [error, setError] = useState(null);
 
   const fetchNotifications = async () => {
+    setError(null);
     setLoading(true);
     try {
       const res = await axios.get(
@@ -24,12 +26,14 @@ const NotificationsPage = () => {
 
       const data = res.data?.data?.notifications || [];
 
-      // console.log(res?.data?.data?.notifications);
-
       setNotifications(data);
       setUnreadCount(data.filter((n) => !n.read).length);
     } catch (error) {
       console.error("Error fetching notifications:", error);
+      const errorMessage =
+        error.response?.data?.message ||
+        "Failed to load notifications. Please try again.";
+      setError(errorMessage);
     } finally {
       setLoading(false);
     }
@@ -47,25 +51,41 @@ const NotificationsPage = () => {
 
     return date.toLocaleString("en-US", {
       year: "numeric",
-      month: "short", // "Jan", "Feb", ...
+      month: "short",
       day: "2-digit",
       hour: "2-digit",
       minute: "2-digit",
       hour12: true,
     });
   };
+
+  const ErrorUI = ({ message, onRetry }) => (
+    <div className="p-8 text-center bg-red-50 border border-red-300 rounded-lg min-h-[80vh] flex flex-col items-center justify-center">
+      {/* <p className="text-red-700 text-lg font-semibold mb-3">
+        Error Loading Notifications
+      </p> */}
+      <p className="text-gray-500 text-sm mb-4">{message}</p>
+      {/* <button
+        onClick={onRetry}
+        className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 transition duration-150"
+      >
+        Try Again
+      </button> */}
+    </div>
+  );
+
   return (
     <div className="w-full relative bg-white p-5 lg:p-7 rounded-[12px] min-h-[80vh] lg:rounded-[24px] custom-shadow">
       <div className="w-full relative flex items-center justify-between gap-5">
         <h2 className="page-heading">Notifications</h2>
       </div>
-
-      <div className="w-full border my-4" />
-
+      <div className="w-full border mt-4 mb-2" />
       {loading ? (
         <div className="p-4 text-center text-gray-500 text-sm min-h-[320px] flex items-center justify-center">
           <Loader />
         </div>
+      ) : error ? (
+        <ErrorUI message={error} onRetry={fetchNotifications} />
       ) : notifications.length === 0 ? (
         <div className="p-4 text-center text-gray-500 text-sm min-h-[320px] flex items-center justify-center">
           No notifications
@@ -75,7 +95,7 @@ const NotificationsPage = () => {
           {notifications?.map((notif, index) => (
             <li
               key={index}
-              className={`py-3 text-start border-b cursor-pointer hover:bg-gray-100 ${
+              className={`p-3 text-start border-b cursor-pointer hover:bg-gray-100 ${
                 !notif.is_read ? "bg-gray-50 font-medium" : "bg-white"
               }`}
             >

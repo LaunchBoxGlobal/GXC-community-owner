@@ -11,10 +11,11 @@ const Sidebar = () => {
   const location = useLocation();
 
   const handleLogout = async () => {
+    const deviceInfo = localStorage.getItem("ownerBrowserDeviceId");
     try {
       const res = await axios.post(
         `${BASE_URL}/auth/logout`,
-        {},
+        { deviceInfo },
         {
           headers: {
             Authorization: `Bearer ${getToken()}`,
