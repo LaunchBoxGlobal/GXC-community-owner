@@ -80,10 +80,10 @@ const ProductPage = () => {
     return null;
   }
 
-  if (productDetails?.status !== "active") {
-    navigate(-1);
-    return;
-  }
+  // if (productDetails?.status !== "active") {
+  //   navigate(-1);
+  //   return;
+  // }
 
   return (
     <div className="w-full bg-white custom-shadow rounded-[10px] p-7 mt-5">

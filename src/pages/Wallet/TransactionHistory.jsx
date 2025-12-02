@@ -198,7 +198,7 @@ const TransactionHistory = ({ setUserBalance }) => {
                             className="w-[43px] h-[43px] object-cover rounded-full"
                           />
                           <Link
-                            to={`/products/transaction?.product?.title?productId=${transaction?.product?.id}`}
+                            to={`/products/${transaction?.product?.title}?productId=${transaction?.product?.id}`}
                             className="text-sm font-normal"
                           >
                             {transaction?.product?.title}
