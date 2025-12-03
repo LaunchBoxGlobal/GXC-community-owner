@@ -9,6 +9,12 @@ import { getToken } from "../../utils/getToken";
 import Button from "../../components/Common/Button";
 import Cookies from "js-cookie";
 import { enqueueSnackbar } from "notistack";
+import {
+  CountrySelect,
+  StateSelect,
+  CitySelect,
+} from "react-country-state-city";
+import "react-country-state-city/dist/react-country-state-city.css";
 
 const AddCommunity = ({
   showPopup,
@@ -47,6 +53,13 @@ const AddCommunity = ({
       name: "",
       urlSlug: "",
       description: "",
+      // location: "",
+      // zipcode: "",
+      // city: "",
+      // state: "",
+      // country: "United States",
+      // countryId: 233,
+      // stateId: "",
     },
     validationSchema: Yup.object({
       name: Yup.string()
@@ -65,6 +78,20 @@ const AddCommunity = ({
         .min(11, `Description can not be less than 11 characters`)
         .max(150, `Description can not be more than 150 characters`)
         .required("Community description is required"),
+      // location: Yup.string()
+      //   .trim("Address can not start or end with spaces")
+      //   .min(1, "Address can not be less than 1 character")
+      //   .max(30, "Address can not be more than 30 characters")
+      //   .required("Please enter your location"),
+
+      // zipcode: Yup.string()
+      //   .trim("Zip code can not start or end with spaces")
+      //   .matches(/^[A-Za-z0-9\- ]{4,10}$/, "Please enter a valid zip code")
+      //   .required("Enter your zip code"),
+
+      // city: Yup.string().required("Enter your city"),
+      // state: Yup.string().required("Enter your state"),
+      // country: Yup.string().required("Enter your country"),
     }),
     onSubmit: async (values, { resetForm }) => {
       if (slugError) {
@@ -78,6 +105,11 @@ const AddCommunity = ({
             name: values.name.trim(),
             slug: values.urlSlug.trim(),
             description: values.description.trim(),
+            // address: values.location.trim(),
+            // zipcode: values.zipcode.trim(),
+            // city: values.city.trim(),
+            // state: values.state.trim(),
+            // country: values.country.trim(),
           },
           {
             headers: {
@@ -107,28 +139,51 @@ const AddCommunity = ({
       }
     },
   });
+
   return (
     showPopup && (
-      <div className="w-full h-screen flex items-center justify-center px-5 fixed inset-0 z-50 bg-[rgba(0,0,0,0.4)]">
+      <div
+        className="
+        fixed inset-0 z-50 
+        bg-[rgba(0,0,0,0.4)]
+        flex items-center justify-center 
+        p-3 sm:p-5
+      "
+      >
         <form
           onSubmit={formik.handleSubmit}
-          className="bg-[var(--white-bg)] p-7 rounded-[18px] relative w-full max-w-[471px]"
+          className="
+          bg-[var(--white-bg)]
+          w-full max-w-[471px]
+          rounded-[18px]
+          p-5 sm:p-7
+          relative 
+          max-h-[95vh]
+          overflow-y-auto
+        "
         >
+          {/* Header */}
           <div className="w-full flex items-center justify-between gap-5">
-            <h3 className="text-[20px] lg:text-[24px] font-semibold leading-none max-w-[80%]">
+            <h3 className="text-[18px] sm:text-[20px] lg:text-[24px] font-semibold leading-none max-w-[80%]">
               Add New Community
             </h3>
+
             <button
               type="button"
               onClick={() => setShowAddCommunityPopup(false)}
-              className="w-[22px] h-[22px] border border-[#989898] rounded"
+              className="
+              w-[22px] h-[22px] 
+              border border-[#989898] 
+              rounded flex items-center justify-center
+            "
             >
               <IoClose className="w-full h-full" />
             </button>
           </div>
 
-          <div className="w-full border my-7 border-[#000000]/10" />
+          <div className="w-full border my-4 border-[#000000]/10" />
 
+          {/* Form Fields */}
           <div className="w-full space-y-3">
             <TextField
               type="text"
@@ -157,7 +212,8 @@ const AddCommunity = ({
               label={null}
             />
 
-            <div className="">
+            {/* Description */}
+            <div>
               <textarea
                 name="description"
                 id="description"
@@ -165,26 +221,129 @@ const AddCommunity = ({
                 onBlur={formik.handleBlur}
                 value={formik.values.description}
                 placeholder="Community description..."
-                className={`w-full h-[124px] px-[15px] py-[14px] rounded-[8px] bg-[var(--secondary-bg)] outline-none ${
+                className={`w-full h-[120px] sm:h-[140px] px-[15px] py-[12px] rounded-[8px] bg-[var(--secondary-bg)] outline-none resize-none
+                ${
                   formik.touched.description && formik.errors.description
-                    ? "border-red-500"
-                    : "border-[var(--secondary-bg]"
-                }`}
+                    ? "border-red-500 border"
+                    : "border border-transparent"
+                }
+              `}
               ></textarea>
-              {formik.touched.description && formik.errors.description ? (
+              {formik.touched.description && formik.errors.description && (
                 <div className="text-red-500 text-xs">
                   {formik.errors.description}
                 </div>
-              ) : null}
+              )}
+            </div>
+          </div>
+
+          {/* Country & State */}
+          {/* <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-3">
+            <div className="w-full flex flex-col gap-1">
+              <CountrySelect
+                defaultValue={{
+                  id: 233,
+                  name: "United States",
+                  iso2: "US",
+                  iso3: "USA",
+                }}
+                disabled={true}
+                containerClassName="w-full"
+                inputClassName={`w-full border h-[39px] px-[15px] rounded-[8px] outline-none disabled:cursor-not-allowed 
+                ${
+                  formik.touched.country && formik.errors.country
+                    ? "border-red-500"
+                    : "border-gray-200"
+                }
+              `}
+                placeHolder="Select Country"
+                onChange={(val) => {
+                  formik.setFieldValue("country", val.name);
+                  formik.setFieldValue("countryId", val.id);
+                  formik.setFieldValue("state", "");
+                  formik.setFieldValue("stateId", "");
+                  formik.setFieldValue("city", "");
+                }}
+              />
+              {formik.touched.country && formik.errors.country && (
+                <p className="text-red-500 text-xs">{formik.errors.country}</p>
+              )}
             </div>
 
-            <div className="w-full">
-              <Button
-                type={`submit`}
-                isLoading={loading}
-                title={"Add Community"}
+            <div className="w-full flex flex-col gap-1">
+              <StateSelect
+                countryid={formik.values.countryId || 0}
+                containerClassName="w-full"
+                inputClassName={`w-full border h-[39px] px-[15px] rounded-[8px] outline-none 
+                ${
+                  formik.touched.state && formik.errors.state
+                    ? "border-red-500"
+                    : "border-gray-200"
+                }
+              `}
+                placeHolder="Select State"
+                onChange={(val) => {
+                  formik.setFieldValue("state", val.name);
+                  formik.setFieldValue("stateId", val.id);
+                  formik.setFieldValue("city", "");
+                }}
               />
+              {formik.touched.state && formik.errors.state && (
+                <p className="text-red-500 text-xs">{formik.errors.state}</p>
+              )}
             </div>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 my-3.5">
+            <div className="w-full flex flex-col gap-1">
+              <CitySelect
+                countryid={formik.values.countryId || 0}
+                stateid={formik.values.stateId || 0}
+                containerClassName="w-full"
+                inputClassName={`w-full border h-[39px] px-[15px] rounded-[8px] outline-none
+                ${
+                  formik.touched.city && formik.errors.city
+                    ? "border-red-500"
+                    : "border-gray-200"
+                }
+              `}
+                placeHolder="Select City"
+                onChange={(val) => formik.setFieldValue("city", val.name)}
+              />
+              {formik.touched.city && formik.errors.city && (
+                <p className="text-red-500 text-xs">{formik.errors.city}</p>
+              )}
+            </div>
+
+            <TextField
+              type="text"
+              name="zipcode"
+              placeholder="Enter zip code"
+              value={formik.values.zipcode}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              error={formik.errors.zipcode}
+              touched={formik.touched.zipcode}
+              label=""
+            />
+          </div> */}
+
+          {/* Location */}
+          {/* <TextField
+            type="text"
+            name="location"
+            placeholder="Suite / Apartment / Street"
+            value={formik.values.location}
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+            error={formik.errors.location}
+            touched={formik.touched.location}
+            label=""
+          /> */}
+
+          {/* Submit Button */}
+          <div className="w-full mt-4 sm:mt-2">
+            <Button type="submit" isLoading={loading} title="Add Community" />
           </div>
         </form>
       </div>

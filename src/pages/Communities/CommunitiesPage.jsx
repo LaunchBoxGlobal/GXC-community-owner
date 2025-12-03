@@ -209,7 +209,7 @@ const CommunitiesPage = () => {
           </h3>
         </div>
 
-        <div className="w-full lg:max-w-1/2 flex flex-wrap mt-5 justify-end gap-4">
+        <div className="w-full lg:max-w-1/2 flex flex-wrap mt-5 lg:mt-0 justify-end gap-4">
           {/* Search input */}
           <div className="w-full md:max-w-[252px]">
             <div className="h-[49px] pl-[15px] pr-[10px] rounded-[8px] bg-white flex items-center gap-2 custom-shadow">

@@ -3,9 +3,7 @@ import { Link } from "react-router-dom";
 
 const CommunityCard = ({ community }) => {
   return (
-    <Link
-      to={`/communities/details/${community?.slug}/${community?.id}?activeTab=products`}
-    >
+    <Link to={`/communities/details/${community?.slug}?activeTab=products`}>
       <div className="w-full bg-white p-5 rounded-[20px] custom-shadow overflow-hidden">
         <div className="w-full flex items-center justify-between gap-4">
           <div className="flex items-center gap-2">
