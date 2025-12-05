@@ -203,11 +203,7 @@ const CommunitiesPage = () => {
     <main className="w-full p-5 rounded-[10px] bg-[var(--white-bg)] custom-shadow min-h-[78vh]">
       {/* Header */}
       <div className="w-full grid grid-cols-1 lg:grid-cols-2">
-        <div className="lg:pt-4">
-          <h3 className="text-[32px] font-semibold leading-none">
-            Communities
-          </h3>
-        </div>
+        <h3 className="text-[32px] font-semibold leading-none">Communities</h3>
 
         <div className="w-full lg:max-w-1/2 flex flex-wrap mt-5 lg:mt-0 justify-end gap-4">
           {/* Search input */}

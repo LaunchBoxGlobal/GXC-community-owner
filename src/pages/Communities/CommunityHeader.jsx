@@ -12,6 +12,7 @@ const CommunityHeader = ({
   showInvitationButton,
   isCommunitySuspended,
 }) => {
+  console.log(community?.community);
   return (
     <div className="w-full relative">
       <div className="w-full flex items-center justify-between flex-col md:flex-row gap-5">
@@ -69,6 +70,15 @@ const CommunityHeader = ({
             <p className="text-base text-[var(--secondary-color)] leading-[1.3] mt-2 break-words">
               <span className="font-semibold">Description: </span>
               {community?.community?.description}
+            </p>
+          )}
+
+          {community?.community?.address && (
+            <p className="text-base text-[var(--secondary-color)] leading-[1.3] mt-2 break-words">
+              <span className="font-semibold">Address: </span>
+              {community?.community?.address} {community?.community?.city}{" "}
+              {community?.community?.state} {community?.community?.zipcode}{" "}
+              {community?.community?.country}
             </p>
           )}
         </div>

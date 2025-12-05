@@ -174,8 +174,6 @@ const CommunityPage = () => {
     );
   }
 
-  console.log(isCommunitySuspended);
-
   // --- Main Content ---
   return (
     <main className="w-full p-5 rounded-[10px] min-h-[80vh] bg-white custom-shadow">

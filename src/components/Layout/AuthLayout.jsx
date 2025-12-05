@@ -1,4 +1,3 @@
-import React from "react";
 import { useLocation } from "react-router-dom";
 
 const AuthLayout = ({ children }) => {
@@ -10,37 +9,39 @@ const AuthLayout = ({ children }) => {
           <img
             src="/login-page-mockup.png"
             alt=""
-            className="w-full h-full object-cover"
+            className="w-full h-full object-cover rounded-[20px]"
           />
         ) : location?.pathname === "/forgot-password" ? (
           <img
             src="/verify-email-mockup.png"
             alt=""
-            className="w-full h-full object-cover"
+            className="w-full h-full object-cover rounded-[20px]"
           />
         ) : location?.pathname === "/verify-otp" ? (
           <img
             src="/verify-otp.png"
             alt=""
-            className="w-full h-full object-cover"
+            className="w-full h-full object-cover rounded-[20px]"
           />
         ) : location?.pathname === "/change-password" ? (
           <img
             src="/change-password-mockup.png"
             alt=""
-            className="w-full h-full object-cover"
+            className="w-full h-full object-cover rounded-[20px]"
           />
         ) : location?.pathname === "/signup" ? (
-          <img
-            src="/signup-page-mockup.png"
-            alt=""
-            className="w-full h-full object-cover"
-          />
+          <div className="rounded-[20px] overflow-hidden h-full">
+            <img
+              src="/signup-page-mockup.png"
+              alt=""
+              className="w-full h-full"
+            />
+          </div>
         ) : (
           <img
             src="/login-page-mockup.png"
             alt=""
-            className="w-full h-full object-cover"
+            className="w-full h-full object-cover rounded-[20px]"
           />
         )}
       </div>

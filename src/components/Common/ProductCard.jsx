@@ -27,11 +27,11 @@ const ProductCard = ({ product }) => {
               <div className="w-full flex items-center justify-between gap-4 my-2">
                 <p className="text-[#9D9D9DDD] text-[15px] font-normal text-start">
                   {product?.deliveryMethod === "both"
-                    ? "Pickup/Delivery"
+                    ? "Pickup / Community Pickup"
                     : product?.deliveryMethod === "pickup"
                     ? "Pickup"
                     : product?.deliveryMethod === "delivery"
-                    ? "Delivery"
+                    ? "Community Pickup"
                     : null}
                 </p>
                 <p className="text-[18px] font-medium leading-none tracking-tight">

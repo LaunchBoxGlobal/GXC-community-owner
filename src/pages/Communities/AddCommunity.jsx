@@ -1,7 +1,6 @@
 import { IoClose } from "react-icons/io5";
 import TextField from "../../components/Common/TextField";
 import { useFormik } from "formik";
-import * as Yup from "yup";
 import { useState } from "react";
 import axios from "axios";
 import { BASE_URL } from "../../data/baseUrl";
@@ -15,6 +14,7 @@ import {
   CitySelect,
 } from "react-country-state-city";
 import "react-country-state-city/dist/react-country-state-city.css";
+import { communitySchema } from "../../schema/communitySchema";
 
 const AddCommunity = ({
   showPopup,
@@ -53,46 +53,15 @@ const AddCommunity = ({
       name: "",
       urlSlug: "",
       description: "",
-      // location: "",
-      // zipcode: "",
-      // city: "",
-      // state: "",
-      // country: "United States",
-      // countryId: 233,
-      // stateId: "",
+      location: "",
+      zipcode: "",
+      city: "",
+      state: "",
+      country: "United States",
+      countryId: 233,
+      stateId: "",
     },
-    validationSchema: Yup.object({
-      name: Yup.string()
-        .min(3, "Community name must contain at least 3 characters")
-        .max(35, "Community name must be 35 characters or less")
-        .required("Community name is required"),
-      urlSlug: Yup.string()
-        .min(3, "Community slug can not be less than 3 characters")
-        .max(50, "Community slug can not be more than 50 characters")
-        .matches(
-          /^[a-z0-9-]+$/,
-          "Community slug can only contain lowercase letters, numbers, and hyphens"
-        )
-        .required("Community slug is required"),
-      description: Yup.string()
-        .min(11, `Description can not be less than 11 characters`)
-        .max(150, `Description can not be more than 150 characters`)
-        .required("Community description is required"),
-      // location: Yup.string()
-      //   .trim("Address can not start or end with spaces")
-      //   .min(1, "Address can not be less than 1 character")
-      //   .max(30, "Address can not be more than 30 characters")
-      //   .required("Please enter your location"),
-
-      // zipcode: Yup.string()
-      //   .trim("Zip code can not start or end with spaces")
-      //   .matches(/^[A-Za-z0-9\- ]{4,10}$/, "Please enter a valid zip code")
-      //   .required("Enter your zip code"),
-
-      // city: Yup.string().required("Enter your city"),
-      // state: Yup.string().required("Enter your state"),
-      // country: Yup.string().required("Enter your country"),
-    }),
+    validationSchema: communitySchema,
     onSubmit: async (values, { resetForm }) => {
       if (slugError) {
         return;
@@ -105,11 +74,11 @@ const AddCommunity = ({
             name: values.name.trim(),
             slug: values.urlSlug.trim(),
             description: values.description.trim(),
-            // address: values.location.trim(),
-            // zipcode: values.zipcode.trim(),
-            // city: values.city.trim(),
-            // state: values.state.trim(),
-            // country: values.country.trim(),
+            address: values.location.trim(),
+            zipcode: values.zipcode.trim(),
+            city: values.city.trim(),
+            state: values.state.trim(),
+            country: values.country.trim(),
           },
           {
             headers: {
@@ -238,7 +207,8 @@ const AddCommunity = ({
           </div>
 
           {/* Country & State */}
-          {/* <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-3">
+            {/* Country */}
             <div className="w-full flex flex-col gap-1">
               <CountrySelect
                 defaultValue={{
@@ -270,6 +240,7 @@ const AddCommunity = ({
               )}
             </div>
 
+            {/* State */}
             <div className="w-full flex flex-col gap-1">
               <StateSelect
                 countryid={formik.values.countryId || 0}
@@ -294,6 +265,7 @@ const AddCommunity = ({
             </div>
           </div>
 
+          {/* City & Zip */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 my-3.5">
             <div className="w-full flex flex-col gap-1">
               <CitySelect
@@ -326,10 +298,10 @@ const AddCommunity = ({
               touched={formik.touched.zipcode}
               label=""
             />
-          </div> */}
+          </div>
 
           {/* Location */}
-          {/* <TextField
+          <TextField
             type="text"
             name="location"
             placeholder="Suite / Apartment / Street"
@@ -339,10 +311,10 @@ const AddCommunity = ({
             error={formik.errors.location}
             touched={formik.touched.location}
             label=""
-          /> */}
+          />
 
           {/* Submit Button */}
-          <div className="w-full mt-4 sm:mt-2">
+          <div className="w-full mt-4 sm:mt-5">
             <Button type="submit" isLoading={loading} title="Add Community" />
           </div>
         </form>

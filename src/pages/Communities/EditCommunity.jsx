@@ -2,7 +2,7 @@ import { IoClose } from "react-icons/io5";
 import TextField from "../../components/Common/TextField";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
 import { BASE_URL } from "../../data/baseUrl";
 import { getToken } from "../../utils/getToken";
@@ -11,13 +11,14 @@ import Cookies from "js-cookie";
 import { enqueueSnackbar } from "notistack";
 import { handleApiError } from "../../utils/handleApiError";
 import { useNavigate } from "react-router-dom";
+import {
+  CountrySelect,
+  StateSelect,
+  CitySelect,
+} from "react-country-state-city";
+import "react-country-state-city/dist/react-country-state-city.css";
 
 const EditCommunity = ({
-  showPopup,
-  togglePopup,
-  setCommunityUrl,
-  setShowAddCommunityPopup,
-  setShowSuccessPopup,
   setShowEditCommunityPopup,
   showEditCommunityPopup,
   community,
@@ -54,6 +55,13 @@ const EditCommunity = ({
       name: community?.name || "",
       urlSlug: community?.slug || "",
       description: community?.description || "",
+      location: community?.address || "",
+      zipcode: community?.zipcode || "",
+      city: community?.city || "",
+      state: community?.state || "",
+      country: community?.country || "United States",
+      countryId: 233,
+      stateId: "",
     },
     validationSchema: Yup.object({
       name: Yup.string()
@@ -72,6 +80,20 @@ const EditCommunity = ({
         .min(11, `Description can not be less than 11 characters`)
         .max(150, `Description can not be more than 150 characters`)
         .required("Description is required"),
+      location: Yup.string()
+        .trim("Address can not start or end with spaces")
+        .min(1, "Address can not be less than 1 character")
+        .max(30, "Address can not be more than 30 characters")
+        .required("Please enter your location"),
+
+      zipcode: Yup.string()
+        .trim("Zip code can not start or end with spaces")
+        .matches(/^[A-Za-z0-9\- ]{4,10}$/, "Please enter a valid zip code")
+        .required("Enter your zip code"),
+
+      city: Yup.string().required("Enter your city"),
+      state: Yup.string().required("Enter your state"),
+      country: Yup.string().required("Enter your country"),
     }),
     onSubmit: async (values, { resetForm }) => {
       if (slugError) {
@@ -85,6 +107,11 @@ const EditCommunity = ({
             name: values.name.trim(),
             slug: values.urlSlug.trim(),
             description: values.description.trim(),
+            address: values.location.trim(),
+            city: values.city.trim(),
+            state: values.state.trim(),
+            zipcode: values.zipcode.trim(),
+            country: values.country.trim(),
           },
           {
             headers: {
@@ -114,6 +141,26 @@ const EditCommunity = ({
       }
     },
   });
+
+  useEffect(() => {
+    // Only run once when community data is loaded
+    if (community?.state) {
+      // Find the stateId dynamically from react-country-state-city list
+      fetch(`https://countriesnow.space/api/v0.1/countries/states`)
+        .then((res) => res.json())
+        .then((data) => {
+          const usa = data.data.find((c) => c.name === "United States");
+          const selectedState = usa.states.find(
+            (s) => s.name.toLowerCase() === community.state.toLowerCase()
+          );
+          if (selectedState) {
+            formik.setFieldValue("stateId", selectedState?.id);
+            formik.setFieldValue("countryId", 233);
+          }
+        });
+    }
+  }, [community]);
+
   return (
     showEditCommunityPopup && (
       <div className="w-full h-screen flex items-center justify-center px-5 fixed inset-0 z-50 bg-[rgba(0,0,0,0.4)]">
@@ -188,6 +235,117 @@ const EditCommunity = ({
                 </div>
               ) : null}
             </div>
+
+            {/* Country & State */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-3">
+              {/* Country */}
+              <div className="w-full flex flex-col gap-1">
+                <CountrySelect
+                  defaultValue={{
+                    id: 233,
+                    name: "United States",
+                    iso2: "US",
+                    iso3: "USA",
+                  }}
+                  disabled={true}
+                  containerClassName="w-full"
+                  inputClassName={`w-full border h-[39px] px-[15px] rounded-[8px] outline-none disabled:cursor-not-allowed 
+                ${
+                  formik.touched.country && formik.errors.country
+                    ? "border-red-500"
+                    : "border-gray-200"
+                }
+              `}
+                  placeHolder="Select Country"
+                  onChange={(val) => {
+                    formik.setFieldValue("country", val.name);
+                    formik.setFieldValue("countryId", val.id);
+                    formik.setFieldValue("state", "");
+                    formik.setFieldValue("stateId", "");
+                    formik.setFieldValue("city", "");
+                  }}
+                />
+                {formik.touched.country && formik.errors.country && (
+                  <p className="text-red-500 text-xs">
+                    {formik.errors.country}
+                  </p>
+                )}
+              </div>
+
+              {/* State */}
+              <div className="w-full flex flex-col gap-1">
+                <StateSelect
+                  countryid={formik.values.countryId || undefined}
+                  containerClassName="w-full"
+                  inputClassName={`w-full border h-[39px] px-[15px] rounded-[8px] outline-none bg-[var(--secondary-bg)] ${
+                    formik.touched.state && formik.errors.state
+                      ? "border-red-500"
+                      : "border-gray-200"
+                  }`}
+                  placeHolder="Select State"
+                  onChange={(val) => {
+                    formik.setFieldValue("state", val.name);
+                    formik.setFieldValue("stateId", val.id);
+                    formik.setFieldValue("city", "");
+                  }}
+                  defaultValue={
+                    formik.values.state ? { name: formik.values.state } : null
+                  }
+                />
+                {formik.touched.state && formik.errors.state && (
+                  <p className="text-red-500 text-xs">{formik.errors.state}</p>
+                )}
+              </div>
+            </div>
+
+            {/* City & Zip */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 my-3.5">
+              <div className="w-full flex flex-col gap-1">
+                <CitySelect
+                  countryid={formik.values.countryId || undefined}
+                  stateid={formik.values.stateId || undefined}
+                  containerClassName="w-full"
+                  inputClassName={`w-full border h-[39px] px-[15px] rounded-[8px] outline-none bg-[var(--secondary-bg)] ${
+                    formik.touched.city && formik.errors.city
+                      ? "border-red-500"
+                      : "border-gray-200"
+                  }`}
+                  placeHolder="Select City"
+                  onChange={(val) => formik.setFieldValue("city", val.name)}
+                  defaultValue={
+                    formik.values.city ? { name: formik.values.city } : null
+                  }
+                />
+                {formik.touched.city && formik.errors.city && (
+                  <p className="text-red-500 text-xs">{formik.errors.city}</p>
+                )}
+              </div>
+
+              <TextField
+                type="text"
+                name="zipcode"
+                placeholder="Enter zip code"
+                value={formik.values.zipcode}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                error={formik.errors.zipcode}
+                touched={formik.touched.zipcode}
+                label=""
+              />
+            </div>
+
+            {/* Location */}
+            <TextField
+              type="text"
+              name="location"
+              placeholder="Suite / Apartment / Street"
+              value={formik.values.location}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              error={formik.errors.location}
+              touched={formik.touched.location}
+              label=""
+            />
 
             <div className="w-full">
               <Button type={`submit`} isLoading={loading} title={"Save"} />

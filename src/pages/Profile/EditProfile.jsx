@@ -28,8 +28,6 @@ const EditProfile = ({ togglePopup, showPopup, fetchUserProfile }) => {
   const [loading, setLoading] = useState(false);
   const [fileError, setFileError] = useState(null);
 
-  const parsedPhone = parsePhoneNumberFromString(user?.phone || "");
-
   useEffect(() => {
     if (user?.profilePicture) {
       setPreview(user.profilePictureUrl);
