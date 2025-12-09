@@ -29,8 +29,8 @@ const settingPages = [
     url: "/settings/delete-account",
   },
   {
-    title: "Support",
-    url: "/settings/support",
+    title: "Report",
+    url: "/settings/report",
   },
 ];
 
@@ -51,7 +51,7 @@ const SettingsLayout = () => {
       <ChangePasswordPage />
     ) : settingsTab === "delete-account" ? (
       <DeleteAccountPage />
-    ) : settingsTab === "support" ? (
+    ) : settingsTab === "report" ? (
       <SupportPage />
     ) : (
       ""

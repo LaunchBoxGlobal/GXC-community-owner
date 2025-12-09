@@ -77,13 +77,20 @@ const ProductPage = () => {
   }
 
   if (!productDetails) {
-    return null;
+    return (
+      <div className="w-full bg-white custom-shadow rounded-[10px] p-7 mt-5 min-h-[70vh] flex flex-col items-center justify-center text-center">
+        <p className="text-red-500 font-medium text-lg mb-4">
+          Something went wrong.
+        </p>
+        <button
+          onClick={() => navigate(-1)}
+          className="px-4 py-2 bg-[var(--button-bg)] text-white rounded-md hover:opacity-90"
+        >
+          Go Back
+        </button>
+      </div>
+    );
   }
-
-  // if (productDetails?.status !== "active") {
-  //   navigate(-1);
-  //   return;
-  // }
 
   return (
     <div className="w-full bg-white custom-shadow rounded-[10px] p-7 mt-5">
@@ -106,8 +113,8 @@ const ProductPage = () => {
                 {productDetails?.deliveryMethod === "pickup"
                   ? "Pickup"
                   : productDetails?.deliveryMethod === "delivery"
-                  ? "Delivery"
-                  : "Pickup / Delivery"}
+                  ? "Community Pickup"
+                  : "Pickup / Community Pickup"}
               </p>
             </div>
             <p className="text-[24px] font-semibold leading-none text-[var(--button-bg)]">
