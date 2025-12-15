@@ -380,8 +380,8 @@ const ReportDetailsModal = ({
                         className="bg-[var(--primary-color)] font-medium text-white text-sm px-4 py-2 rounded-lg"
                       >
                         {report?.seller?.status === "active"
-                          ? "Suspend"
-                          : "Unsuspend"}
+                          ? "Block"
+                          : "Unblock"}
                       </button>
                     </div>
                   </div>
