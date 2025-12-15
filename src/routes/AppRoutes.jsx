@@ -32,6 +32,7 @@ import { useAppContext } from "../context/AppContext";
 import SellerStripeSuccess from "../pages/Auth/SellerStripeSuccess";
 import UserDetailsPage from "../pages/Wallet/UserDetailsPage";
 import NotificationsPage from "../pages/Notifications/NotificationsPage";
+import ProductReportsPage from "../pages/ProductReports/ProductReportsPage";
 
 const PrivateRoute = ({ element }) => {
   const token = Cookies.get("ownerToken") ? Cookies.get("ownerToken") : null;
@@ -296,19 +297,6 @@ const AppRoutes = () => {
         }
       />
 
-      {/* <Route
-        path="/settings/change-password"
-        element={
-          <PrivateRoute
-            element={
-              <DashboardLayout
-                pages={<SettingsLayout page={<ChangePasswordPage />} />}
-              />
-            }
-          />
-        }
-      /> */}
-
       <Route
         path="/profile"
         element={
@@ -323,6 +311,15 @@ const AppRoutes = () => {
         element={
           <PrivateRoute
             element={<DashboardLayout pages={<NotificationsPage />} />}
+          />
+        }
+      />
+
+      <Route
+        path="/reported-products"
+        element={
+          <PrivateRoute
+            element={<DashboardLayout pages={<ProductReportsPage />} />}
           />
         }
       />

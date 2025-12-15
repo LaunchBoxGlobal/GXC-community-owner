@@ -76,16 +76,16 @@ export const handleApiError = (error, navigate) => {
 
     // ----------------- 400 -----------------
     if (status === 400) {
-      if (shouldShowError("errOther")) {
-        markErrorShown("errOther");
+      // if (shouldShowError("errOther")) {
+      // markErrorShown("errOther");
 
-        enqueueSnackbar(
-          error?.response?.data?.message ||
-            error?.message ||
-            "Invalid request. Please check your input.",
-          { variant: "error" }
-        );
-      }
+      enqueueSnackbar(
+        error?.response?.data?.message ||
+          error?.message ||
+          "Invalid request. Please check your input.",
+        { variant: "error" }
+      );
+      // }
       return;
     }
 
@@ -144,15 +144,15 @@ export const handleApiError = (error, navigate) => {
 
     // ----------------- 500+ -----------------
     if (status >= 500) {
-      if (shouldShowError("err500")) {
-        markErrorShown("err500");
-        enqueueSnackbar(
-          "Something went wrong on our end. Please try again later.",
-          {
-            variant: "error",
-          }
-        );
-      }
+      // if (shouldShowError("err500")) {
+      markErrorShown("err500");
+      enqueueSnackbar(
+        "Something went wrong on our end. Please try again later.",
+        {
+          variant: "error",
+        }
+      );
+      // }
       return;
     }
 
