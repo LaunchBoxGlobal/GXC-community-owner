@@ -454,7 +454,7 @@ const ReportDetailsModal = ({
                 <div className="flex flex-col items-end gap-1.5">
                   <label htmlFor="disable" className="font-medium text-sm">
                     {report?.product?.status === "delisted"
-                      ? "Mark Active"
+                      ? "Delisted"
                       : "Delist"}
                   </label>
                   <label className="inline-flex items-center cursor-pointer">
