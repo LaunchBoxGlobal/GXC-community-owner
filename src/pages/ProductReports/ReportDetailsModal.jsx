@@ -322,6 +322,13 @@ const ReportDetailsModal = ({
                 </div>
               </div>
 
+              <div className="w-full mt-3 flex items-center gap-1.5">
+                <h4 className="font-medium leading-none text-sm">Community:</h4>
+                <p className="text-[14px] font-medium">
+                  {report?.community?.name}
+                </p>
+              </div>
+
               <div className="w-full mt-5 flex flex-col items-start">
                 <div className="w-full">
                   <h4 className="font-medium">Reporter</h4>
@@ -369,7 +376,7 @@ const ReportDetailsModal = ({
                         type="button"
                         disabled={isRemoved}
                         onClick={() => handleBlockUser()}
-                        className="bg-[#DEDEDE] font-medium text-sm px-4 py-2 rounded-lg"
+                        className="bg-gray-200 font-medium text-sm px-4 py-2 rounded-lg"
                       >
                         Remove
                       </button>
@@ -474,7 +481,7 @@ const ReportDetailsModal = ({
                 <div className="w-full mt-3 grid grid-cols-2 gap-3">
                   <button
                     type="button"
-                    className="w-full bg-gray-400 text-black h-[49px] rounded-[8px] text-sm lg:text-base text-center font-medium disabled:cursor-not-allowed"
+                    className="w-full bg-gray-200 text-black h-[49px] rounded-[8px] text-sm lg:text-base text-center font-medium disabled:cursor-not-allowed"
                     onClick={() => markReportResolvedRejected("rejected")}
                   >
                     {isPending && actionType === "rejected" ? (
