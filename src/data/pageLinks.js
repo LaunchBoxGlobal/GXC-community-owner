@@ -34,7 +34,7 @@ export const PAGE_LINKS = [
   {
     title: "Reported Products",
     page: "/reported-products",
-    icon: "/notification-icon.png",
+    icon: "/missing-item-reports-tab-icon.png",
     iconWidth: 17,
     iconHeight: 17,
     iconAltTag: "wallet icon",
