@@ -111,7 +111,7 @@ const ProductReportsPage = () => {
 
   return (
     <div className="w-full relative bg-white p-5 lg:p-7 rounded-[12px] min-h-[80vh] lg:rounded-[24px] custom-shadow">
-      <div className="w-full relative flex items-center justify-between gap-5">
+      <div className="w-full relative flex items-center justify-between flex-wrap gap-5">
         <h2 className="page-heading">Reported Products</h2>
 
         <div className="w-full md:max-w-[252px]">

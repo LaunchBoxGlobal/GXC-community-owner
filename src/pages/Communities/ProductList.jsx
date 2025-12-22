@@ -95,7 +95,7 @@ const ProductList = ({ community }) => {
 
   return (
     <div className="w-full mt-6">
-      <div className="w-full flex items-center justify-between gap-5">
+      <div className="w-full flex items-center justify-between flex-wrap gap-5">
         <h3 className="page-heading">
           Products{" "}
           {products?.length > 0 ? (

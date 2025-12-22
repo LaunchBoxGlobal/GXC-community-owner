@@ -166,7 +166,7 @@ const EditCommunity = ({
       <div className="w-full h-screen flex items-center justify-center px-5 fixed inset-0 z-50 bg-[rgba(0,0,0,0.4)]">
         <form
           onSubmit={formik.handleSubmit}
-          className="bg-[var(--white-bg)] p-7 rounded-[18px] relative w-full max-w-[471px]"
+          className="bg-[var(--white-bg)] p-7 rounded-[18px] relative w-full max-w-[471px] max-h-[80vh] lg:max-h-[90vh] overflow-hidden flex flex-col"
         >
           <div className="w-full flex items-center justify-between gap-5">
             <h3 className="text-[20px] lg:text-[24px] font-semibold leading-none max-w-[80%]">
@@ -183,7 +183,7 @@ const EditCommunity = ({
 
           <div className="w-full border my-7 border-[#000000]/10" />
 
-          <div className="w-full space-y-3">
+          <div className="w-full space-y-3 overflow-y-auto pr-1">
             <TextField
               type="text"
               name="name"

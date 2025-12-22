@@ -45,19 +45,15 @@ const UserProfilePage = () => {
           <div className="w-full bg-white p-5 flex items-center flex-col md:flex-row justify-between rounded-[15px] mt-5 gap-5 custom-shadow">
             <div className="w-full lg:max-w-[70%] flex items-start lg:items-center gap-3">
               <div className="">
-                {user?.profilePictureUrl ? (
-                  <img
-                    class="lg:h-[116px] min-w-[54px] h-[54px] lg:max-w-[116px] rounded-full object-cover object-center"
-                    src={user?.profilePictureUrl}
-                    alt="user profile picture"
-                  />
-                ) : (
-                  <img
-                    class="lg:h-[116px] min-w-[54px] h-[54px] lg:max-w-[116px] rounded-full object-cover object-center"
-                    src={"/profile-icon.png"}
-                    alt="user profile picture"
-                  />
-                )}
+                <img
+                  class="lg:h-[116px] min-w-[54px] h-[54px] lg:max-w-[116px] lg:min-w-[116px] rounded-full object-cover object-center"
+                  src={
+                    user?.profilePictureUrl
+                      ? user?.profilePictureUrl
+                      : "/profile-icon.png"
+                  }
+                  alt={`${user?.fullName} profile picture`}
+                />
               </div>
               <div className="space-y-2">
                 <h2 className="text-[22px] lg:text-[32px] font-semibold leading-[1]">

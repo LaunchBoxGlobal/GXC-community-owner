@@ -107,7 +107,7 @@ const ReportsPage = () => {
 
   return (
     <div className="w-full relative bg-white p-5 lg:p-7 rounded-[12px] min-h-[80vh] lg:rounded-[24px] custom-shadow">
-      <div className="w-full relative flex items-center justify-between gap-5">
+      <div className="w-full relative flex items-center justify-between gap-5 flex-wrap">
         <h2 className="page-heading">Reports</h2>
 
         <div className="w-full md:max-w-[252px]">

@@ -64,8 +64,12 @@ const NotificationsPage = () => {
         {/* Product Alerts */}
         <div className="w-full bg-[#F5F5F5] rounded-[12px] p-5 flex items-center justify-between">
           <div className="w-full max-w-[80%]">
-            <h3 className="font-semibold text-lg">New Product Alerts</h3>
-            <p>Receive instant alerts for newly listed products.</p>
+            <h3 className="font-semibold text-lg leading-none">
+              New Product Alerts
+            </h3>
+            <p className="leading-none mt-2 lg:mt-0">
+              Receive instant alerts for newly listed products.
+            </p>
           </div>
 
           <label className="inline-flex items-center cursor-pointer">
@@ -91,8 +95,10 @@ const NotificationsPage = () => {
         {/* Order Alerts */}
         <div className="w-full bg-[#F5F5F5] rounded-[12px] p-5 flex items-center justify-between">
           <div className="w-full max-w-[80%]">
-            <h3 className="font-semibold text-lg">Order Updates</h3>
-            <p>
+            <h3 className="font-semibold text-lg leading-none">
+              Order Updates
+            </h3>
+            <p className="leading-none mt-2 lg:mt-0">
               Stay informed about order confirmations, shipments, and
               deliveries.
             </p>

@@ -111,8 +111,8 @@ const TransactionHistory = ({ setUserBalance }) => {
 
   return (
     <div className="w-full bg-white min-h-screen relative mt-8">
-      <div className="w-full flex items-center justify-between gap-5">
-        <h3 className="text-[32px] font-semibold leading-none">
+      <div className="w-full flex items-center justify-between flex-wrap gap-5">
+        <h3 className="text-[24px] lg:text-[32px] font-semibold leading-none">
           Transaction History
         </h3>
         <div className="w-full md:max-w-[252px]">
@@ -145,7 +145,7 @@ const TransactionHistory = ({ setUserBalance }) => {
       ) : (
         <div className="relative overflow-x-auto mt-5 bg-white min-h-screen custom-shadow rounded-[12px] p-3">
           <table className="w-full text-sm text-left rtl:text-right text-gray-500 border-separate border-spacing-0 rounded-[8px] overflow-hidden">
-            <thead className="text-xs text-gray-700 light-green-bg">
+            <thead className="text-xs text-gray-700 light-green-bg whitespace-nowrap">
               <tr>
                 <th
                   scope="col"
@@ -183,7 +183,10 @@ const TransactionHistory = ({ setUserBalance }) => {
               {transactions &&
                 transactions?.map((transaction, i) => {
                   return (
-                    <tr key={i} className="bg-white border-b border-gray-400">
+                    <tr
+                      key={i}
+                      className="bg-white border-b border-gray-400 whitespace-nowrap"
+                    >
                       <td className="px-6 py-4 border-b text-sm">
                         {transaction?.orderId}
                       </td>
@@ -195,7 +198,7 @@ const TransactionHistory = ({ setUserBalance }) => {
                           <img
                             src={transaction?.product?.image}
                             alt="user profile picture"
-                            className="w-[43px] h-[43px] object-cover rounded-full"
+                            className="min-w-[43px] h-[43px] object-cover rounded-full"
                           />
                           <Link
                             to={`/products/${transaction?.product?.title}?productId=${transaction?.product?.id}`}
@@ -214,7 +217,7 @@ const TransactionHistory = ({ setUserBalance }) => {
                                 : "/profile-icon.png"
                             }
                             alt="user profile picture"
-                            className="w-[43px] h-[43px] object-cover rounded-full"
+                            className="min-w-[43px] h-[43px] object-cover rounded-full"
                           />
                           <Link
                             to={`/transaction-history/member/${transaction?.seller?.id}`}
@@ -233,7 +236,7 @@ const TransactionHistory = ({ setUserBalance }) => {
                                 : "/profile-icon.png"
                             }
                             alt="user profile picture"
-                            className="w-[43px] h-[43px] object-cover rounded-full"
+                            className="min-w-[43px] h-[43px] object-cover rounded-full"
                           />
                           <Link
                             to={`/transaction-history/member/${transaction?.buyer?.id}`}

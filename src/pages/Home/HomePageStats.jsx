@@ -33,7 +33,7 @@ export const DASHBOARD_STATS = [
 
 const HomePageStats = ({ stats }) => {
   return (
-    <div className="w-full mt-5 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+    <div className="w-full mt-5 grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-4">
       {DASHBOARD_STATS?.map((st, i) => {
         return (
           <div
@@ -42,9 +42,7 @@ const HomePageStats = ({ stats }) => {
           >
             {/* --- Left Section --- */}
             <div className="flex-1">
-              <p className="text-[#565656] font-medium text-xs sm:text-sm">
-                {st?.title}
-              </p>
+              <p className="text-[#565656] font-medium text-sm">{st?.title}</p>
               <p className="text-lg sm:text-xl xl:text-[24px] font-semibold mt-1">
                 {st?.title === "Total Communities"
                   ? stats?.activeCommunities
@@ -60,11 +58,9 @@ const HomePageStats = ({ stats }) => {
 
             {/* --- Right Section (Icon Box) --- */}
             <div className="self-start sm:self-center">
-              <div className="w-[55px] h-[55px] sm:w-[67px] sm:h-[67px] bg-[var(--button-bg)] rounded-[15px] flex items-center justify-center">
+              <div className="w-[45px] h-[45px] sm:w-[67px] sm:h-[67px] bg-[var(--button-bg)] rounded-[15px] flex items-center justify-center p-2">
                 <img
                   src={st?.icon}
-                  width={st?.iconWidth}
-                  height={st?.iconHeight}
                   alt="icon placeholder"
                   className="object-contain max-w-[70%] max-h-[70%]"
                 />

@@ -145,7 +145,7 @@ const VerifyOtpForAccountDeletionModal = ({ onClose, showModal }) => {
 
   return (
     showModal && (
-      <div className="w-full h-screen bg-[rgba(0,0,0,0.5)] fixed inset-0 z-50 flex items-center justify-center">
+      <div className="w-full h-screen bg-[rgba(0,0,0,0.5)] fixed inset-0 z-50 flex items-center justify-center px-4">
         <div className="bg-white w-full max-w-[471px] rounded-[32px] p-6 relative">
           <div className="w-full flex items-center justify-between">
             <h2 className="text-[24px] font-semibold leading-none">

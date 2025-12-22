@@ -153,14 +153,14 @@ const MemberList = ({ communityId, setMemberCount, community }) => {
       </div>
       <div className="w-full mt-5 bg-white custom-shadow rounded-[12px] p-5">
         {/* Filter Buttons */}
-        <div className="w-full mb-4 space-x-3">
+        <div className="w-full mb-4 space-x-3 lg:max-w-[35%]">
           <button
             type="button"
             onClick={() => {
               setListType("active");
               setPage(1);
             }}
-            className={`px-5 py-3 rounded-lg text-xs lg:text-sm font-medium ${
+            className={`px-3 lg:px-5 py-3 rounded-lg text-xs lg:text-sm font-medium ${
               listType === "active"
                 ? "bg-[var(--button-bg)] text-white"
                 : "bg-[#E6E6E6] text-black"
@@ -174,7 +174,7 @@ const MemberList = ({ communityId, setMemberCount, community }) => {
               setListType("blocked");
               setPage(1);
             }}
-            className={`px-5 py-3 rounded-lg text-xs lg:text-sm font-medium ${
+            className={`px-3 lg:px-5 py-3 rounded-lg text-xs lg:text-sm font-medium ${
               listType === "blocked"
                 ? "bg-[var(--button-bg)] text-white"
                 : "bg-[#E6E6E6] text-black"

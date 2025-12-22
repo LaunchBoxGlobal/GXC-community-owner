@@ -76,21 +76,23 @@ const UserDetailsPage = () => {
     <div className="w-full bg-white custom-shadow min-h-screen rounded-lg md:rounded-xl lg:rounded-[24px] p-7">
       <h2 className="text-[24px] lg:text-[32px] font-semibold">User Details</h2>
       <div className="w-full bg-white custom-shadow rounded-lg md:rounded-xl lg:rounded-[24px] p-7 mt-5 flex items-center justify-between flex-wrap gap-6 lg:gap-0">
-        <div className="w-full lg:w-[70%] flex items-center gap-2">
-          <div>
+        <div className="w-full lg:w-[70%] flex items-start flex-col lg:flex-row lg:items-center justify-start gap-2">
+          <div className="w-full flex items-center gap-2 lg:w-auto">
             <img
-              className="min-h-[84px] min-w-[84px] lg:w-[116px] lg:h-[116px] rounded-full object-cover object-center"
+              className="h-[54px] min-w-[54px] lg:w-[116px] lg:h-[116px] rounded-full object-cover object-center"
               src={member?.profilePictureUrl || "/profile-icon.png"}
               alt="Profile"
             />
+            <h2 className="text-[20px] lg:text-[32px] font-semibold leading-none block lg:hidden">
+              {member?.firstName} {member?.lastName}
+            </h2>
           </div>
 
           <div>
-            <h2 className="text-[27px] lg:text-[32px] font-semibold leading-none">
+            <h2 className="text-[20px] lg:text-[32px] font-semibold leading-none hidden lg:block">
               {member?.firstName} {member?.lastName}
             </h2>
-
-            <div className="flex items-center gap-x-4 flex-wrap justify-start mt-2">
+            <div className="flex items-start flex-col gap-2 lg:gap-0 gap-x-4 flex-wrap justify-start mt-2">
               {member?.email && (
                 <p className="text-sm lg:text-base text-[var(--secondary-color)]">
                   {member?.email}

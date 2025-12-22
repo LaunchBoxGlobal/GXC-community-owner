@@ -14,7 +14,7 @@ const ReportList = ({ reports }) => {
     <div class="relative overflow-x-auto bg-white mt-7 min-h-[70vh]">
       <table class="w-full text-sm text-left rtl:text-right text-gray-500">
         <thead class="text-gray-700 light-green-bg rounded-[12px]">
-          <tr className="rounded-[12px]">
+          <tr className="rounded-[12px] whitespace-nowrap">
             <th
               scope="col"
               class="px-6 py-4 text-sm font-medium rounded-l-[12px]"
@@ -47,7 +47,7 @@ const ReportList = ({ reports }) => {
               return (
                 <tr
                   key={report?.id}
-                  class="bg-white border-b border-gray-200 text-sm"
+                  class="bg-white border-b border-gray-200 text-sm whitespace-nowrap"
                 >
                   <td class="px-6 py-3">{report?.id}</td>
 

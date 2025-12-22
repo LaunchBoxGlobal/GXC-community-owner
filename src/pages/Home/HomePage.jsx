@@ -182,7 +182,9 @@ const HomePage = () => {
           Hello {user.fullName},
         </h1>
       )}
-      <h2 className="text-[32px] font-semibold">Welcome to giveXchange</h2>
+      <h2 className="text-[24px] lg:text-[32px] font-semibold leading-none">
+        Welcome to giveXchange
+      </h2>
 
       {/* Stats */}
       {fetchingStats ? (
@@ -197,7 +199,9 @@ const HomePage = () => {
 
       {/* Communities */}
       <div className="w-full mt-8">
-        <h2 className="text-[32px] font-semibold">Recent Communities</h2>
+        <h2 className="text-[24px] lg:text-[32px] font-semibold">
+          Recent Communities
+        </h2>
 
         {loading ? (
           <div className="w-full flex justify-center pt-10">
