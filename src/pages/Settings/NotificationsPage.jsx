@@ -67,7 +67,7 @@ const NotificationsPage = () => {
             <h3 className="font-semibold text-lg leading-none">
               New Product Alerts
             </h3>
-            <p className="leading-none mt-2 lg:mt-0">
+            <p className="leading-none mt-2">
               Receive instant alerts for newly listed products.
             </p>
           </div>
@@ -98,7 +98,7 @@ const NotificationsPage = () => {
             <h3 className="font-semibold text-lg leading-none">
               Order Updates
             </h3>
-            <p className="leading-none mt-2 lg:mt-0">
+            <p className="leading-none mt-2">
               Stay informed about order confirmations, shipments, and
               deliveries.
             </p>
