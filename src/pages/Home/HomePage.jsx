@@ -237,6 +237,13 @@ const HomePage = () => {
             if (res?.data?.success) {
               window.open(res.data.data.url, "_blank");
             }
+          } catch (error) {
+            enqueueSnackbar(
+              error?.message ||
+                error?.responsive?.data?.message ||
+                "Something went wrong. Try again.",
+              { variant: "error" }
+            );
           } finally {
             setCreateStripe(false);
             setShowConfirmationModal(false);
