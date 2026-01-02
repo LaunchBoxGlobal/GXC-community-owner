@@ -34,7 +34,7 @@ export const UserProvider = ({ children }) => {
         setShowStripeAccountConfirmationModal(true);
         return;
       }
-      console.log("handleCheckStripeAccountStatus error >>> ", error);
+      // console.log("handleCheckStripeAccountStatus error >>> ", error);
       handleApiError(error, navigate);
     } finally {
       setIStripeAccountCreated(false);
