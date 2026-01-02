@@ -1,4 +1,3 @@
-//
 // this is staging base url
 export const BASE_URL = `https://stg-api.app.thegiveXchange.com/api`;
 
