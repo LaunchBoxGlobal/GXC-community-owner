@@ -135,25 +135,28 @@ const CommunitiesPage = () => {
       } else if (res?.data?.data?.accountStatus === "not_connected") {
         setShowConfirmationModal(true);
       } else if (res?.data?.data?.accountStatus === "pending") {
-        enqueueSnackbar(
-          "Your stripe account is pending for approval. Please wait until the acount is approved",
-          { variant: "error" }
-        );
-      } else if (
-        res?.data?.data?.accountStatus === "restricted" ||
-        res?.data?.data?.accountStatus === "disabled"
-      ) {
-        enqueueSnackbar(
-          `Your stripe account is ${
-            res?.data?.data?.accountStatus === "restricted"
-              ? "restricted."
-              : res?.data?.data?.accountStatus === "disabled"
-              ? "disabled."
-              : "incomplete."
-          }`,
-          { variant: "error" }
-        );
-      } else {
+        setShowConfirmationModal(true);
+        // enqueueSnackbar(
+        //   "Your stripe account is pending for approval. Please wait until the acount is approved",
+        //   { variant: "error" }
+        // );
+      }
+      // else if (
+      //   res?.data?.data?.accountStatus === "restricted" ||
+      //   res?.data?.data?.accountStatus === "disabled"
+      // ) {
+      //   enqueueSnackbar(
+      //     `Your stripe account is ${
+      //       res?.data?.data?.accountStatus === "restricted"
+      //         ? "restricted."
+      //         : res?.data?.data?.accountStatus === "disabled"
+      //         ? "disabled."
+      //         : "incomplete."
+      //     }`,
+      //     { variant: "error" }
+      //   );
+      // }
+      else {
         enqueueSnackbar("Something went wrong. Try again.", {
           variant: "error",
         });
