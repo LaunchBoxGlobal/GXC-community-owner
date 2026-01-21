@@ -1,0 +1,72 @@
+@import url("./styles/fonts.css");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+  font-family: "General Sans";
+}
+
+:root {
+  --button-bg: #2b3743;
+  /* --button-bg: #4e9d4b; */
+  --primary-color: #2b3743;
+  --secondary-color: #565656;
+  --secondary-bg: #f5f5f5;
+  --primary-blue: #2f88ff;
+  --page-bg: #fcfcfc;
+  --primary-bg: #d1e6d2;
+  --white-bg: #fff;
+  --light-green: #4e9d4b1a;
+  --light-bg: #f7f7f7;
+}
+
+.button {
+  @apply w-full bg-[var(--button-bg)] text-white h-[49px] rounded-[8px] text-sm lg:text-base text-center font-medium disabled:cursor-not-allowed;
+}
+
+.outlined-button {
+  @apply w-full border border-[var(--button-bg)] text-[var(--button-bg)] hover:bg-[var(--button-bg)] hover:text-white h-[49px] rounded-[8px] text-center font-medium transition-all duration-300;
+}
+
+/* Remove border from the flag dropdown */
+.react-tel-input .flag-dropdown {
+  border: none !important;
+  background: transparent !important;
+}
+
+/* Also remove outline when focused */
+.react-tel-input .flag-dropdown.open {
+  box-shadow: none !important;
+}
+
+.page-heading {
+  @apply text-[24px] lg:text-[32px] font-semibold leading-none;
+}
+
+.custom-shadow {
+  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+}
+
+textarea {
+  resize: none;
+}
+
+.stdropdown-container {
+  border: none !important;
+  @apply bg-[var(--secondary-bg)];
+}
+
+.stsearch-box > input {
+  border: none !important;
+  background-color: transparent !important;
+}
+
+.light-green-bg {
+  @apply bg-[#F5F5F5]
+  /* @apply bg-[#4e9d4b]/10; */;
+}
