@@ -1,52 +1,34 @@
-import axios from "axios";
-import React, { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
-import { BASE_URL } from "../../data/baseUrl";
-import { getToken } from "../../utils/getToken";
-import { handleApiError } from "../../utils/handleApiError";
+import { useEffect } from "react";
+import { useParams } from "react-router-dom";
+
 import PageLoader from "../../components/Loader/PageLoader";
 import ProductCard from "../../components/Common/ProductCard";
 import SuspendUuserButton from "./SuspendUuserButton";
+import { useGetMemberQuery } from "../../services/userApi/userApi";
 
 const MemberDetails = () => {
   const params = useParams();
-  const navigate = useNavigate();
 
-  const [member, setMember] = useState(null);
-  const [loading, setLoading] = useState(false);
-  const [errorMsg, setErrorMsg] = useState("");
+  const communityId = params?.communityId;
+  const userId = params?.userId;
 
-  const fetchMemberDetails = async () => {
-    setLoading(true);
-    setErrorMsg("");
-    try {
-      const res = await axios.get(
-        `${BASE_URL}/communities/${params?.communityId}/members/${params?.userId}/details`,
-        {
-          headers: {
-            Authorization: `Bearer ${getToken()}`,
-          },
-        }
-      );
-
-      setMember(res?.data?.data);
-    } catch (error) {
-      setErrorMsg(
-        error?.response?.data?.message || "Failed to load member details."
-      );
-      handleApiError(error, navigate);
-    } finally {
-      setLoading(false);
+  const { data, error, isError, isLoading, refetch } = useGetMemberQuery(
+    { communityId, userId },
+    {
+      skip: !userId,
+      refetchOnReconnect: true,
+      refetchOnMountOrArgChange: true,
+      refetchOnFocus: true,
     }
-  };
+  );
+
+  const member = data?.data || null;
 
   useEffect(() => {
     document.title = "Member Details - giveXchange";
-    fetchMemberDetails();
   }, []);
 
-  // ----- UI States -----
-  if (loading) {
+  if (isLoading) {
     return (
       <div className="w-full bg-white custom-shadow rounded-[10px] p-7 mt-5 min-h-[90vh] flex items-center justify-center">
         <PageLoader />
@@ -54,10 +36,12 @@ const MemberDetails = () => {
     );
   }
 
-  if (errorMsg) {
+  if (error || isError) {
     return (
       <div className="w-full bg-white custom-shadow rounded-[10px] p-7 mt-5 min-h-[70vh] flex items-center justify-center">
-        <p className="text-red-500 font-medium">{errorMsg}</p>
+        <p className="text-red-500 font-medium">
+          {error?.data?.message || "Something went wrong."}
+        </p>
       </div>
     );
   }
@@ -70,7 +54,6 @@ const MemberDetails = () => {
     );
   }
 
-  // ----- Main Render -----
   return (
     <div className="w-full bg-white custom-shadow rounded-lg md:rounded-xl lg:rounded-[27px] p-7 min-h-screen">
       <h2 className="text-[24px] lg:text-[32px] font-semibold leading-none">
@@ -136,7 +119,7 @@ const MemberDetails = () => {
           <SuspendUuserButton
             member={member}
             communityId={params?.communityId}
-            fetchMemberDetails={fetchMemberDetails}
+            fetchMemberDetails={refetch}
           />
         </div>
       </div>

@@ -1,63 +1,39 @@
 import { useEffect, useRef, useState } from "react";
 import Sidebar from "./Sidebar";
-import { HiOutlineArrowLeft, HiOutlineMenuAlt2 } from "react-icons/hi";
-import { useLocation, useNavigate } from "react-router-dom";
-import axios from "axios";
-import { BASE_URL } from "../../data/baseUrl";
-import { getToken } from "../../utils/getToken";
-import { useAppContext } from "../../context/AppContext";
-import Cookies from "js-cookie";
-import { handleApiError } from "../../utils/handleApiError";
-
-const pathnames = [
-  "/",
-  "/communities",
-  "/invites",
-  "/reports",
-  "/wallet",
-  "/settings",
-];
+import { HiOutlineMenuAlt2 } from "react-icons/hi";
+import { useNavigate } from "react-router-dom";
+import useOnlineSatus from "../../hooks/useOnlineStatus";
+import { useGetMyProfileQuery } from "../../services/userApi/userApi";
+import { useDispatch, useSelector } from "react-redux";
+import { setUser } from "../../features/userSlice/userSlice";
 
 const DashboardLayout = ({ pages }) => {
   const sidebarRef = useRef(null);
   const navigate = useNavigate();
   const [isOpen, setisOpen] = useState(false);
-  const { user, setUser } = useAppContext();
-  const location = useLocation();
+  const isOnline = useOnlineSatus();
+  const dispatch = useDispatch();
+
+  const { data } = useGetMyProfileQuery(undefined, {
+    refetchOnMountOrArgChange: true,
+    refetchOnReconnect: true,
+  });
+
+  const user = useSelector((state) => state.user.user);
+
+  useEffect(() => {
+    if (!user && data?.data?.user) {
+      dispatch(setUser(data.data.user));
+    }
+  }, [data, user, dispatch]);
 
   const toggleModal = () => {
     setisOpen(!isOpen);
   };
 
-  const handleLogout = () => {
+  const handleNavigateToProfile = () => {
     navigate("/profile");
   };
-
-  const fetchUserProfile = async () => {
-    try {
-      const res = await axios.get(`${BASE_URL}/auth/profile`, {
-        headers: {
-          Authorization: `Bearer ${getToken()}`,
-        },
-      });
-
-      const user = res?.data?.data?.user;
-
-      setUser(user);
-
-      // if (user && !user?.emailVerified) {
-      //   Cookies.remove("ownerToken");
-      //   Cookies.remove("owner");
-      //   navigate("/login");
-      // }
-    } catch (error) {
-      handleApiError(error, navigate);
-    }
-  };
-
-  useEffect(() => {
-    fetchUserProfile();
-  }, []);
 
   return (
     <div className="w-screen h-screen flex justify-start items-start bg-[#FCFCFC]">
@@ -87,18 +63,10 @@ const DashboardLayout = ({ pages }) => {
           >
             <HiOutlineMenuAlt2 className="text-2xl" />
           </button>
-          {/* {!pathnames.includes(location.pathname) && (
-            <button
-              type="button"
-              onClick={() => navigate(-1)}
-              className="text-[#5C5C5C] text-sm flex items-center gap-1"
-            >
-              <HiOutlineArrowLeft className="text-black text-base" /> Back
-            </button>
-          )} */}
+
           <button
             type="button"
-            onClick={handleLogout}
+            onClick={handleNavigateToProfile}
             className="flex gap-3 items-center py-4 font-normal text-gray-900"
           >
             <p className="font-semibold text-gray-700 leading-tight">
@@ -107,13 +75,13 @@ const DashboardLayout = ({ pages }) => {
             <div>
               {user?.profilePicture ? (
                 <img
-                  class="h-[54px] min-w-[54px] max-w-[54px] rounded-full object-cover object-center"
+                  className="h-[54px] min-w-[54px] max-w-[54px] rounded-full object-cover object-center"
                   src={user?.profilePictureUrl}
                   alt=""
                 />
               ) : (
                 <img
-                  class="h-[54px] min-w-[54px] max-w-[54px] rounded-full object-cover object-center"
+                  className="h-[54px] min-w-[54px] max-w-[54px] rounded-full object-cover object-center"
                   src={"/profile-icon.png"}
                   alt=""
                 />
@@ -121,7 +89,15 @@ const DashboardLayout = ({ pages }) => {
             </div>
           </button>
         </div>
-        <div className="w-full pt-6 text-black">{pages}</div>
+        {isOnline ? (
+          <div className="w-full pt-6 text-black">{pages}</div>
+        ) : (
+          <div className="w-full min-h-screen flex items-center justify-center px-4 rounded-[18px] custom-shadow">
+            <p className="text-sm font-medium text-gray-500">
+              No internet connection.
+            </p>
+          </div>
+        )}
       </div>
     </div>
   );

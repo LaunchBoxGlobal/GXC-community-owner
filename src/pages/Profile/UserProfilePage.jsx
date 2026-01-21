@@ -1,40 +1,39 @@
 import { useEffect, useState } from "react";
 import CommunitiesPage from "../Communities/CommunitiesPage";
-import axios from "axios";
-import { BASE_URL } from "../../data/baseUrl";
-import { getToken } from "../../utils/getToken";
-import { useNavigate } from "react-router-dom";
 import EditProfile from "./EditProfile";
-import { useAppContext } from "../../context/AppContext";
-import { handleApiError } from "../../utils/handleApiError";
+import { useGetMyProfileQuery } from "../../services/userApi/userApi";
+import { useDispatch, useSelector } from "react-redux";
+import PageLoader from "../../components/Loader/PageLoader";
+import { setUser } from "../../features/userSlice/userSlice";
+import CommunitiesList from "../Home/CommunitiesList";
 
 const UserProfilePage = () => {
-  const { user, setUser } = useAppContext();
-  const navigate = useNavigate();
   const [showPopup, setShowPopup] = useState(false);
+  const dispatch = useDispatch();
+  const user = useSelector((state) => state?.user?.user);
+
+  const { data, error, isError, isLoading, refetch } = useGetMyProfileQuery(
+    undefined,
+    {
+      refetchOnReconnect: true,
+    }
+  );
+
+  useEffect(() => {
+    if (data?.data?.user) {
+      dispatch(setUser(user));
+    }
+  }, [data]);
 
   const togglePopup = () => {
     setShowPopup((prev) => !prev);
   };
 
-  const fetchUserProfile = async () => {
-    try {
-      const res = await axios.get(`${BASE_URL}/auth/profile`, {
-        headers: {
-          Authorization: `Bearer ${getToken()}`,
-        },
-      });
-
-      setUser(res?.data?.data?.user);
-    } catch (error) {
-      handleApiError(error, navigate);
-    }
-  };
-
   useEffect(() => {
     document.title = "My Profile - giveXchange";
-    fetchUserProfile();
   }, []);
+
+  if (isLoading) return <PageLoader />;
 
   return (
     <>
@@ -46,7 +45,7 @@ const UserProfilePage = () => {
             <div className="w-full lg:max-w-[70%] flex items-start lg:items-center gap-3">
               <div className="">
                 <img
-                  class="lg:h-[116px] min-w-[54px] h-[54px] lg:max-w-[116px] lg:min-w-[116px] rounded-full object-cover object-center"
+                  className="lg:h-[116px] min-w-[54px] h-[54px] lg:max-w-[116px] lg:min-w-[116px] rounded-full object-cover object-center"
                   src={
                     user?.profilePictureUrl
                       ? user?.profilePictureUrl
@@ -84,13 +83,19 @@ const UserProfilePage = () => {
           </div>
         </div>
 
-        <CommunitiesPage />
+        {/* <CommunitiesPage /> */}
+        <div className="w-full rounded-[12px] bg-white custom-shadow pb-5 px-5">
+          <h3 className="text-lg lg:text-[32px] font-semibold leading-none pt-5 px-4">
+            Communities
+          </h3>
+          <CommunitiesList />
+        </div>
       </div>
 
       <EditProfile
         togglePopup={togglePopup}
         showPopup={showPopup}
-        fetchUserProfile={fetchUserProfile}
+        fetchUserProfile={refetch}
         name={user?.fullName}
         email={user?.email}
         description={user?.description}

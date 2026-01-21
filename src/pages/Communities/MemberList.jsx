@@ -1,43 +1,26 @@
-import axios from "axios";
-import React, { useEffect, useState } from "react";
-import { BASE_URL } from "../../data/baseUrl";
-import { getToken } from "../../utils/getToken";
-import { handleApiError } from "../../utils/handleApiError";
+import { useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import { LuSearch } from "react-icons/lu";
-import { IoClose } from "react-icons/io5";
-import { MdKeyboardArrowLeft, MdKeyboardArrowRight } from "react-icons/md";
-import { useDebounce } from "use-debounce";
-import { enqueueSnackbar } from "notistack";
-
+import Pagination from "../../components/Common/Pagination";
+import Loader from "../../components/Loader/Loader";
+import MemberCard from "./MemberCard";
 import RemoveUserPopup from "../../components/Popups/RemoveUserPopup";
 import BanUserPopup from "../../components/Popups/BanUserPopup";
-import MemberCard from "./MemberCard";
-import Loader from "../../components/Loader/Loader";
 import UserBlockedSuccessPopup from "../../components/Popups/UserBlockedSuccessPopup";
+import {
+  useGetCommunityMembersQuery,
+  useGetCommunityBannedMembersQuery,
+} from "../../services/communityApi/communityApi";
+import SearchField from "../../components/Common/SearchField";
 
-const MemberList = ({ communityId, setMemberCount, community }) => {
+const MemberList = ({ communityId }) => {
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
 
-  // Query params
-  const typeFromUrl = searchParams.get("type") || "active";
-  const pageFromUrl = parseInt(searchParams.get("page")) || 1;
-  const limitFromUrl = parseInt(searchParams.get("limit")) || 10;
+  const listType = searchParams.get("type") || "active";
+  const page = Number(searchParams.get("page")) || 1;
+  const limit = Number(searchParams.get("limit")) || 10;
+  const search = searchParams.get("search") || "";
 
-  // States
-  const [listType, setListType] = useState(typeFromUrl);
-  const [page, setPage] = useState(pageFromUrl);
-  const [limit, setLimit] = useState(limitFromUrl);
-  const [totalPages, setTotalPages] = useState(1);
-  const [total, setTotal] = useState(0);
-  const [members, setMembers] = useState([]);
-  const [bannedMembers, setBannedMembers] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const [searchTerm, setSearchTerm] = useState("");
-  const [debouncedSearch] = useDebounce(searchTerm, 500);
-
-  // Popups
   const [openActions, setOpenActions] = useState(null);
   const [userId, setUserId] = useState(null);
   const [showRemoveUserPopup, setShowRemoveUserPopup] = useState(false);
@@ -45,270 +28,158 @@ const MemberList = ({ communityId, setMemberCount, community }) => {
   const [isBanned, setIsBanned] = useState(false);
   const [isRemoved, setIsRemoved] = useState(false);
 
-  const toggleActionsDropdown = (index, id) => {
-    setOpenActions((prev) => (prev === index ? null : index));
-    setUserId(id);
+  const queryArgs = {
+    communityId,
+    page,
+    limit,
+    search,
   };
 
-  // Fetch Members
-  const getMembers = async () => {
-    if (!communityId) {
-      enqueueSnackbar("Community ID is not defined", { variant: "error" });
-      return;
-    }
+  const activeMembersQuery = useGetCommunityMembersQuery(queryArgs, {
+    skip: !communityId || listType !== "active",
+    refetchOnMountOrArgChange: true,
+    refetchOnFocus: true,
+    refetchOnReconnect: true,
+  });
 
-    setLoading(true);
-    try {
-      const baseUrl =
-        listType === "blocked"
-          ? `${BASE_URL}/communities/${communityId}/banned-members`
-          : `${BASE_URL}/communities/${communityId}/members`;
+  const blockedMembersQuery = useGetCommunityBannedMembersQuery(queryArgs, {
+    skip: !communityId || listType !== "blocked",
+    refetchOnMountOrArgChange: true,
+    refetchOnFocus: true,
+    refetchOnReconnect: true,
+  });
 
-      const query = new URLSearchParams({
-        page,
-        limit,
-        ...(debouncedSearch && { search: debouncedSearch }),
-      }).toString();
+  const membersQuery =
+    listType === "blocked" ? blockedMembersQuery : activeMembersQuery;
 
-      const res = await axios.get(`${baseUrl}?${query}`, {
-        headers: { Authorization: `Bearer ${getToken()}` },
-      });
+  const { data, isLoading, refetch } = membersQuery;
 
-      const data = res?.data?.data || {};
-      setMembers(data.members || []);
-      setBannedMembers(data.bannedMembers || []);
-      setTotal(data.pagination?.total || 0);
-      setTotalPages(data.pagination?.totalPages || 1);
-      setMemberCount(data.pagination?.total || 0);
-    } catch (error) {
-      handleApiError(error, navigate);
-    } finally {
-      setLoading(false);
-      setOpenActions(null);
-    }
-  };
+  const pagination = data?.data?.pagination || null;
 
-  // Fetch when dependencies change
-  useEffect(() => {
-    if (!communityId) return;
-    getMembers();
-  }, [listType, page, debouncedSearch, communityId]);
-
-  // Keep URL in sync with listType & page
-  useEffect(() => {
-    const currentParams = Object.fromEntries(searchParams.entries());
-
-    // Merge new params while keeping existing ones (like activeTab)
-    const newParams = {
-      ...currentParams,
-      type: listType,
-      page,
-      limit,
-      ...(debouncedSearch && { search: debouncedSearch }),
-    };
-
-    setSearchParams(newParams);
-  }, [listType, page, limit, debouncedSearch, searchParams, setSearchParams]);
-
-  // Pagination Handlers
-  const handleNext = () => {
-    if (page < totalPages) setPage((prev) => prev + 1);
-  };
-
-  const handlePrev = () => {
-    if (page > 1) setPage((prev) => prev - 1);
-  };
-
-  const handlePageClick = (num) => {
-    setPage(num);
-  };
+  const members =
+    listType === "blocked"
+      ? data?.data?.bannedMembers ?? []
+      : data?.data?.members ?? [];
 
   return (
     <div className="w-full">
       {/* Header + Search */}
       <div className="w-full flex items-center justify-between flex-wrap gap-5">
-        <h2 className="page-heading whitespace-nowrap">Members</h2>
+        <h2 className="page-heading">Members</h2>
+
         <div className="w-full md:max-w-[252px]">
-          <div className="h-[49px] pl-[15px] pr-[10px] rounded-[8px] bg-white custom-shadow flex items-center gap-2">
-            <LuSearch className="text-xl text-[var(--secondary-color)]" />
-            <input
-              type="text"
-              placeholder="Search members..."
-              disabled={total <= 0}
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full outline-none border-none bg-transparent disabled:cursor-not-allowed"
-            />
-            {searchTerm && (
-              <button
-                type="button"
-                onClick={() => setSearchTerm("")}
-                className="bg-gray-100 w-4 h-4 rounded-full"
-              >
-                <IoClose className="text-gray-900 text-sm" />
-              </button>
-            )}
-          </div>
+          <SearchField />
         </div>
       </div>
-      <div className="w-full mt-5 bg-white custom-shadow rounded-[12px] p-5">
-        {/* Filter Buttons */}
-        <div className="w-full mb-4 space-x-3 lg:max-w-[35%]">
-          <button
-            type="button"
-            onClick={() => {
-              setListType("active");
-              setPage(1);
-            }}
-            className={`px-3 lg:px-5 py-3 rounded-lg text-xs lg:text-sm font-medium ${
-              listType === "active"
-                ? "bg-[var(--button-bg)] text-white"
-                : "bg-[#E6E6E6] text-black"
-            }`}
-          >
-            Active Members
-          </button>
-          <button
-            type="button"
-            onClick={() => {
-              setListType("blocked");
-              setPage(1);
-            }}
-            className={`px-3 lg:px-5 py-3 rounded-lg text-xs lg:text-sm font-medium ${
-              listType === "blocked"
-                ? "bg-[var(--button-bg)] text-white"
-                : "bg-[#E6E6E6] text-black"
-            }`}
-          >
-            Blocked Members
-          </button>
-        </div>
 
-        {/* Members List */}
-        {loading ? (
-          <div className="w-full flex justify-center">
+      <div className="w-full mt-5 bg-white custom-shadow rounded-[12px] p-5">
+        {/* Filters */}
+        <div className="w-full mb-4 space-x-3">
+          {["active", "blocked"].map((type) => (
+            <button
+              key={type}
+              onClick={() => {
+                const currentParams = Object.fromEntries(
+                  searchParams.entries()
+                );
+                setSearchParams({
+                  ...currentParams,
+                  type,
+                  page: 1,
+                  limit,
+                });
+              }}
+              className={`px-4 py-2 rounded-lg text-sm ${
+                listType === type
+                  ? "bg-[var(--button-bg)] text-white"
+                  : "bg-[#E6E6E6]"
+              }`}
+            >
+              {type === "active" ? "Active Members" : "Blocked Members"}
+            </button>
+          ))}
+        </div>
+        {}
+
+        {/* Members */}
+        {isLoading ? (
+          <div className="w-full flex justify-center min-h-[50vh] pt-32">
             <Loader />
           </div>
+        ) : members.length > 0 ? (
+          members.map((member, i) => (
+            <MemberCard
+              key={member.id || i}
+              member={member}
+              index={i}
+              refetch={refetch}
+              setShowRemoveUserPopup={setShowRemoveUserPopup}
+              setShowBlockUserPopup={setShowBlockUserPopup}
+              toggleActionsDropdown={(idx, id) => {
+                setOpenActions(openActions === idx ? null : idx);
+                setUserId(id);
+              }}
+              openActions={openActions}
+              getMembers={() => {}}
+              isBlocked={listType === "blocked"}
+              communityId={communityId}
+              userId={userId}
+            />
+          ))
         ) : (
-          <>
-            {(listType === "active" ? members : bannedMembers)?.length > 0 ? (
-              <div className="w-full bg-white">
-                {(listType === "active" ? members : bannedMembers).map(
-                  (member, i) => (
-                    <MemberCard
-                      key={i}
-                      member={member}
-                      index={i}
-                      setShowRemoveUserPopup={setShowRemoveUserPopup}
-                      setShowBlockUserPopup={setShowBlockUserPopup}
-                      toggleActionsDropdown={toggleActionsDropdown}
-                      openActions={openActions}
-                      total={total}
-                      getMembers={getMembers}
-                      isBlocked={listType === "blocked"}
-                      communityId={communityId}
-                      userId={userId}
-                    />
-                  )
-                )}
-              </div>
+          <div className="w-full min-h-[50vh] pt-28 text-center px-4">
+            {search ? (
+              <p className="mt-5 text-sm font-medium text-gray-500">
+                No members found for the search term "{search}".
+              </p>
             ) : (
-              <div className="w-full text-center min-h-[40vh] pt-10">
-                <p className="text-sm">No members found!</p>
-              </div>
+              <p className="mt-5 text-sm font-medium text-gray-500">
+                No members found in this community.
+              </p>
             )}
-          </>
+          </div>
         )}
 
         {/* Pagination */}
-        {totalPages > 1 && (
-          <div className="w-full mt-5 flex justify-end">
-            <nav aria-label="Page navigation example">
-              <ul className="inline-flex items-center space-x-1 text-base h-[50px] bg-[#E6E6E6] rounded-[12px] px-2">
-                <li>
-                  <button
-                    onClick={handlePrev}
-                    disabled={page === 1}
-                    className={`flex items-center px-4 h-10 font-medium rounded-s-[12px] ${
-                      page === 1
-                        ? "opacity-50 cursor-not-allowed"
-                        : "hover:text-[var(--button-bg)]"
-                    }`}
-                  >
-                    <MdKeyboardArrowLeft className="text-2xl" />
-                    Previous
-                  </button>
-                </li>
-
-                {[...Array(totalPages)].map((_, i) => (
-                  <li key={i}>
-                    <button
-                      onClick={() => handlePageClick(i + 1)}
-                      className={`flex items-center justify-center px-4 h-10 rounded-[12px] ${
-                        page === i + 1
-                          ? "bg-[var(--button-bg)] text-white"
-                          : "text-gray-900 hover:text-[var(--button-bg)]"
-                      }`}
-                    >
-                      {i + 1}
-                    </button>
-                  </li>
-                ))}
-
-                <li>
-                  <button
-                    onClick={handleNext}
-                    disabled={page === totalPages}
-                    className={`flex items-center px-4 h-10 font-medium rounded-e-[12px] ${
-                      page === totalPages
-                        ? "opacity-50 cursor-not-allowed"
-                        : "hover:text-[var(--button-bg)]"
-                    }`}
-                  >
-                    Next <MdKeyboardArrowRight className="text-2xl" />
-                  </button>
-                </li>
-              </ul>
-            </nav>
-          </div>
-        )}
+        <Pagination page={page} pagination={pagination} />
       </div>
 
       {/* Popups */}
       <RemoveUserPopup
         showPopup={showRemoveUserPopup}
         setShowRemoveUserPopup={setShowRemoveUserPopup}
-        setOpenActions={setOpenActions}
-        openActions={openActions}
         userId={userId}
         communityId={communityId}
-        getMembers={getMembers}
-        navigate={navigate}
         setIsRemoved={setIsRemoved}
+        navigate={navigate}
+        setOpenActions={setOpenActions}
+        refetch={refetch}
       />
 
+      {/* ban user */}
       <BanUserPopup
         showPopup={showBlockUserPopup}
         setShowBlockUserPopup={setShowBlockUserPopup}
-        setOpenActions={setOpenActions}
         userId={userId}
         communityId={communityId}
-        getMembers={getMembers}
         setIsBanned={setIsBanned}
+        refetch={refetch}
       />
 
+      {/* user blocked success modal */}
       <UserBlockedSuccessPopup
         showPopup={isBanned}
         setShowPopup={setIsBanned}
         title="Member Blocked Successfully"
-        description="The selected member has been blocked and can no longer access or interact within this community."
+        description="The selected member has been blocked."
       />
 
+      {/* user removed success modal */}
       <UserBlockedSuccessPopup
         showPopup={isRemoved}
         setShowPopup={setIsRemoved}
         title="Member Removed Successfully"
-        description="The member has been removed and no longer has access to this community."
+        description="The member has been removed."
       />
     </div>
   );

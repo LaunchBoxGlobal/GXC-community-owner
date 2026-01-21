@@ -1,58 +1,28 @@
 import { useFormik } from "formik";
 import PasswordField from "../../components/Common/PasswordField";
-import axios from "axios";
-import { BASE_URL } from "../../data/baseUrl";
-import * as Yup from "yup";
-import { getToken } from "../../utils/getToken";
-import Cookies from "js-cookie";
-import { useNavigate } from "react-router-dom";
 import { enqueueSnackbar } from "notistack";
-import { handleApiError } from "../../utils/handleApiError";
-import { useState } from "react";
 import Loader from "../../components/Loader/Loader";
+import {
+  settingsChangePasswordInitialValues,
+  settingsChangePasswordSchema,
+} from "../../schema/settingsChangePasswordSchema";
+import { useSettingsChangePasswordMutation } from "../../services/userApi/userApi";
 
 const ChangePasswordPage = () => {
-  const navigate = useNavigate();
-  const [loading, setLoading] = useState(false);
+  const [settingsChangePassword, { isLoading }] =
+    useSettingsChangePasswordMutation();
 
   const formik = useFormik({
-    initialValues: {
-      currentPassword: "",
-      password: "",
-      confirmPassword: "",
-    },
-    validationSchema: Yup.object({
-      currentPassword: Yup.string().required("Enter your current password"),
-      password: Yup.string()
-        .min(8, "Password must be at least 8 characters")
-        .max(25, "Password cannot be more than 25 characters")
-        .matches(/[A-Z]/, "Password must contain at least one uppercase letter")
-        .matches(/[a-z]/, "Password must contain at least one lowercase letter")
-        .matches(/\d/, "Password must contain at least one number")
-        .matches(
-          /[@$!%*?&^#_.-]/,
-          "Password must contain at least one special character"
-        )
-        .required("Enter your new password"),
-      confirmPassword: Yup.string()
-        .oneOf([Yup.ref("password"), null], "Passwords do not match")
-        .required("Confirm password is required"),
-    }),
+    initialValues: settingsChangePasswordInitialValues,
+    validationSchema: settingsChangePasswordSchema,
     onSubmit: async (values, { resetForm }) => {
       try {
-        setLoading(true);
-        const res = await axios.post(
-          `${BASE_URL}/auth/change-password`,
-          { password: values?.password, oldPassword: values.currentPassword },
-          {
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${getToken()}`,
-            },
-          }
-        );
+        const res = await settingsChangePassword({
+          password: values?.password,
+          oldPassword: values.currentPassword,
+        }).unwrap();
 
-        if (res?.data?.success) {
+        if (res?.success) {
           resetForm();
           enqueueSnackbar("Password changed successfully", {
             variant: "success",
@@ -60,17 +30,6 @@ const ChangePasswordPage = () => {
         }
       } catch (error) {
         console.error("change password error:", error.response?.data);
-        handleApiError(error, navigate);
-        // enqueueSnackbar(error?.message || error?.response?.data?.message, {
-        //   variant: "error",
-        // });
-        // if (error?.response?.status === 401) {
-        //   Cookies.remove("token");
-        //   Cookies.remove("user");
-        //   navigate("/login");
-        // }
-      } finally {
-        setLoading(false);
       }
     },
   });
@@ -134,7 +93,7 @@ const ChangePasswordPage = () => {
             type="submit"
             className="bg-[var(--button-bg)] button max-w-[150px]"
           >
-            {loading ? <Loader /> : "Save"}
+            {isLoading ? <Loader /> : "Save"}
           </button>
         </div>
       </form>

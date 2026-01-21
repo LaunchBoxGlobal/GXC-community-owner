@@ -1,11 +1,9 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { formatDate } from "../../utils/formatDate";
-import axios from "axios";
-import { BASE_URL } from "../../data/baseUrl";
-import { getToken } from "../../utils/getToken";
 import { enqueueSnackbar } from "notistack";
 import ImageSlider from "./ImageSlider";
 import { IoClose } from "react-icons/io5";
+import { useBanUserMutation } from "../../services/userApi/userApi";
 
 const ReportDetailsModal = ({
   reportDetails,
@@ -15,25 +13,20 @@ const ReportDetailsModal = ({
   const [isBanned, setIsBanned] = useState(
     reportDetails?.reportedUser?.isBanned || false
   );
-  const [loading, setLoading] = useState(false);
   const [showImageModal, setShowImageModal] = useState(false);
   const [initialSlide, setInitialSlide] = useState(0);
 
+  const [banUser, { isLoading }] = useBanUserMutation();
+
   const toggleBanStatus = async () => {
-    setLoading(true);
     try {
       const action = isBanned ? "unban" : "ban";
-      const res = await axios.post(
-        `${BASE_URL}/communities/${reportDetails?.communityId}/members/${reportDetails?.reportedUser?.id}/${action}`,
-        {},
-        {
-          headers: {
-            Authorization: `Bearer ${getToken()}`,
-          },
-        }
-      );
+      const communityId = reportDetails?.communityId;
+      const userId = reportDetails?.reportedUser?.id;
 
-      if (res?.data?.success) {
+      const res = await banUser({ communityId, userId, action }).unwrap();
+
+      if (res?.success) {
         setIsBanned(!isBanned);
         enqueueSnackbar(
           isBanned
@@ -45,14 +38,7 @@ const ReportDetailsModal = ({
         );
       }
     } catch (error) {
-      enqueueSnackbar(
-        error?.response?.data?.message ||
-          error?.message ||
-          "Something went wrong. Try again.",
-        { variant: "error" }
-      );
-    } finally {
-      setLoading(false);
+      console.log(error);
     }
   };
 
@@ -68,7 +54,7 @@ const ReportDetailsModal = ({
           <button
             type="button"
             onClick={handleToggleReportDetailsModal}
-            disabled={loading}
+            // disabled={isLoading}
           >
             <img
               src="/close-icon.png"
@@ -159,7 +145,7 @@ const ReportDetailsModal = ({
             </div>
           </div>
 
-          {/* ✅ Toggle Button */}
+          {/* Toggle Button */}
           <div className="flex flex-col items-end gap-1.5">
             <label htmlFor="disable" className="font-medium text-sm">
               {isBanned ? "Banned" : "Disable"}
@@ -168,7 +154,7 @@ const ReportDetailsModal = ({
               <input
                 type="checkbox"
                 checked={isBanned}
-                disabled={loading}
+                disabled={isLoading}
                 onChange={toggleBanStatus}
                 className="sr-only peer"
               />

@@ -1,25 +1,29 @@
 import { useFormik } from "formik";
-import * as Yup from "yup";
 import Button from "../Common/Button";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useRef, useState } from "react";
-import axios from "axios";
-import { BASE_URL } from "../../data/baseUrl";
 import Cookies from "js-cookie";
 import ResentOtp from "./ResentOtp";
 import EmailVerificationStatusPage from "../../pages/Auth/EmailVerificationStatusPage";
-import { useAppContext } from "../../context/AppContext";
 import CopyCommunityLinkPopup from "../Popups/CopyCommunityLinkPopup";
 import { enqueueSnackbar } from "notistack";
 import ForgetPasswordEmailVerifiedSuccessPopup from "../Popups/ForgetPasswordEmailVerifiedSuccessPopup";
+import {
+  verifyOtpInitialValues,
+  verifyOtpValidationSchema,
+} from "../../schema/verifyOtpSchema";
+import {
+  useVerifyEmailMutation,
+  useVerifyOtpMutation,
+} from "../../services/authApi/authApi";
+import { setUser } from "../../features/userSlice/userSlice";
+import { useDispatch } from "react-redux";
 
 const VerifyOtp = () => {
   const inputRefs = useRef([]);
+  const dispatch = useDispatch();
   const navigate = useNavigate();
-  const [loading, setLoading] = useState(false);
-  const [showPopup, setShowPopup] = useState(false);
-  const [redirectParams, setRedirectParams] = useState(null);
-  const { setShowEmailVerificationPopup, setUser } = useAppContext();
+
   const userEmail = Cookies.get(`ownerEmail`)
     ? Cookies.get(`ownerEmail`)
     : null;
@@ -28,9 +32,16 @@ const VerifyOtp = () => {
     useState(false);
 
   const [showLinkPopup, setShowLinkPopup] = useState(false);
-  const togglePopup = () => {
-    setShowEmailVerificationPopup(true);
-  };
+
+  const [showEmailVerificationPopup, setShowEmailVerificationPopup] =
+    useState(false);
+
+  const [showCommunityLinkPopup, setShowCommunityLinkPopup] = useState(false);
+
+  const [verifyEmail, { isLoading: isVerifyingEmail }] =
+    useVerifyEmailMutation();
+
+  const [verifyOtp, { isLoading: isVerifyingOtp }] = useVerifyOtpMutation();
 
   useEffect(() => {
     const userCookie = Cookies.get("owner")
@@ -46,47 +57,35 @@ const VerifyOtp = () => {
   }, []);
 
   const formik = useFormik({
-    initialValues: {
-      otp: ["", "", "", "", "", ""],
-    },
-    validationSchema: Yup.object({
-      otp: Yup.array()
-        .test("complete", "OTP is required", (arr) =>
-          arr.every((digit) => digit !== "")
-        )
-        .test("valid", "OTP must be 6 digits", (arr) =>
-          /^\d{6}$/.test(arr.join(""))
-        ),
-    }),
+    initialValues: verifyOtpInitialValues,
+    validationSchema: verifyOtpValidationSchema,
     validateOnChange: true,
     validateOnBlur: true,
     onSubmit: async (values, { resetForm }) => {
       const otp = values.otp.join("");
+
       if (!userEmail) {
-        enqueueSnackbar("Something went wrong!", {
-          variant: "error",
-        });
+        enqueueSnackbar("Something went wrong!", { variant: "error" });
         return;
       }
 
       const body =
-        page === "/signup" ? { code: otp } : { code: otp, email: userEmail };
-      setLoading(true);
-      try {
-        const url =
-          page === "/signup"
-            ? `${BASE_URL}/auth/verify-email`
-            : page === "/login"
-            ? `${BASE_URL}/auth/verify-email`
-            : `${BASE_URL}/auth/verify-reset-code`;
-        const res = await axios.post(url, body, {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        });
+        page === "/signup"
+          ? { code: Number(otp) }
+          : { code: otp, email: userEmail };
 
-        if (res?.data?.success) {
+      try {
+        let res;
+
+        if (page === "/signup" || page === "/login") {
+          res = await verifyEmail(body).unwrap();
+        } else {
+          res = await verifyOtp(body).unwrap();
+        }
+
+        if (res?.success) {
           resetForm();
+
           const userCookie = Cookies.get("owner")
             ? JSON.parse(Cookies.get("owner"))
             : null;
@@ -94,7 +93,7 @@ const VerifyOtp = () => {
           if (userCookie) {
             userCookie.emailVerified = true;
             Cookies.set("owner", JSON.stringify(userCookie));
-            setUser(userCookie);
+            dispatch(setUser(userCookie));
           }
 
           Cookies.set("isOwnerEmailVerified", true);
@@ -120,12 +119,7 @@ const VerifyOtp = () => {
           navigate("/");
         }
       } catch (error) {
-        console.error("verify email error:", error);
-        enqueueSnackbar(error.response?.data?.message || error?.message, {
-          variant: "error",
-        });
-      } finally {
-        setLoading(false);
+        console.log("verify email error >>> ", error);
       }
     },
   });
@@ -194,7 +188,9 @@ const VerifyOtp = () => {
         className="w-full max-w-[350px] flex flex-col items-start gap-4"
       >
         <div className="w-full text-center space-y-3 mt-4">
-          <h1 className="font-semibold text-[32px] leading-none">Verify OTP</h1>
+          <h1 className="font-semibold text-[32px] leading-none">
+            Verify 6-digit code
+          </h1>
           {userEmail ? (
             <p className="text-[var(--secondary-color)]">
               Verify the code sent at{" "}
@@ -227,7 +223,11 @@ const VerifyOtp = () => {
           </div>
 
           <div className="pt-3">
-            <Button type="submit" title="Verify" isLoading={loading} />
+            <Button
+              type="submit"
+              title="Verify"
+              isLoading={isVerifyingEmail || isVerifyingOtp}
+            />
           </div>
         </div>
 
@@ -255,10 +255,10 @@ const VerifyOtp = () => {
       </form>
 
       <EmailVerificationStatusPage
-        showPopup={showPopup}
-        togglePopup={togglePopup}
-        redirectParams={redirectParams}
+        isOpen={showEmailVerificationPopup}
         showLinkPopup={showLinkPopup}
+        onClose={() => setShowEmailVerificationPopup(false)}
+        onShowCommunityLink={() => setShowCommunityLinkPopup(true)}
       />
 
       <ForgetPasswordEmailVerifiedSuccessPopup
@@ -266,7 +266,10 @@ const VerifyOtp = () => {
         handleContinue={handleConitnueChangePassword}
       />
 
-      <CopyCommunityLinkPopup />
+      <CopyCommunityLinkPopup
+        isOpen={showCommunityLinkPopup}
+        onClose={() => setShowCommunityLinkPopup(false)}
+      />
     </>
   );
 };

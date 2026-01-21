@@ -1,15 +1,21 @@
-import React from "react";
 import { useSearchParams } from "react-router-dom";
 
-const CommunityTabs = ({ activeTab, setActiveTab }) => {
+const CommunityTabs = ({ activeTab }) => {
   const [searchParams, setSearchParams] = useSearchParams();
 
-  const handleTabClick = (tab) => {
-    setActiveTab(tab);
+  // const handleTabClick = (tab) => {
+  //   const currentParams = Object.fromEntries(searchParams.entries());
+  //   currentParams.activeTab = tab;
+  //   setSearchParams(currentParams);
+  // };
 
+  const handleTabClick = (tab) => {
     const currentParams = Object.fromEntries(searchParams.entries());
-    currentParams.activeTab = tab;
-    setSearchParams(currentParams);
+
+    setSearchParams({
+      ...currentParams,
+      activeTab: tab,
+    });
   };
 
   return (

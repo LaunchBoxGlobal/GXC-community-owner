@@ -1,10 +1,7 @@
 import { useState } from "react";
-import { BASE_URL } from "../../data/baseUrl";
-import axios from "axios";
-import { getToken } from "../../utils/getToken";
 import { enqueueSnackbar } from "notistack";
-import { handleApiError } from "../../utils/handleApiError";
 import Loader from "../Loader/Loader";
+import { useRemoveUserFromCommunityMutation } from "../../services/communityApi/communityApi";
 
 const RemoveUserPopup = ({
   showPopup,
@@ -12,11 +9,12 @@ const RemoveUserPopup = ({
   setOpenActions,
   userId,
   communityId,
-  getMembers,
-  navigate,
   setIsRemoved,
+  refetch,
 }) => {
   const [loading, setLoading] = useState(false);
+  const [removeUserFromCommunity, { isLoading }] =
+    useRemoveUserFromCommunityMutation();
 
   const handleBlockUser = async () => {
     if (!communityId) {
@@ -33,26 +31,17 @@ const RemoveUserPopup = ({
     }
     setLoading(true);
     try {
-      const res = await axios.delete(
-        `${BASE_URL}/communities/${communityId}/members/${userId}`,
-        {
-          headers: {
-            Authorization: `Bearer ${getToken()}`,
-          },
-        }
-      );
+      const res = await removeUserFromCommunity({
+        communityId,
+        userId,
+      }).unwrap();
 
-      // console.log("Block user response >>> ", res?.data);
-      if (res?.data?.success) {
-        // enqueueSnackbar(res?.data?.message, {
-        //   variant: "success",
-        // });
+      if (res?.success) {
         setIsRemoved(true);
-        getMembers();
+        refetch();
       }
     } catch (error) {
-      console.log("Block user error >>> ", error);
-      handleApiError(error, navigate);
+      console.log(error);
     } finally {
       setLoading(false);
       setShowRemoveUserPopup(false);
@@ -90,7 +79,7 @@ const RemoveUserPopup = ({
             Remove member
           </h2>
           <p className="text-[var(--secondary-color)] text-center leading-[1.3]">
-            Are you sure you want to remove this member?
+            Are you sure you want to remove this member from the community?
           </p>
           <div className="w-full grid grid-cols-2 gap-2 mt-2">
             <button

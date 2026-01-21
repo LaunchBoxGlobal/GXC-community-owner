@@ -1,77 +1,52 @@
-import axios from "axios";
-import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { BASE_URL } from "../../data/baseUrl";
-import { getToken } from "../../utils/getToken";
+import { useEffect } from "react";
 import Button from "../../components/Common/Button";
 import { useFormik } from "formik";
-import * as Yup from "yup";
 import ImageUpload from "./ImageUpload";
 import { enqueueSnackbar } from "notistack";
+import {
+  appBugReportInitialValues,
+  appBugReportValidationSchema,
+} from "../../schema/appBugReportSchema";
+import { useSubmitBugReportMutation } from "../../services/reportsApi/reportsApi";
 
 const ReportingPage = () => {
-  const navigate = useNavigate();
-  const [loading, setLoading] = useState(false);
+  const [submitBugReport, { isLoading: loading }] =
+    useSubmitBugReportMutation();
 
   useEffect(() => {
     document.title = "Reporting - giveXchange";
   }, []);
 
   const formik = useFormik({
-    initialValues: {
-      description: "",
-      images: [],
-    },
+    initialValues: appBugReportInitialValues,
 
-    validationSchema: Yup.object({
-      description: Yup.string()
-        .min(10, "Description must be 10 characters or more")
-        .max(1500, "Description must be 1500 characters or less")
-        .required("Description is required"),
-    }),
+    validationSchema: appBugReportValidationSchema,
 
     onSubmit: async (values, { resetForm }) => {
-      setLoading(true);
-
       try {
         const formData = new FormData();
         formData.append("description", values.description);
 
-        // Append images only if available
         values.images.forEach((img) => {
           formData.append("images", img);
         });
-        // formData,
 
-        const response = await axios.post(
-          `${BASE_URL}/reports/bugs`,
-          formData,
-          {
-            headers: {
-              Authorization: `Bearer ${getToken()}`,
-              // "Content-Type": "multipart/form-data",
-            },
-          }
-        );
+        const response = await submitBugReport(formData).unwrap();
 
-        if (response.data.success) {
+        if (response?.success) {
           enqueueSnackbar(
-            response?.data?.message || "Bug report submitted successfully",
+            response?.message || "Bug report submitted successfully",
             { variant: "success" }
           );
           resetForm();
         }
       } catch (error) {
-        enqueueSnackbar(
-          error?.response?.data?.message ||
-            error?.message ||
-            "Something went wrong on the server.",
-          { variant: "error" }
-        );
-
-        // handleApiError(error, navigate);
-      } finally {
-        setLoading(false);
+        // enqueueSnackbar(
+        //   error?.data?.message ||
+        //     error?.message ||
+        //     "Something went wrong on the server.",
+        //   { variant: "error" }
+        // );
       }
     },
   });

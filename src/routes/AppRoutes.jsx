@@ -13,9 +13,6 @@ import CompleteProfileForm from "../components/Forms/CompleteProfileForm";
 import LoginForm from "../components/Forms/LoginForm";
 import VerifyEmail from "../components/Forms/VerifyEmail";
 import ChangePassword from "../components/Forms/ChangePassword";
-import AddPaymentInfo from "../components/Forms/AddPaymentInfo";
-import PaymentMethods from "../pages/PaymentMethods";
-import AccountSuccessPage from "../pages/Auth/AccountSuccessPage";
 
 // --- Dashboard Pages ---
 import HomePage from "../pages/Home/HomePage";
@@ -28,44 +25,47 @@ import WalletPage from "../pages/Wallet/WalletPage";
 import MemberDetails from "../pages/Members/MemberDetails";
 import ChangePasswordPage from "../pages/Settings/ChangePasswordPage";
 import UserProfilePage from "../pages/Profile/UserProfilePage";
-import { useAppContext } from "../context/AppContext";
+// import { useAppContext } from "../context/AppContext";
 import SellerStripeSuccess from "../pages/Auth/SellerStripeSuccess";
 import UserDetailsPage from "../pages/Wallet/UserDetailsPage";
 import NotificationsPage from "../pages/Notifications/NotificationsPage";
 import ProductReportsPage from "../pages/ProductReports/ProductReportsPage";
+import { useSelector } from "react-redux";
 
 const PrivateRoute = ({ element }) => {
   const token = Cookies.get("ownerToken") ? Cookies.get("ownerToken") : null;
-  const { user } = useAppContext();
+  // const { user } = useAppContext();
+  const user = useSelector((state) => state?.user?.user);
 
-  // 1️⃣ Not logged in → go to login
+  // Not logged in → go to login
   if (!token) return <Navigate to="/login" replace />;
 
-  // 2️⃣ Logged in but email not verified → verify otp
+  // Logged in but email not verified → verify otp
   if (token && user && user.emailVerified == false) {
     return <Navigate to="/verify-otp" replace />;
   }
 
-  // 3️⃣ Logged in & email verified → allow access
+  // Logged in & email verified → allow access
   return element;
 };
 
 // --- Public Route ---
 const PublicRoute = ({ element }) => {
   const token = Cookies.get("ownerToken") ? Cookies.get("ownerToken") : null;
-  const { user } = useAppContext();
+  // const { user } = useAppContext();
+  const user = useSelector((state) => state?.user?.user);
 
-  // 1️⃣ Logged in & verified → dashboard
+  // Logged in & verified → dashboard
   if (token && user && user?.emailVerified == true) {
     return <Navigate to="/" replace />;
   }
 
-  // 2️⃣ Logged in but not verified → verify otp
+  // Logged in but not verified → verify otp
   if (token && user && user?.emailVerified == false) {
     return <Navigate to="/verify-otp" replace />;
   }
 
-  // 3️⃣ Not logged in → allow
+  // Not logged in → allow
   return element;
 };
 
@@ -167,45 +167,6 @@ const AppRoutes = () => {
             element={
               <AuthLayout>
                 <LoginForm />
-              </AuthLayout>
-            }
-          />
-        }
-      />
-
-      <Route
-        path="/add-payment-info"
-        element={
-          <PrivateRoute
-            element={
-              <AuthLayout>
-                <AddPaymentInfo />
-              </AuthLayout>
-            }
-          />
-        }
-      />
-
-      <Route
-        path="/payment-methods"
-        element={
-          <PrivateRoute
-            element={
-              <AuthLayout>
-                <PaymentMethods />
-              </AuthLayout>
-            }
-          />
-        }
-      />
-
-      <Route
-        path="/account-created"
-        element={
-          <PrivateRoute
-            element={
-              <AuthLayout>
-                <AccountSuccessPage />
               </AuthLayout>
             }
           />

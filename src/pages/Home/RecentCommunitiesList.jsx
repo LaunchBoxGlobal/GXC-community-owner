@@ -1,38 +1,9 @@
-import { useEffect, useState } from "react";
 import CommunityCard from "../../components/Common/CommunityCard";
-import AddCommunity from "../Communities/AddCommunity";
-import CommunitySuccessPopup from "../Communities/CommunitySuccessPopup";
-import axios from "axios";
-import { BASE_URL } from "../../data/baseUrl";
-import { getToken } from "../../utils/getToken";
-import { handleApiError } from "../../utils/handleApiError";
 import PageLoader from "../../components/Loader/PageLoader";
 
-const RecentCommunitiesList = ({
-  showAddCommunityPopup,
-  setShowAddCommunityPopup,
-  setCommunityUrl,
-  showSuccessPopup,
-  setShowSuccessPopup,
-  toggleCommunityPopup,
-  handleCloseSuccessPopup,
-  communities,
-  loading,
-}) => {
+const RecentCommunitiesList = ({ communities, loading }) => {
   return (
     <div className="w-full">
-      <AddCommunity
-        showPopup={showAddCommunityPopup}
-        setCommunityUrl={setCommunityUrl}
-        togglePopup={toggleCommunityPopup}
-        setShowAddCommunityPopup={setShowAddCommunityPopup}
-        setShowSuccessPopup={setShowSuccessPopup}
-      />
-      <CommunitySuccessPopup
-        showPopup={showSuccessPopup}
-        togglePopup={handleCloseSuccessPopup}
-      />
-
       {loading ? (
         <PageLoader />
       ) : (

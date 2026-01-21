@@ -1,19 +1,23 @@
-import { useAppContext } from "../../context/AppContext";
-import { BASE_URL } from "../../data/baseUrl";
-import axios from "axios";
-import { getToken } from "../../utils/getToken";
 import { enqueueSnackbar } from "notistack";
-import { handleApiError } from "../../utils/handleApiError";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import {
+  useGetMyProfileQuery,
+  useToggleNotificationSettingsMutation,
+} from "../../services/userApi/userApi";
+import { useDispatch, useSelector } from "react-redux";
+import { setUser } from "../../features/userSlice/userSlice";
 
 const NotificationsPage = () => {
-  const { user, fetchUserProfile } = useAppContext();
-  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const user = useSelector((state) => state.user.user);
 
   const [updatingField, setUpdatingField] = useState(null);
+  const { data, refetch } = useGetMyProfileQuery(undefined, {
+    refetchOnMountOrArgChange: true,
+  });
 
-  const url = `${BASE_URL}/auth/profile`;
+  const [toggleNotificationSettings, { isLoading }] =
+    useToggleNotificationSettingsMutation();
 
   const handleToggle = async (field) => {
     if (!user) return;
@@ -24,29 +28,17 @@ const NotificationsPage = () => {
     try {
       setUpdatingField(field);
 
-      await axios.put(
-        url,
-        { [field]: nextValue },
-        {
-          headers: {
-            Authorization: `Bearer ${getToken()}`,
-          },
-        }
-      );
+      await toggleNotificationSettings({ [field]: nextValue });
 
-      await fetchUserProfile();
+      await refetch();
+
+      dispatch(setUser(data?.data?.user));
 
       enqueueSnackbar("Preferences updated successfully!", {
         variant: "success",
       });
     } catch (error) {
-      enqueueSnackbar(
-        error?.response?.data?.message ||
-          error?.message ||
-          "Something went wrong. Try again.",
-        { variant: "error" }
-      );
-      handleApiError(error, navigate);
+      console.log(error);
     } finally {
       setUpdatingField(null);
     }

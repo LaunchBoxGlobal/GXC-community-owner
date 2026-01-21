@@ -1,60 +1,24 @@
-import React, { useEffect, useState } from "react";
 import Gallery from "./Gallery";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import axios from "axios";
-import { BASE_URL } from "../../data/baseUrl";
-import { getToken } from "../../utils/getToken";
-import { handleApiError } from "../../utils/handleApiError";
 import PageLoader from "../../components/Loader/PageLoader";
+import { useGetProductByIdQuery } from "../../services/productsApi/productsApi";
 
 const ProductPage = () => {
   const [searchParams] = useSearchParams();
   const productId = searchParams.get("productId");
-  const [productDetails, setProductDetails] = useState(null);
-  const [loading, setLoading] = useState(false);
-  const [errorMsg, setErrorMsg] = useState("");
   const navigate = useNavigate();
 
-  const fetchProductDetails = async () => {
-    if (!productId) {
-      setErrorMsg("Invalid product ID");
-      return;
+  const { data, error, isError, isLoading } = useGetProductByIdQuery(
+    productId,
+    {
+      skip: !productId,
+      refetchOnReConnect: true,
     }
+  );
 
-    setLoading(true);
-    setErrorMsg("");
+  const productDetails = data?.data?.product || null;
 
-    try {
-      const res = await axios.get(`${BASE_URL}/products/${productId}`, {
-        headers: {
-          Authorization: `Bearer ${getToken()}`,
-        },
-      });
-
-      const product = res?.data?.data?.product;
-      if (!product) {
-        setErrorMsg("Product not found.");
-      } else {
-        setProductDetails(product);
-      }
-    } catch (error) {
-      // handle known API errors gracefully
-      if (error.response?.status === 404) {
-        setErrorMsg("Product not found.");
-      } else {
-        setErrorMsg("Failed to load product details. Please try again.");
-      }
-      handleApiError(error, navigate);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    fetchProductDetails();
-  }, [productId]);
-
-  if (loading) {
+  if (isLoading) {
     return (
       <div className="w-full bg-white custom-shadow rounded-[10px] p-7 mt-5 min-h-[70vh] flex items-center justify-center">
         <PageLoader />
@@ -62,16 +26,12 @@ const ProductPage = () => {
     );
   }
 
-  if (errorMsg) {
+  if (error || isError) {
     return (
       <div className="w-full bg-white custom-shadow rounded-[10px] p-7 mt-5 min-h-[70vh] flex flex-col items-center justify-center text-center">
-        <p className="text-red-500 font-medium text-lg mb-4">{errorMsg}</p>
-        <button
-          onClick={() => navigate(-1)}
-          className="px-4 py-2 bg-[var(--button-bg)] text-white rounded-md hover:opacity-90"
-        >
-          Go Back
-        </button>
+        <p className="text-red-500 font-medium text-lg mb-4">
+          {error?.data?.message || "Something went wrong."}
+        </p>
       </div>
     );
   }

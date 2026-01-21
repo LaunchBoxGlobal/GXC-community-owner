@@ -1,12 +1,18 @@
-import axios from "axios";
 import Cookies from "js-cookie";
 import { useEffect, useState } from "react";
-import { BASE_URL } from "../../data/baseUrl";
-import { getToken } from "../../utils/getToken";
 import { enqueueSnackbar } from "notistack";
+import {
+  useResendOtpMutation,
+  useVerifyForgotPasswordEmailMutation,
+} from "../../services/authApi/authApi";
 
 const ResentOtp = ({ email, page }) => {
   const [timer, setTimer] = useState(60);
+
+  const [resendOtp, { isLoading: isResending }] = useResendOtpMutation();
+
+  const [verifyForgotPasswordEmail, { isLoading: isForgotResending }] =
+    useVerifyForgotPasswordEmailMutation();
 
   useEffect(() => {
     if (timer <= 0) return;
@@ -22,44 +28,38 @@ const ResentOtp = ({ email, page }) => {
     if (timer > 0) return;
 
     const savedEmail = Cookies.get("signupEmail");
-    const url =
-      page === "/login" || page === "/signup"
-        ? `${BASE_URL}/auth/resend-verification`
-        : `${BASE_URL}/auth/forgot-password`;
+    const finalEmail = savedEmail || email;
 
     try {
-      const res = await axios.post(
-        url,
-        { email: savedEmail || email },
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${getToken()}`,
-          },
-        }
-      );
+      const response =
+        page === "/login" || page === "/signup"
+          ? await resendOtp({ email: finalEmail }).unwrap()
+          : await verifyForgotPasswordEmail({
+              email: finalEmail,
+            }).unwrap();
 
-      if (res?.data?.success) {
-        enqueueSnackbar(res?.data?.message, {
-          variant: "success",
-        });
-        setTimer(60);
-      }
+      enqueueSnackbar(response?.message, {
+        variant: "success",
+      });
+
+      setTimer(60);
     } catch (error) {
-      enqueueSnackbar(error?.response?.data?.message || error.message, {
+      enqueueSnackbar(error?.data?.message || "Something went wrong.", {
         variant: "error",
       });
     }
   };
 
+  const isDisabled = timer > 0 || !email || isResending || isForgotResending;
+
   return (
     <button
       type="button"
       className={`font-medium text-[var(--button-bg)] ${
-        timer > 0 ? "opacity-50 cursor-not-allowed" : ""
+        isDisabled ? "opacity-50 cursor-not-allowed" : ""
       }`}
       onClick={handleResendOtp}
-      disabled={timer > 0 || !email}
+      disabled={isDisabled}
     >
       {timer > 0 ? `Resend in ${timer}s` : "Resend"}
     </button>

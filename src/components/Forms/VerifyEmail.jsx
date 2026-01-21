@@ -1,54 +1,40 @@
 import TextField from "../Common/TextField";
 import { useFormik } from "formik";
-import * as Yup from "yup";
 import Button from "../Common/Button";
 import { Link, useNavigate } from "react-router-dom";
 import { RiArrowLeftSLine } from "react-icons/ri";
-import { useEffect, useState } from "react";
-import axios from "axios";
-import { BASE_URL } from "../../data/baseUrl";
+import { useEffect } from "react";
 import Cookies from "js-cookie";
 import { enqueueSnackbar } from "notistack";
+import { useVerifyForgotPasswordEmailMutation } from "../../services/authApi/authApi";
+import {
+  verifyEmailInitialValues,
+  verifyEmailSchema,
+} from "../../schema/verifyEmailSchema";
 
 const VerifyEmail = () => {
   const navigate = useNavigate();
-  const [loading, setLoading] = useState(false);
+
+  const [verifyEmail, { isLoading }] = useVerifyForgotPasswordEmailMutation();
 
   useEffect(() => {
     document.title = `Verify Email - giveXchange`;
   }, []);
 
   const formik = useFormik({
-    initialValues: {
-      email: "",
-    },
-    validationSchema: Yup.object({
-      email: Yup.string()
-        .trim("Email address can not start or end with spaces")
-        .email("Invalid email address")
-        .required("Email addres is required"),
-    }),
+    initialValues: verifyEmailInitialValues,
+    validationSchema: verifyEmailSchema,
     validateOnChange: true,
     validateOnBlur: true,
     onSubmit: async (values, { resetForm }) => {
-      setLoading(true);
-
       try {
-        const res = await axios.post(
-          `${BASE_URL}/auth/forgot-password`,
-          { email: values.email.trim() },
-          {
-            headers: {
-              "Content-Type": "application/json",
-            },
-          }
-        );
+        const res = await verifyEmail({ email: values.email.trim() }).unwrap();
 
-        if (res?.data?.success) {
+        if (res?.success) {
           Cookies.set("ownerEmail", values.email.trim());
           Cookies.set("page", "/forgot-password");
           resetForm();
-          enqueueSnackbar(res?.data?.message, {
+          enqueueSnackbar(res?.message, {
             variant: "success",
           });
           navigate("/verify-otp", {
@@ -59,12 +45,7 @@ const VerifyEmail = () => {
           });
         }
       } catch (error) {
-        // console.error("verify email error:", error);
-        enqueueSnackbar(error.response?.data?.message || error?.message, {
-          variant: "error",
-        });
-      } finally {
-        setLoading(false);
+        console.error("verify email error for forgot password:", error);
       }
     },
   });
@@ -97,7 +78,7 @@ const VerifyEmail = () => {
         />
 
         <div className="pt-2 w-full">
-          <Button type={"submit"} title={`Send`} isLoading={loading} />
+          <Button type={"submit"} title={`Send`} isLoading={isLoading} />
         </div>
       </div>
 

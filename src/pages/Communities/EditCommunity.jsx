@@ -1,22 +1,18 @@
 import { IoClose } from "react-icons/io5";
 import TextField from "../../components/Common/TextField";
 import { useFormik } from "formik";
-import * as Yup from "yup";
-import { useEffect, useState } from "react";
-import axios from "axios";
-import { BASE_URL } from "../../data/baseUrl";
-import { getToken } from "../../utils/getToken";
+import { useEffect } from "react";
 import Button from "../../components/Common/Button";
 import Cookies from "js-cookie";
 import { enqueueSnackbar } from "notistack";
-import { handleApiError } from "../../utils/handleApiError";
-import { useNavigate } from "react-router-dom";
 import {
   CountrySelect,
   StateSelect,
   CitySelect,
 } from "react-country-state-city";
 import "react-country-state-city/dist/react-country-state-city.css";
+import { communitySchema } from "../../schema/communitySchema";
+import { useEditCommunityMutation } from "../../services/communityApi/communityApi";
 
 const EditCommunity = ({
   setShowEditCommunityPopup,
@@ -24,30 +20,7 @@ const EditCommunity = ({
   community,
   fetchCommunityDetails,
 }) => {
-  const [loading, setLoading] = useState(false);
-  const [slugError, setSlugError] = useState(null);
-  const navigate = useNavigate();
-
-  const checkSlugAvailability = async (slug) => {
-    try {
-      if (!slug || slug.length < 3) {
-        setSlugError("Slug must be at least 3 characters");
-        return;
-      }
-
-      const res = await axios.get(`${BASE_URL}/communities/check-slug/${slug}`);
-      const available = res?.data?.data?.available;
-
-      if (!available) {
-        setSlugError("Slug is already taken");
-      } else {
-        setSlugError(null);
-      }
-    } catch (err) {
-      console.error(err);
-      setSlugError("Could not check slug availability");
-    }
-  };
+  const [editCommunity, { isLoading: loading }] = useEditCommunityMutation();
 
   const formik = useFormik({
     enableReinitialize: true,
@@ -63,47 +36,12 @@ const EditCommunity = ({
       countryId: 233,
       stateId: "",
     },
-    validationSchema: Yup.object({
-      name: Yup.string()
-        .min(3, "Community name must contain at least 3 characters")
-        .max(35, "Community name can not be more than 35 characters")
-        .required("Community name is required"),
-      urlSlug: Yup.string()
-        .min(3, "Slug can not be less than 3 characters")
-        .max(50, "Slug can not be more than 50 characters")
-        .matches(
-          /^[a-z0-9-]+$/,
-          "Slug can only contain lowercase letters, numbers, and hyphens"
-        )
-        .required("Slug is required"),
-      description: Yup.string()
-        .min(11, `Description can not be less than 11 characters`)
-        .max(150, `Description can not be more than 150 characters`)
-        .required("Description is required"),
-      location: Yup.string()
-        .trim("Address can not start or end with spaces")
-        .min(1, "Address can not be less than 1 character")
-        .max(30, "Address can not be more than 30 characters")
-        .required("Please enter your location"),
-
-      zipcode: Yup.string()
-        .trim("Zip code can not start or end with spaces")
-        .matches(/^[A-Za-z0-9\- ]{4,10}$/, "Please enter a valid zip code")
-        .required("Enter your zip code"),
-
-      city: Yup.string().required("Enter your city"),
-      state: Yup.string().required("Enter your state"),
-      country: Yup.string().required("Enter your country"),
-    }),
+    validationSchema: communitySchema,
     onSubmit: async (values, { resetForm }) => {
-      if (slugError) {
-        return;
-      }
       try {
-        setLoading(true);
-        const communityRes = await axios.put(
-          `${BASE_URL}/communities/${community?.id}`,
-          {
+        const res = await editCommunity({
+          id: community?.id,
+          data: {
             name: values.name.trim(),
             slug: values.urlSlug.trim(),
             description: values.description.trim(),
@@ -113,39 +51,21 @@ const EditCommunity = ({
             zipcode: values.zipcode.trim(),
             country: values.country.trim(),
           },
-          {
-            headers: {
-              Authorization: `Bearer ${getToken()}`,
-            },
-          }
-        );
-        if (communityRes?.data?.success) {
-          Cookies.set("slug", communityRes?.data?.data?.community?.slug);
+        }).unwrap();
+
+        if (res?.success) {
+          Cookies.set("slug", res?.data?.community?.slug);
           resetForm();
           setShowEditCommunityPopup(false);
           fetchCommunityDetails();
-          enqueueSnackbar(communityRes?.data?.message, {
-            variant: "success",
-          });
-          // setShowAddCommunityPopup(false);
-          // setShowSuccessPopup(true);
-          // setCommunityUrl(values.urlSlug);
+          enqueueSnackbar(res?.message, { variant: "success" });
         }
-      } catch (error) {
-        handleApiError(error, navigate);
-        // enqueueSnackbar(error.response?.data?.message || error?.message, {
-        //   variant: "error",
-        // });
-      } finally {
-        setLoading(false);
-      }
+      } catch (error) {}
     },
   });
 
   useEffect(() => {
-    // Only run once when community data is loaded
     if (community?.state) {
-      // Find the stateId dynamically from react-country-state-city list
       fetch(`https://countriesnow.space/api/v0.1/countries/states`)
         .then((res) => res.json())
         .then((data) => {
@@ -202,12 +122,9 @@ const EditCommunity = ({
               placeholder="URL Slug"
               value={formik.values.urlSlug}
               onChange={formik.handleChange}
-              onBlur={(e) => {
-                formik.handleBlur(e);
-                checkSlugAvailability(e.target.value);
-              }}
+              onBlur={formik.handleBlur}
               disabled={true}
-              error={formik.errors.urlSlug || slugError}
+              error={formik.errors.urlSlug}
               touched={formik.touched.urlSlug}
               label={"Community Slug"}
             />

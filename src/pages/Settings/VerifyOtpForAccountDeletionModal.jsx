@@ -1,20 +1,27 @@
 import { useEffect, useRef, useState } from "react";
-import { useAppContext } from "../../context/AppContext";
-import axios from "axios";
 import { enqueueSnackbar } from "notistack";
-import { BASE_URL } from "../../data/baseUrl";
-import { getToken } from "../../utils/getToken";
-import Cookies from "js-cookie";
 import { useNavigate } from "react-router-dom";
+import {
+  useDeleteAccountMutation,
+  useRequestDeleteAccountOtpMutation,
+} from "../../services/userApi/userApi";
+import { handleLogout } from "../../utils/handleLogout";
+import { useDispatch, useSelector } from "react-redux";
+import { removeUser } from "../../features/userSlice/userSlice";
 
 const VerifyOtpForAccountDeletionModal = ({ onClose, showModal }) => {
-  const { user } = useAppContext();
+  const user = useSelector((state) => state?.user?.user);
   const navigate = useNavigate();
   const [otp, setOtp] = useState(Array(6).fill(""));
   const [timer, setTimer] = useState(60);
   const inputsRef = useRef([]);
-  const [loading, setLoading] = useState(false);
-  const [resending, setResending] = useState(false);
+  const dispatch = useDispatch();
+
+  const [requestDeleteAccountOtp, { isLoading: resending }] =
+    useRequestDeleteAccountOtpMutation();
+
+  const [deleteAccount, { isLoading: deletingAccount, isError }] =
+    useDeleteAccountMutation();
 
   useEffect(() => {
     if (showModal) {
@@ -69,27 +76,17 @@ const VerifyOtpForAccountDeletionModal = ({ onClose, showModal }) => {
     return () => clearInterval(countdown);
   }, [timer]);
 
+  // resent otp
   const handleResendOtp = async () => {
-    setResending(true);
     try {
-      const res = await axios.post(
-        `${BASE_URL}/auth/request-delete-account`,
-        {},
-        {
-          headers: {
-            Authorization: `Bearer ${getToken()}`,
-          },
-        }
-      );
+      const res = await requestDeleteAccountOtp({}).unwrap();
 
-      if (res?.data?.success) {
+      if (res?.success) {
         enqueueSnackbar("OTP resent successfully", { variant: "success" });
         setTimer(60);
       }
     } catch (error) {
-      handleApiError(error, navigate);
-    } finally {
-      setResending(false);
+      console.log("err while requesting an otp >> ", error);
     }
   };
 
@@ -97,49 +94,28 @@ const VerifyOtpForAccountDeletionModal = ({ onClose, showModal }) => {
   const handleVerify = async () => {
     const otpCode = otp.join("");
     if (otpCode.length < 6) {
-      // setErrorMessage("Please enter a 6-digit OTP");
       enqueueSnackbar("Please enter a 6-digit OTP", { variant: "error" });
       return;
     }
 
     try {
-      setLoading(true);
-      const res = await axios.post(
-        `${BASE_URL}/auth/delete`,
-        {
-          email: user?.email,
-          code: otpCode,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${getToken()}`,
-          },
-        }
-      );
-      if (res?.data?.success) {
+      const res = await deleteAccount({
+        email: user?.email,
+        code: otpCode,
+      }).unwrap();
+
+      if (res?.success) {
         enqueueSnackbar(
-          res?.data?.message || "Your account has been deleted successfully.",
+          res?.message || "Your account has been deleted successfully.",
           { variant: "success" }
         );
-        Cookies.remove("ownerToken");
-        Cookies.remove("page");
-        Cookies.remove("owner");
-        Cookies.remove("isOwnerEmailVerified");
-        Cookies.remove("slug");
-        localStorage.removeItem("ownerfcmToken");
+        handleLogout();
+        dispatch(removeUser());
         onClose?.();
         navigate("/login");
       }
     } catch (error) {
       console.log(error);
-      enqueueSnackbar(
-        error?.response?.data?.message ||
-          error?.message ||
-          "Invalid OTP, please try again",
-        { variant: "error" }
-      );
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -207,9 +183,9 @@ const VerifyOtpForAccountDeletionModal = ({ onClose, showModal }) => {
             type="button"
             className="button w-full"
             onClick={handleVerify}
-            disabled={loading}
+            disabled={deletingAccount}
           >
-            {loading ? "Verifying..." : "Verify"}
+            {deletingAccount ? "Verifying..." : "Verify"}
           </button>
         </div>
       </div>

@@ -1,8 +1,11 @@
-import React from "react";
 import { useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
 
-const CommunitySuccessPopup = ({ showPopup, togglePopup, communityUrl }) => {
+const CommunitySuccessPopup = ({
+  showPopup,
+  togglePopup,
+  setShowSuccessPopup,
+}) => {
   const navigate = useNavigate();
 
   const handleNavigate = () => {
@@ -14,7 +17,19 @@ const CommunitySuccessPopup = ({ showPopup, togglePopup, communityUrl }) => {
   return (
     showPopup && (
       <div className="w-full h-screen fixed inset-0 z-50 bg-[rgba(0,0,0,0.4)] flex items-center justify-center px-5 py-5">
-        <div className="w-full max-w-[471px] bg-[#fff] p-7 rounded-[24px]">
+        <div className="w-full max-w-[471px] bg-[#fff] p-7 rounded-[24px] relative">
+          <button
+            type="button"
+            onClick={() => setShowSuccessPopup(false)}
+            className="absolute top-5 right-5"
+          >
+            <img
+              src="/close-icon.png"
+              alt="close icon"
+              width={20}
+              height={20}
+            />
+          </button>
           <div className="w-full text-center">
             <div className="w-[107px] h-[107px] bg-[var(--button-bg)] flex items-center justify-center rounded-full mx-auto">
               <img

@@ -1,17 +1,85 @@
+import { enqueueSnackbar } from "notistack";
 import Loader from "../../components/Loader/Loader";
+import { useToggleCommunityInvitationLinkMutation } from "../../services/communityApi/communityApi";
+import {
+  useCheckStripeStatusQuery,
+  useCreateStripeAccountMutation,
+} from "../../services/userApi/userApi";
+import { useEffect, useState } from "react";
 
 const CommunityHeader = ({
   community,
-  enableDisableLoading,
-  enableDisableCommunity,
   loading,
   setShowEditCommunityPopup,
   setShowCopyLinkPopup,
-  createStripe,
-  handleCreateStripeAccount,
-  showInvitationButton,
   isCommunitySuspended,
+  refetch,
 }) => {
+  const [showInvitationButton, setShowInvitationButton] = useState(false);
+  const [stripeAccountStatus, setAccountStripeStatus] = useState(null);
+
+  const [toggleCommunityInvitationLink, { isLoading }] =
+    useToggleCommunityInvitationLinkMutation();
+
+  const {
+    data,
+    isLoading: isStripeLoading,
+    isError: isStripeError,
+    error: stripeError,
+  } = useCheckStripeStatusQuery(undefined, {
+    refetchOnMountOrArgChange: true,
+    refetchOnReconnect: true,
+  });
+
+  const enableDisableCommunityInvitationLink = async () => {
+    const communityId = community?.community?.id;
+    const currentStatus = community.community.inviteLinkActive;
+    try {
+      const res = await toggleCommunityInvitationLink({
+        communityId,
+        inviteLinkActive: !currentStatus,
+      });
+
+      if (res?.data?.success) {
+        enqueueSnackbar(res?.data?.message, { variant: "success" });
+        refetch();
+      }
+    } catch (error) {}
+  };
+
+  useEffect(() => {
+    if (isStripeError) {
+      if (stripeError?.status === 404) {
+        setShowInvitationButton(false);
+        return;
+      }
+
+      return;
+    }
+    setAccountStripeStatus(data?.data?.accountStatus);
+
+    if (data?.data?.accountStatus === "active") {
+      setShowInvitationButton(true);
+    } else {
+      setShowInvitationButton(false);
+    }
+  }, [data, isStripeError, stripeError]);
+
+  const [createStripeAccount, { isLoading: createStripe }] =
+    useCreateStripeAccountMutation();
+
+  const handleCreateStripeAccount = async () => {
+    try {
+      const result = await createStripeAccount().unwrap();
+
+      if (result?.success && result?.data?.url) {
+        window.open(result.data.url, "_blank", "noopener,noreferrer");
+      }
+    } catch (error) {
+      handleApiError(error, navigate);
+    }
+  };
+
   return (
     <div className="w-full relative">
       <div className="w-full flex items-center justify-between flex-col md:flex-row gap-5">
@@ -24,7 +92,7 @@ const CommunityHeader = ({
               <div className="flex items-center justify-center md:justify-end gap-3 w-full lg:w-[80%]">
                 <button
                   type="button"
-                  disabled={loading || enableDisableLoading}
+                  disabled={loading || isLoading || isStripeLoading}
                   onClick={() => setShowEditCommunityPopup(true)}
                   className="button px-3 md:px-5 max-w-[190px] disabled:cursor-not-allowed"
                 >
@@ -33,9 +101,11 @@ const CommunityHeader = ({
 
                 <button
                   type="button"
-                  disabled={!community?.community?.inviteLinkActive || loading}
+                  disabled={
+                    !community?.community?.inviteLinkActive || isLoading
+                  }
                   onClick={() => setShowCopyLinkPopup(true)}
-                  className="button px-3 md:px-5 max-w-[160px] disabled:cursor-not-allowed"
+                  className="button px-3 md:px-5 max-w-[160px] disabled:cursor-not-allowed disabled:opacity-60"
                 >
                   Invite Members
                 </button>
@@ -109,15 +179,15 @@ const CommunityHeader = ({
               <div className="space-y-1.5 pt-1">
                 <h4>
                   {community?.community?.inviteLinkActive
-                    ? "Disable"
-                    : "Enable"}
+                    ? "Disable Community"
+                    : "Enable Community"}
                 </h4>
                 <label className="inline-flex items-center cursor-pointer">
                   <input
                     type="checkbox"
                     checked={community?.community?.inviteLinkActive}
-                    disabled={enableDisableLoading}
-                    onChange={enableDisableCommunity}
+                    disabled={isLoading}
+                    onChange={enableDisableCommunityInvitationLink}
                     className="sr-only peer"
                   />
                   <div className="relative w-11 h-6 bg-gray-200 rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[var(--button-bg)]"></div>

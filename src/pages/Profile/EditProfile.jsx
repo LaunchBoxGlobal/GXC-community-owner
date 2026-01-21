@@ -1,14 +1,9 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { FiPlus } from "react-icons/fi";
 import { IoClose } from "react-icons/io5";
 import TextField from "../../components/Common/TextField";
 import { useNavigate } from "react-router-dom";
 import { useFormik } from "formik";
-import axios from "axios";
-import { BASE_URL } from "../../data/baseUrl";
-import * as Yup from "yup";
-import { getToken } from "../../utils/getToken";
-import { useAppContext } from "../../context/AppContext";
 import { enqueueSnackbar } from "notistack";
 import PhoneNumberField from "../../components/Common/PhoneNumberField";
 import {
@@ -19,14 +14,23 @@ import {
 import "react-country-state-city/dist/react-country-state-city.css";
 import Loader from "../../components/Loader/Loader";
 import { handleApiError } from "../../utils/handleApiError";
-import { parsePhoneNumberFromString } from "libphonenumber-js";
+import { completeProfileValidationSchema } from "../../schema/completeProfileValidationSchema";
+import {
+  useCompleteUserProfileMutation,
+  useUploadProfilePictureMutation,
+} from "../../services/userApi/userApi";
+import { useSelector } from "react-redux";
 
 const EditProfile = ({ togglePopup, showPopup, fetchUserProfile }) => {
   const [preview, setPreview] = useState(null);
   const navigate = useNavigate();
-  const { user } = useAppContext();
   const [loading, setLoading] = useState(false);
   const [fileError, setFileError] = useState(null);
+  const user = useSelector((state) => state?.user?.user);
+
+  const [updateProfile, { isLoading }] = useCompleteUserProfileMutation();
+  const [uploadProfilePicture, { isLoading: isUploadingProfile }] =
+    useUploadProfilePictureMutation();
 
   useEffect(() => {
     if (user?.profilePicture) {
@@ -50,120 +54,31 @@ const EditProfile = ({ togglePopup, showPopup, fetchUserProfile }) => {
       zipcode: user?.zipcode || "",
       location: user?.address || "",
     },
-    validationSchema: Yup.object({
-      firstName: Yup.string()
-        .trim("First name can not start or end with spaces")
-        .min(3, "First name must contain at least 3 characters")
-        .max(10, "First name must be 10 characters or less")
-        .matches(
-          /^[A-Za-z ]+$/,
-          "First name must contain only letters and spaces"
-        )
-        .required("First name is required"),
-      lastName: Yup.string()
-        .trim("Last name can not start or end with spaces")
-        .min(3, "Last name must contain at least 3 characters")
-        .max(10, "Last name must be 10 characters or less")
-        .matches(
-          /^[A-Za-z ]+$/,
-          "Last name must contain only letters and spaces"
-        )
-        .required("Last name is required"),
-      phoneNumber: Yup.string()
-        .required("Phone number is required")
-        .test("is-valid-phone", "Invalid phone number", (value) => {
-          if (!value) return false;
-
-          const phone = parsePhoneNumberFromString(value);
-
-          return phone ? phone.isValid() : false;
-        }),
-      email: Yup.string()
-        .trim("Email address can not start or end with spaces")
-        .email("Invalid email address")
-        .required("Email is required"),
-      profileImage: Yup.mixed().nullable(),
-      city: Yup.string()
-        .trim("City name not start or end with spaces")
-        .min(3, "City name cannot be less than 3 characters")
-        .max(15, "City name cannot be more than 15 characters")
-        .matches(
-          /^[A-Za-z ]+$/,
-          "City name must contain only letters and spaces"
-        )
-        .required("Enter your city"),
-
-      state: Yup.string()
-        .trim("State can not start or end with spaces")
-        .min(3, "State can not be less than 3 characters")
-        .max(15, "State can not be more than 15 characters")
-        .matches(
-          /^[A-Za-z ]+$/,
-          "State name must contain only letters and spaces"
-        )
-        .required("Enter your state"),
-
-      country: Yup.string()
-        .trim("AddCountryres can not start or end with spaces")
-        .min(3, "Country name can not be less than 3 characters")
-        .max(15, "Country name can not be more than 15 characters")
-        .matches(
-          /^[A-Za-z ]+$/,
-          "Country name must contain only letters and spaces"
-        )
-        .required("Enter your country"),
-      location: Yup.string()
-        .trim("Address can not start or end with spaces")
-        .min(1, `Address cannot be less than 1 characters`)
-        .max(30, `Address can not be more than 30 characters`)
-        .required("Please enter your location"),
-      zipcode: Yup.string()
-        .trim("Zip code can not start or end with spaces")
-        .matches(/^[A-Za-z0-9\- ]{4,10}$/, "Please enter a valid zip code")
-        .required("Enter your zip code"),
-    }),
+    validationSchema: completeProfileValidationSchema,
     onSubmit: async (values, { resetForm }) => {
       try {
         setLoading(true);
-        const profileRes = await axios.put(
-          `${BASE_URL}/auth/profile`,
-          {
-            firstName: values.firstName,
-            lastName: values.lastName,
-            email: values.email,
-            description: null,
-            country: values?.country,
-            state: values?.state,
-            city: values?.city,
-            zipcode: values?.zipcode,
-            address: values?.location,
-            phone: values?.phoneNumber,
-          },
-          {
-            headers: {
-              Authorization: `Bearer ${getToken()}`,
-            },
-          }
-        );
+        const profileRes = await updateProfile({
+          firstName: values.firstName,
+          lastName: values.lastName,
+          email: values.email,
+          description: null,
+          country: values?.country,
+          state: values?.state,
+          city: values?.city,
+          zipcode: values?.zipcode,
+          address: values?.location,
+          phone: values?.phoneNumber,
+        }).unwrap();
 
         if (values.profileImage instanceof File) {
           const formData = new FormData();
           formData.append("profilePicture", values.profileImage);
 
-          await axios.post(
-            `${BASE_URL}/auth/upload-profile-picture`,
-            formData,
-            {
-              headers: {
-                "Content-Type": "multipart/form-data",
-                Authorization: `Bearer ${getToken()}`,
-              },
-            }
-          );
-          // console.log("Image uploaded:", imageRes.data);
+          await uploadProfilePicture(formData).unwrap();
         }
 
-        if (profileRes?.data?.success) {
+        if (profileRes?.success) {
           resetForm();
           togglePopup();
           fetchUserProfile();
@@ -431,8 +346,12 @@ const EditProfile = ({ togglePopup, showPopup, fetchUserProfile }) => {
               />
 
               <div className="w-full">
-                <button type="submit" disabled={loading} className="button">
-                  {loading ? <Loader /> : "Update Profile"}
+                <button
+                  type="submit"
+                  disabled={loading || isUploadingProfile}
+                  className="button"
+                >
+                  {isLoading ? <Loader /> : "Update Profile"}
                 </button>
               </div>
             </div>

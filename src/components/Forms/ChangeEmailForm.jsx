@@ -2,24 +2,21 @@ import TextField from "../Common/TextField";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import Button from "../Common/Button";
-import { Link, useNavigate, useSearchParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { RiArrowLeftSLine } from "react-icons/ri";
-import { useEffect, useState } from "react";
-import axios from "axios";
-import { BASE_URL } from "../../data/baseUrl";
+import { useEffect } from "react";
 import Cookies from "js-cookie";
 import { enqueueSnackbar } from "notistack";
-import { getToken } from "../../utils/getToken";
+import { useResendOtpMutation } from "../../services/authApi/authApi";
 
 const ChangeEmailForm = () => {
   const navigate = useNavigate();
-  const [loading, setLoading] = useState(false);
-  const [searchParams] = useSearchParams();
-  const redirect = searchParams?.get("redirect");
 
   useEffect(() => {
     document.title = `Change Email - giveXchange`;
   }, []);
+
+  const [resendOtp, { isLoading }] = useResendOtpMutation();
 
   const formik = useFormik({
     initialValues: {
@@ -32,28 +29,16 @@ const ChangeEmailForm = () => {
         .required("Email address is required"),
     }),
     onSubmit: async (values, { resetForm }) => {
-      resetForm();
-      setLoading(true);
-
       try {
-        const res = await axios.post(
-          `${BASE_URL}/auth/resend-verification`,
-          { newEmail: values.email.trim() },
-          {
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${getToken()}`,
-            },
-          }
-        );
+        const res = await resendOtp({ newEmail: values.email.trim() }).unwrap();
 
-        if (res?.data?.success) {
+        if (res?.success) {
           Cookies.set("ownerEmail", values.email);
           Cookies.set("isOwnerEmailVerified", false);
-          resetForm();
-          enqueueSnackbar(res?.data?.message, {
+          enqueueSnackbar(res?.message, {
             variant: "success",
           });
+          resetForm();
           navigate(`/verify-otp`, {
             state: {
               page: "/signup",
@@ -63,11 +48,6 @@ const ChangeEmailForm = () => {
         }
       } catch (error) {
         console.error("verify email error:", error);
-        enqueueSnackbar(error.response?.data?.message || error?.message, {
-          variant: "error",
-        });
-      } finally {
-        setLoading(false);
       }
     },
   });
@@ -102,7 +82,7 @@ const ChangeEmailForm = () => {
         </div>
 
         <div className="pt-2 w-full">
-          <Button type={"submit"} title={`Update`} isLoading={loading} />
+          <Button type={"submit"} title={`Update`} isLoading={isLoading} />
         </div>
       </div>
 
@@ -110,7 +90,6 @@ const ChangeEmailForm = () => {
         <button
           type="button"
           onClick={() => navigate(-1)}
-          // to={redirect ? `${-1}?redirect=${redirect}` : -1}
           className="text-sm font-medium flex items-center gap-1 text-[var(--button-bg)]"
         >
           <div className="w-[18px] h-[18px] bg-[var(--button-bg)] rounded-full flex items-center justify-center">

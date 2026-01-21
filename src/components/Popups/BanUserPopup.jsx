@@ -1,11 +1,6 @@
-import axios from "axios";
-import { BASE_URL } from "../../data/baseUrl";
-import { getToken } from "../../utils/getToken";
-import { handleApiError } from "../../utils/handleApiError";
-import { useNavigate } from "react-router-dom";
 import { enqueueSnackbar } from "notistack";
-import { useState } from "react";
 import Loader from "../Loader/Loader";
+import { useBanUserMutation } from "../../services/userApi/userApi";
 
 const BanUserPopup = ({
   showPopup,
@@ -13,11 +8,10 @@ const BanUserPopup = ({
   setOpenActions,
   userId,
   communityId,
-  getMembers,
   setIsBanned,
+  refetch,
 }) => {
-  const navigate = useNavigate();
-  const [loading, setLoading] = useState(false);
+  const [banUser, { isLoading }] = useBanUserMutation();
 
   const handleBlockUser = async () => {
     if (!communityId) {
@@ -32,28 +26,21 @@ const BanUserPopup = ({
       });
       return;
     }
-    setLoading(true);
     try {
-      const res = await axios.post(
-        `${BASE_URL}/communities/${communityId}/members/${userId}/ban`,
-        {},
-        {
-          headers: {
-            Authorization: `Bearer ${getToken()}`,
-          },
-        }
-      );
+      const res = await banUser({
+        communityId,
+        userId,
+        action: "ban",
+      }).unwrap();
 
-      if (res?.data?.success) {
+      if (res?.success) {
         setOpenActions(false);
-        getMembers();
+        refetch();
         setIsBanned(true);
       }
     } catch (error) {
       console.log("Block user error >>> ", error);
-      handleApiError(error, navigate);
     } finally {
-      setLoading(false);
       setOpenActions(null);
       setShowBlockUserPopup(false);
     }
@@ -108,10 +95,11 @@ const BanUserPopup = ({
             </button>
             <button
               type={"button"}
+              disabled={isLoading}
               onClick={() => handleBlockUser()}
               className="w-full bg-[var(--button-bg)] text-white h-[49px] rounded-[8px] text-center font-medium"
             >
-              {loading ? <Loader /> : "Yes"}
+              {isLoading ? <Loader /> : "Yes"}
             </button>
           </div>
         </div>

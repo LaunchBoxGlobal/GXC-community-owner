@@ -1,50 +1,32 @@
 import { useState } from "react";
-import { useAppContext } from "../../context/AppContext";
 import VerifyOtpForAccountDeletionModal from "./VerifyOtpForAccountDeletionModal";
-import { useNavigate } from "react-router-dom";
-import axios from "axios";
-import { BASE_URL } from "../../data/baseUrl";
-import { getToken } from "../../utils/getToken";
-import { handleApiError } from "../../utils/handleApiError";
 import Loader from "../../components/Loader/Loader";
+import { useRequestDeleteAccountOtpMutation } from "../../services/userApi/userApi";
+import { useSelector } from "react-redux";
+import { extractEmailDomain } from "../../utils/extractEmailDomain";
 
 const DeleteAccountPage = () => {
-  const navigate = useNavigate();
-  const { user } = useAppContext();
   const [showModal, setShowModal] = useState(false);
-  const [loading, setLoading] = useState(false);
+  const [requestDeleteAccountOtp, { isLoading }] =
+    useRequestDeleteAccountOtpMutation();
+  const user = useSelector((state) => state.user.user);
 
   const handleCloseModal = () => {
     setShowModal((prev) => !prev);
   };
 
   const handleSendOtp = async () => {
-    setLoading(true);
     try {
-      const res = await axios.post(
-        `${BASE_URL}/auth/request-delete-account`,
-        {},
-        {
-          headers: {
-            Authorization: `Bearer ${getToken()}`,
-          },
-        }
-      );
+      const res = await requestDeleteAccountOtp({}).unwrap();
 
-      if (res?.data?.success) {
+      if (res?.success) {
         setShowModal(true);
       }
     } catch (error) {
-      handleApiError(error, navigate);
-    } finally {
-      setLoading(false);
+      console.log("err while requesting an otp >> ", error);
     }
   };
 
-  function extractEmailDomain(email) {
-    const match = email.match(/@.+$/);
-    return match ? match[0] : null;
-  }
   return (
     <div className="w-full relative pt-2">
       <h2 className="text-[24px] font-semibold leading-none">Delete Account</h2>
@@ -70,10 +52,11 @@ const DeleteAccountPage = () => {
         <div className="">
           <button
             type="button"
+            disabled={isLoading}
             onClick={() => handleSendOtp()}
             className="button min-w-[150px]"
           >
-            {loading ? <Loader /> : "Send"}
+            {isLoading ? <Loader /> : "Send"}
           </button>
         </div>
       </div>

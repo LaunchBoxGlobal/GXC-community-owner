@@ -1,12 +1,6 @@
-import React, { useEffect } from "react";
-import {
-  Link,
-  useLocation,
-  useParams,
-  useSearchParams,
-} from "react-router-dom";
+import { useEffect } from "react";
+import { Link, useLocation, useParams } from "react-router-dom";
 import NotificationsPage from "../../pages/Settings/NotificationsPage";
-import PaymentMethodsPage from "../../pages/Settings/PaymentMethodsPage";
 import ChangePasswordPage from "../../pages/Settings/ChangePasswordPage";
 import DeleteAccountPage from "../../pages/Settings/DeleteAccountPage";
 import SupportPage from "../../pages/Settings/SupportPage";
@@ -16,10 +10,7 @@ const settingPages = [
     title: "Notification",
     url: "/settings/notifications",
   },
-  // {
-  //   title: "Pyament Method",
-  //   url: "/settings/payment-method",
-  // },
+
   {
     title: "Change Password",
     url: "/settings/change-password",
@@ -45,8 +36,6 @@ const SettingsLayout = () => {
   const ActivePage =
     settingsTab === "notifications" ? (
       <NotificationsPage />
-    ) : settingsTab === "payment-method" ? (
-      <PaymentMethodsPage />
     ) : settingsTab === "change-password" ? (
       <ChangePasswordPage />
     ) : settingsTab === "delete-account" ? (

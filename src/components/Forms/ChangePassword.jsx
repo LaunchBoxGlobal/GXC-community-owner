@@ -1,81 +1,63 @@
 import { useFormik } from "formik";
-import * as Yup from "yup";
 import Button from "../Common/Button";
 import PasswordField from "../Common/PasswordField";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import PasswordUpdateSuccessModal from "../Popups/PasswordUpdateSuccessModal";
 import { useState } from "react";
-import axios from "axios";
-import { BASE_URL } from "../../data/baseUrl";
 import Cookies from "js-cookie";
 import { enqueueSnackbar } from "notistack";
+import {
+  changePasswordInitialValues,
+  changePasswordSchema,
+} from "../../schema/changePasswordSchema";
+import { useResetPasswordMutation } from "../../services/authApi/authApi";
 
 const ChangePassword = () => {
   const navigate = useNavigate();
   const [showPopup, setShowPopup] = useState(false);
-  const [loading, setLoading] = useState(false);
+
+  const [resetPassword, { isLoading }] = useResetPasswordMutation();
 
   const formik = useFormik({
-    initialValues: {
-      password: "",
-      confirmPassword: "",
-    },
-    validationSchema: Yup.object({
-      password: Yup.string()
-        .trim("Password can not start or end with spaces")
-        .min(8, "Password must be at least 8 characters")
-        .max(25, "Password cannot be more than 25 characters")
-        .matches(/[A-Z]/, "Password must contain at least one uppercase letter")
-        .matches(/[a-z]/, "Password must contain at least one lowercase letter")
-        .matches(/\d/, "Password must contain at least one number")
-        .matches(
-          /[@$!%*?&^#_.-]/,
-          "Password must contain at least one special character"
-        )
-        .required("Password is required"),
-      confirmPassword: Yup.string()
-        .oneOf([Yup.ref("password"), null], "Passwords do not match")
-        .required("Password is required"),
-    }),
+    initialValues: changePasswordInitialValues,
+    validationSchema: changePasswordSchema,
     validateOnChange: true,
     validateOnBlur: true,
     onSubmit: async (values, { resetForm }) => {
       const userEmail = Cookies.get("ownerEmail");
       const userCode = Cookies.get("otp");
+
       if (!userEmail) {
-        enqueueSnackbar("email not found", {
-          variant: "error",
-        });
+        enqueueSnackbar("Please verify your email.", { variant: "error" });
+        navigate("/forgot-password");
         return;
       }
+
       if (!userCode) {
-        enqueueSnackbar("Code not found", {
-          variant: "error",
-        });
+        enqueueSnackbar("Please verify your email.", { variant: "error" });
+        navigate("/forgot-password");
         return;
       }
+
       try {
-        setLoading(true);
-        const res = await axios.post(`${BASE_URL}/auth/reset-password`, {
+        const res = await resetPassword({
           email: userEmail.trim(),
           code: userCode.trim(),
-          password: values?.password.trim(),
-        });
+          password: values.password.trim(),
+        }).unwrap();
 
-        if (res?.data?.success) {
+        if (res?.success) {
           resetForm();
           setShowPopup(true);
-          Cookies.remove(`userEmail`);
-          Cookies.remove(`verifyEmail`);
+          Cookies.remove("ownerEmail");
+          Cookies.remove("verifyEmail");
           Cookies.remove("otp");
         }
       } catch (error) {
-        console.log(`reset password error >>> `, error);
-        enqueueSnackbar(error?.response?.data?.message || error?.message, {
-          variant: "error",
-        });
-      } finally {
-        setLoading(false);
+        enqueueSnackbar(
+          error?.data?.message || error?.message || "Password reset failed",
+          { variant: "error" }
+        );
       }
     },
   });
@@ -127,7 +109,7 @@ const ChangePassword = () => {
           />
 
           <div className="pt-2">
-            <Button type={"submit"} title={`Save`} isLoading={loading} />
+            <Button type={"submit"} title={`Save`} isLoading={isLoading} />
           </div>
         </div>
       </form>

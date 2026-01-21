@@ -1,58 +1,47 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import TextField from "../Common/TextField";
 import { useFormik } from "formik";
-import * as Yup from "yup";
 import Button from "../Common/Button";
 import PasswordField from "../Common/PasswordField";
 import { Link, useNavigate } from "react-router-dom";
-import axios from "axios";
-import { BASE_URL } from "../../data/baseUrl";
-const PAGETITLE = import.meta.env.VITE_PAGE_TITLE;
 import Cookies from "js-cookie";
 import { enqueueSnackbar } from "notistack";
 import { requestNotificationPermission } from "../../notifications";
+import {
+  useLoginMutation,
+  useResendOtpMutation,
+} from "../../services/authApi/authApi";
+import { loginInitialValues, loginSchema } from "../../schema/loginSchema";
+import { useDispatch } from "react-redux";
+import { setUser } from "../../features/userSlice/userSlice";
 
 const LoginForm = () => {
   const navigate = useNavigate();
-  const [loading, setLoading] = useState(false);
+  const dispatch = useDispatch();
+
+  const [login, { isLoading }] = useLoginMutation();
+  const [resendOtp, { isLoading: isResendingOtp }] = useResendOtpMutation();
 
   useEffect(() => {
     document.title = `Login - giveXchange`;
   }, []);
 
   const formik = useFormik({
-    initialValues: {
-      email: "",
-      password: "",
-    },
-    validationSchema: Yup.object({
-      email: Yup.string()
-        .email("Invalid email address")
-        .required("Email is required"),
-      password: Yup.string().required("Password is required"),
-    }),
+    initialValues: loginInitialValues,
+    validationSchema: loginSchema,
     validateOnChange: true,
     validateOnBlur: true,
     onSubmit: async (values, { resetForm }) => {
       try {
-        setLoading(true);
-        const res = await axios.post(
-          `${BASE_URL}/auth/login`,
-          {
-            email: values?.email.trim(),
-            password: values?.password.trim(),
-            userType: "community_owner",
-          },
-          {
-            headers: {
-              "Content-Type": "application/json",
-            },
-          }
-        );
+        const response = await login({
+          email: values?.email.trim(),
+          password: values?.password.trim(),
+          userType: "community_owner",
+        }).unwrap();
 
-        if (res?.data?.success) {
-          Cookies.set("ownerToken", res?.data?.data?.token);
-          Cookies.set("owner", JSON.stringify(res?.data?.data?.user));
+        if (response?.success) {
+          Cookies.set("ownerToken", response?.data?.token);
+          Cookies.set("owner", JSON.stringify(response?.data?.user));
           requestNotificationPermission();
           resetForm();
           navigate("/");
@@ -69,24 +58,16 @@ const LoginForm = () => {
           const newToken = apiRes.data.token;
           Cookies.set("ownerToken", newToken);
           Cookies.set("owner", JSON.stringify(res?.data?.data?.user));
+          dispatch(setUser(res?.data?.data?.user));
           Cookies.set("page", "/login");
 
           try {
-            const resendRes = await axios.post(
-              `${BASE_URL}/auth/resend-verification`,
-              { email: values.email },
-              {
-                headers: {
-                  "Content-Type": "application/json",
-                  Authorization: `Bearer ${newToken}`,
-                },
-              }
-            );
+            const resendRes = await resendOtp({ email: values.email }).unwrap();
 
-            if (resendRes?.data?.success) {
+            if (resendRes?.success) {
               Cookies.set("userEmail", values.email);
               enqueueSnackbar(
-                resendRes?.data?.message ||
+                resendRes?.message ||
                   "Verification code has been sent on your email address",
                 {
                   variant: "success",
@@ -100,19 +81,12 @@ const LoginForm = () => {
               });
             }
           } catch (err) {
-            console.error("verify email error:", err);
             enqueueSnackbar(err.response?.data?.message || err.message, {
               variant: "error",
             });
           }
         } else {
-          // for all other errors show normal error
-          enqueueSnackbar(apiRes?.message || error?.message, {
-            variant: "error",
-          });
         }
-      } finally {
-        setLoading(false);
       }
     },
   });
@@ -165,7 +139,11 @@ const LoginForm = () => {
         </div>
 
         <div className="pt-2 w-full">
-          <Button type={"submit"} title={`Login`} isLoading={loading} />
+          <Button
+            type={"submit"}
+            title={`Login`}
+            isLoading={isLoading || isResendingOtp}
+          />
         </div>
       </div>
 

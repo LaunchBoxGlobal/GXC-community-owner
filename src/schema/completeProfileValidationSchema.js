@@ -1,5 +1,3 @@
-// 📁 src/validation/userValidationSchema.js
-
 import * as Yup from "yup";
 import { parsePhoneNumberFromString } from "libphonenumber-js";
 

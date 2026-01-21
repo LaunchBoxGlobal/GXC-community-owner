@@ -2,13 +2,12 @@ import { messaging } from "./firebase";
 import { getToken, onMessage } from "firebase/messaging";
 import axios from "axios";
 import Cookies from "js-cookie";
-import { enqueueSnackbar } from "notistack";
 import { v4 as uuidv4 } from "uuid";
+import { BASE_URL } from "./data/baseUrl";
 
 const VAPID_KEY =
   "BM6D1oVjxWpWP9wym2P2KEc3oqRh_f540clMC9TssC2tFBN5HsVT9D1rj-vKafvhnIAT9bUsBG2-A0Z32VsVBQI";
 
-// --- New Function to get or create Device ID ---
 const getOrCreateDeviceId = () => {
   let deviceId = localStorage.getItem("ownerBrowserDeviceId");
   if (!deviceId) {
@@ -19,7 +18,6 @@ const getOrCreateDeviceId = () => {
 };
 
 export const requestNotificationPermission = async () => {
-  // console.log("Requesting notification permission...");
   const permission = await Notification.requestPermission();
 
   if (permission !== "granted") {
@@ -36,8 +34,6 @@ export const requestNotificationPermission = async () => {
       return;
     }
 
-    // console.log("FCM token:", currentToken);
-
     const storedToken = localStorage.getItem("ownerfcmToken");
 
     const userToken = Cookies.get("ownerToken");
@@ -49,11 +45,12 @@ export const requestNotificationPermission = async () => {
     if (storedToken !== currentToken) {
       console.log("New token detected — sending to backend");
 
-      const deviceInfo = navigator.userAgent;
       const browserDeviceId = getOrCreateDeviceId();
 
+      const url = `${BASE_URL}/auth/update-fcm`;
+
       await axios.post(
-        "https://dev-api.app.thegivexchange.com/api/auth/update-fcm",
+        url,
         {
           token: currentToken,
           deviceInfo: browserDeviceId,
@@ -68,18 +65,13 @@ export const requestNotificationPermission = async () => {
 
       localStorage.setItem("ownerfcmToken", currentToken);
     } else {
-      // console.log("Token already sent — no need to send again");
     }
-  } catch (err) {
-    // console.error("Error retrieving token:", err);
-  }
+  } catch (err) {}
 };
 
 // Listen for messages while app is in foreground
 export const listenForMessages = (callback) => {
   onMessage(messaging, (payload) => {
-    // console.log("Message received in foreground: ", payload);
-    // enqueueSnackbar("Message received", JSON.stringify(payload));
     if (callback) callback(payload);
   });
 };

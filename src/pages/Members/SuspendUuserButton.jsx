@@ -1,34 +1,25 @@
-import React, { useState } from "react";
-import { BASE_URL } from "../../data/baseUrl";
-import axios from "axios";
-import { getToken } from "../../utils/getToken";
 import { enqueueSnackbar } from "notistack";
-import { handleApiError } from "../../utils/handleApiError";
 import Loader from "../../components/Loader/Loader";
+import { useBanUserMutation } from "../../services/userApi/userApi";
 
 const SuspendUuserButton = ({ member, communityId, fetchMemberDetails }) => {
-  const [loading, setLoading] = useState(false);
-  console.log(member);
+  const [banUser, { isLoading }] = useBanUserMutation();
 
   const membererShipStatus =
     member?.membership?.status === "banned" ? "Unsuspend" : "Suspend";
 
   const handleblockUser = async () => {
-    setLoading(true);
     const userStatus =
       member?.membership?.status === "banned" ? "unban" : "ban";
+    const userId = member?.member?.id;
     try {
-      const res = await axios.post(
-        `${BASE_URL}/communities/${communityId}/members/${member?.member?.id}/${userStatus}`,
-        {},
-        {
-          headers: {
-            Authorization: `Bearer ${getToken()}`,
-          },
-        }
-      );
+      const res = await banUser({
+        communityId,
+        userId,
+        action: userStatus,
+      }).unwrap();
 
-      if (res?.data?.success) {
+      if (res?.success) {
         enqueueSnackbar(res?.data?.message || "Member unbanned successfully!", {
           variant: "success",
         });
@@ -38,22 +29,21 @@ const SuspendUuserButton = ({ member, communityId, fetchMemberDetails }) => {
       enqueueSnackbar(
         error?.response?.data?.message ||
           error?.message ||
-          "Something went wrong. Try again"
+          "Something went wrong. Try again",
+        { variant: "error" }
       );
-      //   handleApiError(error, navigate);
-    } finally {
-      setLoading(false);
     }
   };
+
   return (
     <div className="w-full max-w-[150px]">
       <button
         type="button"
-        disabled={loading}
+        disabled={isLoading}
         onClick={() => handleblockUser()}
         className="button"
       >
-        {loading ? <Loader /> : membererShipStatus}
+        {isLoading ? <Loader /> : membererShipStatus}
       </button>
     </div>
   );

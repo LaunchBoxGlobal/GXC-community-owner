@@ -1,94 +1,45 @@
-import { useEffect, useState } from "react";
 import ProductCard from "../../components/Common/ProductCard";
-import { BASE_URL } from "../../data/baseUrl";
-import { enqueueSnackbar } from "notistack";
-import { handleApiError } from "../../utils/handleApiError";
-import { useNavigate, useSearchParams } from "react-router-dom";
-import { useDebounce } from "use-debounce";
-import axios from "axios";
-import { getToken } from "../../utils/getToken";
+import { useSearchParams } from "react-router-dom";
 import Loader from "../../components/Loader/Loader";
-import { LuSearch } from "react-icons/lu";
-import { IoClose } from "react-icons/io5";
+import SearchField from "../../components/Common/SearchField";
+import { useGetCommunityProductsQuery } from "../../services/communityApi/communityApi";
 
 const ProductList = ({ community }) => {
-  // Query params
-  const [searchParams, setSearchParams] = useSearchParams();
-  const typeFromUrl = searchParams.get("type") || "active";
-  const pageFromUrl = parseInt(searchParams.get("page")) || 1;
-  const limitFromUrl = parseInt(searchParams.get("limit")) || 10;
-  const [loading, setLoading] = useState(false);
-  const [products, setProducts] = useState(null);
-  const [page, setPage] = useState(pageFromUrl);
-  const [limit, setLimit] = useState(limitFromUrl);
-  const [totalPages, setTotalPages] = useState(1);
-  const [total, setTotal] = useState(0);
-  const [searchTerm, setSearchTerm] = useState("");
-  const [debouncedSearch] = useDebounce(searchTerm, 500);
-  const navigate = useNavigate();
+  const limit = 10;
+  const [searchParams] = useSearchParams();
+  const page = parseInt(searchParams.get("page")) || 1;
+  const search = searchParams.get("search") || "";
 
-  // States
-  const [listType, setListType] = useState(typeFromUrl);
+  const communityId = community?.id;
 
-  const fetchProducts = async () => {
-    if (!community?.id) {
-      enqueueSnackbar("Community ID is not defined", { variant: "error" });
-      return;
-    }
-
-    setLoading(true);
-    try {
-      // const baseUrl =
-      //   listType === "blocked"
-      //     ? `${BASE_URL}/communities/${community?.id}/products`
-      //     : `${BASE_URL}/communities/${community?.id}/products`;
-
-      const baseUrl = `${BASE_URL}/communities/${community?.id}/products`;
-
-      const query = new URLSearchParams({
-        page,
-        limit,
-        ...(debouncedSearch && { search: debouncedSearch }),
-      }).toString();
-
-      const res = await axios.get(`${baseUrl}?${query}`, {
-        headers: { Authorization: `Bearer ${getToken()}` },
-      });
-
-      const data = res?.data?.data || {};
-      setProducts(data.products || []);
-      setTotal(data.pagination?.total || 0);
-      setTotalPages(data.pagination?.totalPages || 1);
-    } catch (error) {
-      handleApiError(error, navigate);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    if (!community) return;
-    fetchProducts();
-  }, [listType, page, debouncedSearch, community]);
-
-  useEffect(() => {
-    const currentParams = Object.fromEntries(searchParams.entries());
-
-    const newParams = {
-      ...currentParams,
-      type: listType,
+  const { data, isError, error, isLoading } = useGetCommunityProductsQuery(
+    {
       page,
       limit,
-      ...(debouncedSearch && { search: debouncedSearch }),
-    };
+      search,
+      communityId,
+    },
+    {
+      skip: !communityId,
+    }
+  );
 
-    setSearchParams(newParams);
-  }, [listType, page, limit, debouncedSearch, searchParams, setSearchParams]);
+  const products = data?.data?.products;
 
-  if (loading) {
+  if (isLoading) {
     return (
       <div className="w-full pt-20 flex items-center justify-center">
         <Loader />
+      </div>
+    );
+  }
+
+  if (error || isError) {
+    return (
+      <div className="w-full min-h-[80vh] relative flex items-center justify-center bg-white rounded-[12px] custom-shadow">
+        <p className="text-gray-500 text-sm">
+          {error?.data?.message || "Something went wrong."}
+        </p>
       </div>
     );
   }
@@ -105,26 +56,7 @@ const ProductList = ({ community }) => {
           )}
         </h3>
         <div className="w-full md:max-w-[252px]">
-          <div className="h-[49px] pl-[15px] pr-[10px] rounded-[8px] bg-white custom-shadow flex items-center gap-2">
-            <LuSearch className="text-xl text-[var(--secondary-color)]" />
-            <input
-              type="text"
-              placeholder="Search products..."
-              disabled={total <= 0}
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full outline-none border-none bg-transparent disabled:cursor-not-allowed"
-            />
-            {searchTerm && (
-              <button
-                type="button"
-                onClick={() => setSearchTerm("")}
-                className="bg-gray-100 w-4 h-4 rounded-full"
-              >
-                <IoClose className="text-gray-900 text-sm" />
-              </button>
-            )}
-          </div>
+          <SearchField />
         </div>
       </div>
 
@@ -136,7 +68,17 @@ const ProductList = ({ community }) => {
             })}
           </div>
         ) : (
-          <div className="w-full text-center text-sm">No products found!</div>
+          <div className="w-full min-h-[50vh] pt-28 text-center px-4">
+            {search ? (
+              <p className="mt-5 text-sm font-medium text-gray-500">
+                No products found for the search term "{search}".
+              </p>
+            ) : (
+              <p className="mt-5 text-sm font-medium text-gray-500">
+                No products have been added in this community.
+              </p>
+            )}
+          </div>
         )}
       </div>
     </div>

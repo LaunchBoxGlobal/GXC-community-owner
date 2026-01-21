@@ -1,51 +1,31 @@
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { PAGE_LINKS } from "../../data/pageLinks";
-import Cookies from "js-cookie";
-import axios from "axios";
-import { BASE_URL } from "../../data/baseUrl";
-import { handleApiError } from "../../utils/handleApiError";
-import { getToken } from "../../utils/getToken";
+import { handleLogout } from "../../utils/handleLogout";
+import { useLogoutUserMutation } from "../../services/authApi/authApi";
+import Loader from "../Loader/Loader";
+import { useDispatch } from "react-redux";
+import { removeUser } from "../../features/userSlice/userSlice";
+import { authApi } from "../../services/authApi/authApi";
+import { communityApi } from "../../services/communityApi/communityApi";
 
 const Sidebar = () => {
   const navigate = useNavigate();
   const location = useLocation();
+  const dispatch = useDispatch();
 
-  const handleLogout = async () => {
+  const [logoutUser, { isLoading }] = useLogoutUserMutation();
+
+  const handleLogoutUser = async () => {
     const deviceInfo = localStorage.getItem("ownerBrowserDeviceId");
     try {
-      const res = await axios.post(
-        `${BASE_URL}/auth/logout`,
-        { deviceInfo },
-        {
-          headers: {
-            Authorization: `Bearer ${getToken()}`,
-          },
-        }
-      );
-
-      if (res?.data?.success) {
-        // console.log("Logout successful");
-        Cookies.remove("ownerToken");
-        Cookies.remove("page");
-        Cookies.remove("owner");
-        Cookies.remove("isOwnerEmailVerified");
-        Cookies.remove("slug");
-        Cookies.remove("invitation-link");
-        localStorage.removeItem("ownerfcmToken");
-        localStorage.removeItem("ownerBrowserDeviceId");
-      }
+      await logoutUser({ deviceInfo }).unwrap();
     } catch (error) {
       console.log("Logout error >>>", error?.response?.data || error.message);
-      // handleApiError(error, navigate);
     } finally {
-      Cookies.remove("ownerToken");
-      Cookies.remove("page");
-      Cookies.remove("owner");
-      Cookies.remove("isOwnerEmailVerified");
-      Cookies.remove("slug");
-      Cookies.remove("invitation-link");
-      localStorage.removeItem("ownerfcmToken");
-      localStorage.removeItem("ownerBrowserDeviceId");
+      dispatch(removeUser());
+      dispatch(authApi.util.resetApiState());
+      dispatch(communityApi.util.resetApiState());
+      handleLogout();
       navigate("/login");
     }
   };
@@ -105,10 +85,10 @@ const Sidebar = () => {
 
       <button
         type="button"
-        onClick={handleLogout}
+        onClick={handleLogoutUser}
         className={`absolute bottom-6 group text-sm font-medium w-full h-[49px] max-w-[145px] px-4 rounded-[12px] outline-none bg-[var(--button-bg)] text-white text-center`}
       >
-        Logout
+        {isLoading ? <Loader /> : "Logout"}
       </button>
     </div>
   );

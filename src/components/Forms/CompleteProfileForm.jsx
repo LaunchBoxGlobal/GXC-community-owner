@@ -3,12 +3,9 @@ import * as Yup from "yup";
 import Button from "../Common/Button";
 import TextField from "../Common/TextField";
 import AuthImageUpload from "../Common/AuthImageUpload";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-import axios from "axios";
-import { BASE_URL } from "../../data/baseUrl";
 import Cookies from "js-cookie";
-import { getToken } from "../../utils/getToken";
 import AccountSuccessPopup from "../Popups/AccountSuccessPopup";
 import PhoneNumberField from "../Common/PhoneNumberField";
 import { enqueueSnackbar } from "notistack";
@@ -18,20 +15,26 @@ import {
   CitySelect,
 } from "react-country-state-city";
 import "react-country-state-city/dist/react-country-state-city.css";
-import { parsePhoneNumberFromString } from "libphonenumber-js";
 import { completeProfileValidationSchema } from "../../schema/completeProfileValidationSchema";
 import { requestNotificationPermission } from "../../notifications";
+import {
+  useCompleteUserProfileMutation,
+  useUploadProfilePictureMutation,
+} from "../../services/userApi/userApi";
 
 const CompleteProfileForm = () => {
   const navigate = useNavigate();
   const userData = Cookies.get("owner")
     ? JSON.parse(Cookies.get("owner"))
     : null;
-  const [loading, setLoading] = useState(false);
   const [showPopup, setShowPopup] = useState(false);
   Cookies.remove("userEmail");
 
   const togglePopup = () => setShowPopup((prev) => !prev);
+
+  const [completeProfile, { isLoading }] = useCompleteUserProfileMutation();
+  const [uploadProfilePicture, { isLoading: isUploadingProfilePicture }] =
+    useUploadProfilePictureMutation();
 
   useEffect(() => {
     document.title = `Complete Profile - giveXchange`;
@@ -58,41 +61,25 @@ const CompleteProfileForm = () => {
     validateOnBlur: true,
     onSubmit: async (values, { resetForm }) => {
       try {
-        setLoading(true);
-        const profileRes = await axios.put(
-          `${BASE_URL}/auth/profile`,
-          {
-            firstName: values.firstName.trim(),
-            lastName: values.lastName.trim(),
-            email: values.email.trim(),
-            phone: values.phoneNumber,
-            address: values.location.trim(),
-            zipcode: values.zipcode.trim(),
-            city: values.city.trim(),
-            state: values.state.trim(),
-            country: values.country.trim(),
-          },
-          {
-            headers: { Authorization: `Bearer ${getToken()}` },
-          }
-        );
+        const profileRes = await completeProfile({
+          firstName: values.firstName.trim(),
+          lastName: values.lastName.trim(),
+          email: values.email.trim(),
+          phone: values.phoneNumber,
+          address: values.location.trim(),
+          zipcode: values.zipcode.trim(),
+          city: values.city.trim(),
+          state: values.state.trim(),
+          country: values.country.trim(),
+        }).unwrap();
 
         if (values.profileImage instanceof File) {
           const formData = new FormData();
           formData.append("profilePicture", values.profileImage);
-          await axios.post(
-            `${BASE_URL}/auth/upload-profile-picture`,
-            formData,
-            {
-              headers: {
-                "Content-Type": "multipart/form-data",
-                Authorization: `Bearer ${getToken()}`,
-              },
-            }
-          );
+          await uploadProfilePicture(formData).unwrap();
         }
 
-        if (profileRes?.data?.success) {
+        if (profileRes?.success) {
           resetForm();
           togglePopup();
           Cookies.remove(`userEmail`);
@@ -100,10 +87,8 @@ const CompleteProfileForm = () => {
           Cookies.remove("signupEmail");
           Cookies.remove("page");
           requestNotificationPermission();
-          // handleCheckStripeStatus();
         }
       } catch (error) {
-        // console.error("complete profile error:", error);
         enqueueSnackbar(error.response?.data?.message || error?.message, {
           variant: "error",
         });
@@ -112,8 +97,6 @@ const CompleteProfileForm = () => {
           Cookies.remove("owner");
           navigate("/login");
         }
-      } finally {
-        setLoading(false);
       }
     },
   });
@@ -320,7 +303,11 @@ const CompleteProfileForm = () => {
               Skip
             </button>
             <div className="w-full max-w-[110px]">
-              <Button type="submit" title="Save" isLoading={loading} />
+              <Button
+                type="submit"
+                title="Save"
+                isLoading={isLoading || isUploadingProfilePicture}
+              />
             </div>
           </div>
         </div>

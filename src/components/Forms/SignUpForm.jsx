@@ -1,26 +1,29 @@
 import { useFormik } from "formik";
-import * as Yup from "yup";
 import Button from "../Common/Button";
 import PasswordField from "../Common/PasswordField";
 import TextField from "../Common/TextField";
 import { Link, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-import axios from "axios";
-import { BASE_URL } from "../../data/baseUrl";
-import api from "../../services/axiosInstance";
 import Cookies from "js-cookie";
-import { enqueueSnackbar } from "notistack";
 import {
   CountrySelect,
   StateSelect,
   CitySelect,
 } from "react-country-state-city";
 import "react-country-state-city/dist/react-country-state-city.css";
+import {
+  signUpInitialValues,
+  signupValidationSchema,
+} from "../../schema/signupSchema";
+import { useSignupMutation } from "../../services/authApi/authApi";
+import { useLazyCheckSlugAvailabilityQuery } from "../../services/communityApi/communityApi";
 
 const SignUpForm = () => {
   const navigate = useNavigate();
-  const [loading, setLoading] = useState(false);
   const [slugError, setSlugError] = useState(null);
+
+  const [signup, { isLoading }] = useSignupMutation();
+  const [checkSlugAvailability] = useLazyCheckSlugAvailabilityQuery();
 
   useEffect(() => {
     document.title = `Sign up - giveXchange`;
@@ -36,135 +39,35 @@ const SignUpForm = () => {
       navigate("/verify-otp", { replace: true });
   }, []);
 
-  const checkSlugAvailability = async (slug) => {
-    try {
-      if (!slug || slug.length < 3) {
-        setSlugError("Slug must be at least 3 characters");
-        return;
-      }
+  const validateSlug = async (slug) => {
+    if (!slug || slug.length < 3) {
+      return "Slug must be at least 3 characters";
+    }
 
-      const res = await api.get(`${BASE_URL}/communities/check-slug/${slug}`);
-      const available = res?.data?.data?.available;
+    try {
+      const res = await checkSlugAvailability(slug).unwrap();
+      const available = res?.data?.available;
 
       if (!available) {
-        setSlugError("Slug is already taken");
-      } else {
-        setSlugError(null);
+        return "Slug is already taken";
       }
-    } catch (err) {
-      setSlugError("Could not check slug availability");
+
+      return undefined; // valid
+    } catch {
+      return "Unable to validate slug";
     }
   };
 
   const formik = useFormik({
-    initialValues: {
-      name: "",
-      firstName: "",
-      lastName: "",
-      email: "",
-      password: "",
-      confirmPassword: "",
-      communityName: "",
-      description: "",
-      urlSlug: "",
-      location: "",
-      zipcode: "",
-      city: "",
-      state: "",
-      country: "United States",
-      countryId: 233,
-      stateId: "",
-    },
-    validationSchema: Yup.object({
-      firstName: Yup.string()
-        .trim("First name cannot start or end with spaces")
-        .min(3, "First name must contain at least 3 characters")
-        .max(10, "First name must be 10 characters or less")
-        .matches(
-          /^[A-Za-z ]+$/,
-          "First name must contain only letters and spaces"
-        )
-        .required("First name is required"),
-      lastName: Yup.string()
-        .trim("Last name cannot start or end with spaces")
-        .min(3, "Last name must contain at least 3 characters")
-        .max(10, "Last name must be 10 characters or less")
-        .matches(
-          /^[A-Za-z ]+$/,
-          "Last name must contain only letters and spaces"
-        )
-        .required("Last name is required"),
-      communityName: Yup.string()
-        .trim("Community name cannot start or end with spaces")
-        .min(3, "Community name must contain atleast 3 characters")
-        .max(35, "Community name must be 35 characters or less")
-        .required("Community name is required"),
-      urlSlug: Yup.string()
-        .trim("Slug can not start or end with spaces")
-        .min(3, "Slug can not be less than 3 characters")
-        .max(50, "Slug can not be more than 50 characters")
-        .matches(
-          /^[a-z0-9-]+$/,
-          "Slug can only contain lowercase letters, numbers, and hyphens"
-        )
-        .required("Slug is required"),
-      description: Yup.string()
-        .trim("Description cannot start or end with spaces")
-        .min(11, `Description can not be less than 11 characters`)
-        .max(150, `Description can not be more than 150 characters`)
-        .required("Description is required"),
-      email: Yup.string()
-        .trim("Email address can not start or end with spaces")
-        .email("Invalid email address")
-        .matches(
-          /^(?![._-])([a-zA-Z0-9._%+-]{1,64})@([a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}$/,
-          "Please enter a valid email address"
-        )
-        .matches(
-          /^(?!.*[._-]{2,})(?!.*\.\.).*$/,
-          "Email cannot contain consecutive special characters"
-        )
-        .required("Email address is required"),
-      password: Yup.string()
-        .trim("Password can not start or end with spaces")
-        .min(8, "Password must be at least 8 characters")
-        .max(25, "Password cannot be more than 25 characters")
-        .matches(/[A-Z]/, "Password must contain at least one uppercase letter")
-        .matches(/[a-z]/, "Password must contain at least one lowercase letter")
-        .matches(/\d/, "Password must contain at least one number")
-        .matches(
-          /[@$!%*?&^#_.-]/,
-          "Password must contain at least one special character"
-        )
-        .required("Password is required"),
-      confirmPassword: Yup.string()
-        .oneOf([Yup.ref("password"), null], "Passwords do not match")
-        .required("Confirm password is required"),
-      location: Yup.string()
-        .trim("Address can not start or end with spaces")
-        .min(1, "Address can not be less than 1 character")
-        .max(30, "Address can not be more than 30 characters")
-        .required("Please enter your location"),
-
-      zipcode: Yup.string()
-        .trim("Zip code can not start or end with spaces")
-        .matches(/^[A-Za-z0-9\- ]{4,10}$/, "Please enter a valid zip code")
-        .required("Enter your zip code"),
-
-      city: Yup.string().required("Enter your city"),
-      state: Yup.string().required("Enter your state"),
-      country: Yup.string().required("Enter your country"),
-      profileImage: Yup.mixed().nullable(),
-    }),
-    validateOnChange: true,
-    validateOnBlur: false,
+    initialValues: signUpInitialValues,
+    validationSchema: signupValidationSchema,
+    validateOnChange: false,
+    validateOnBlur: true,
     onSubmit: async (values, { resetForm }) => {
       if (slugError) {
         return;
       }
       try {
-        setLoading(true);
-
         const formData = new FormData();
         formData.append("firstName", values.firstName.trim());
         formData.append("lastName", values.lastName.trim());
@@ -180,33 +83,24 @@ const SignUpForm = () => {
         formData.append("communityState", values.state.trim());
         formData.append("communityCountry", values.country.trim());
 
-        const res = await axios.post(`${BASE_URL}/auth/register`, formData, {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        });
+        const res = await signup(formData).unwrap();
 
-        if (res?.data?.success) {
-          Cookies.set("ownerToken", res?.data?.data?.token);
-          Cookies.set("owner", JSON.stringify(res?.data?.data?.user));
+        if (res?.success) {
+          Cookies.set("ownerToken", res.data.token);
+          Cookies.set("owner", JSON.stringify(res.data.user));
           Cookies.set("ownerEmail", values.email.trim());
           Cookies.set("slug", values.urlSlug.trim());
           Cookies.set("isOwnerEmailVerified", false);
-          resetForm();
           Cookies.set("page", "/signup");
+
+          resetForm();
+
           navigate("/verify-otp", {
-            state: {
-              page: "/signup",
-            },
+            state: { page: "/signup" },
           });
         }
       } catch (error) {
-        // console.error("Sign up error:", error.response?.data);
-        enqueueSnackbar(error.response?.data?.message || error?.message, {
-          variant: "error",
-        });
-      } finally {
-        setLoading(false);
+        console.log("signup error >>> ", error);
       }
     },
   });
@@ -214,11 +108,16 @@ const SignUpForm = () => {
   useEffect(() => {
     if (!formik.values.urlSlug) return;
 
-    const timeout = setTimeout(() => {
-      checkSlugAvailability(formik.values.urlSlug);
-    }, 500);
+    const timer = setTimeout(async () => {
+      const error = await validateSlug(formik.values.urlSlug);
+      if (error) {
+        formik.setFieldError("urlSlug", error);
+      } else {
+        formik.setFieldError("urlSlug", undefined);
+      }
+    }, 600);
 
-    return () => clearTimeout(timeout);
+    return () => clearTimeout(timer);
   }, [formik.values.urlSlug]);
 
   return (
@@ -289,10 +188,15 @@ const SignUpForm = () => {
             placeholder="Enter your Slug"
             value={formik.values.urlSlug}
             onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
+            onBlur={async () => {
+              const error = await validateSlug(formik.values.urlSlug);
+              if (error) {
+                formik.setFieldError("urlSlug", error);
+              }
+            }}
             error={formik.errors.urlSlug || slugError}
             touched={formik.touched.urlSlug}
-            label={`URL Slug`}
+            label={`Custom URL`}
           />
         </div>
 
@@ -451,7 +355,7 @@ const SignUpForm = () => {
         />
 
         <div className="pt-2">
-          <Button type="submit" title="Sign Up" isLoading={loading} />
+          <Button type="submit" title="Sign Up" isLoading={isLoading} />
         </div>
       </div>
 

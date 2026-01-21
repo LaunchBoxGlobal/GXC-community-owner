@@ -1,12 +1,9 @@
-import axios from "axios";
-import React, { useEffect, useRef, useState } from "react";
-import { HiOutlineDotsVertical } from "react-icons/hi";
-import { BASE_URL } from "../../data/baseUrl";
-import { getToken } from "../../utils/getToken";
+import { useEffect, useRef } from "react";
+import { Link } from "react-router-dom";
 import { enqueueSnackbar } from "notistack";
-import { handleApiError } from "../../utils/handleApiError";
-import { Link, useNavigate } from "react-router-dom";
 import Loader from "../../components/Loader/Loader";
+import { HiOutlineDotsVertical } from "react-icons/hi";
+import { useBanUserMutation } from "../../services/userApi/userApi";
 
 const MemberCard = ({
   member,
@@ -18,40 +15,32 @@ const MemberCard = ({
   setShowBlockUserPopup,
   isBlocked,
   communityId,
-  userId,
   getMembers,
 }) => {
-  const navigate = useNavigate();
-  const [loading, setLoading] = useState(false);
   const dropdownRef = useRef(null);
 
-  const handleUnblockUser = async () => {
-    setLoading(true);
-    try {
-      const res = await axios.post(
-        `${BASE_URL}/communities/${communityId}/members/${member?.userId}/unban`,
-        {},
-        {
-          headers: {
-            Authorization: `Bearer ${getToken()}`,
-          },
-        }
-      );
+  const [banUser, { isLoading }] = useBanUserMutation();
 
-      if (res?.data?.success) {
+  const handleUnblockUser = async () => {
+    try {
+      const res = await banUser({
+        communityId,
+        userId: member?.userId,
+        action: "unban",
+      }).unwrap();
+
+      if (res?.success) {
         enqueueSnackbar(res?.data?.message || "Member unbanned successfully!", {
           variant: "success",
         });
         getMembers();
       }
     } catch (error) {
-      handleApiError(error, navigate);
-    } finally {
-      setLoading(false);
+      console.log(error);
     }
   };
 
-  // ✅ Close dropdown when clicking outside
+  // Close dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = (e) => {
       if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
@@ -104,10 +93,11 @@ const MemberCard = ({
         {isBlocked ? (
           <button
             type="button"
+            disabled={isLoading}
             onClick={() => handleUnblockUser()}
             className="w-[97px] h-[37px] bg-[#E6E6E6] rounded-[12px] text-sm"
           >
-            {loading ? <Loader /> : "Unblock"}
+            {isLoading ? <Loader /> : "Unblock"}
           </button>
         ) : (
           <button

@@ -1,53 +1,27 @@
-import axios from "axios";
-import React, { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
-import { BASE_URL } from "../../data/baseUrl";
-import { getToken } from "../../utils/getToken";
-import { handleApiError } from "../../utils/handleApiError";
+import { useEffect } from "react";
+import { useParams } from "react-router-dom";
 import PageLoader from "../../components/Loader/PageLoader";
-import ProductCard from "../../components/Common/ProductCard";
+import { useGetMemberPublicProfileQuery } from "../../services/userApi/userApi";
 
 const UserDetailsPage = () => {
   const params = useParams();
-  const navigate = useNavigate();
+  const userId = params?.userId;
 
-  const [member, setMember] = useState(null);
-  const [loading, setLoading] = useState(false);
-  const [errorMsg, setErrorMsg] = useState("");
-
-  console.log(member);
-
-  const fetchMemberDetails = async () => {
-    setLoading(true);
-    setErrorMsg("");
-    try {
-      const res = await axios.get(
-        `${BASE_URL}/users/${params?.userId}/profile`,
-        {
-          headers: {
-            Authorization: `Bearer ${getToken()}`,
-          },
-        }
-      );
-
-      setMember(res?.data?.data?.user);
-    } catch (error) {
-      setErrorMsg(
-        error?.response?.data?.message || "Failed to load member details."
-      );
-      handleApiError(error, navigate);
-    } finally {
-      setLoading(false);
+  const { data, error, isError, isLoading } = useGetMemberPublicProfileQuery(
+    { userId },
+    {
+      skip: !userId,
+      refetchOnReconnect: true,
     }
-  };
+  );
+
+  const member = data?.data?.user || null;
 
   useEffect(() => {
     document.title = "Member Details - giveXchange";
-    fetchMemberDetails();
   }, []);
 
-  // ----- UI States -----
-  if (loading) {
+  if (isLoading) {
     return (
       <div className="w-full bg-white custom-shadow rounded-[10px] p-7 mt-5 min-h-[70vh] flex items-center justify-center">
         <PageLoader />
@@ -55,10 +29,12 @@ const UserDetailsPage = () => {
     );
   }
 
-  if (errorMsg) {
+  if ((error, isError)) {
     return (
       <div className="w-full bg-white custom-shadow rounded-[10px] p-7 mt-5 min-h-[70vh] flex items-center justify-center">
-        <p className="text-red-500 font-medium">{errorMsg}</p>
+        <p className="text-red-500 font-medium">
+          {error?.data?.message || "Something went wrong."}
+        </p>
       </div>
     );
   }
@@ -71,7 +47,6 @@ const UserDetailsPage = () => {
     );
   }
 
-  // ----- Main Render -----
   return (
     <div className="w-full bg-white custom-shadow min-h-screen rounded-lg md:rounded-xl lg:rounded-[24px] p-7">
       <h2 className="text-[24px] lg:text-[32px] font-semibold">User Details</h2>
@@ -132,26 +107,8 @@ const UserDetailsPage = () => {
           </div>
         </div>
 
-        <div className="w-full lg:w-[30%] flex items-center justify-end gap-10">
-          {/* Add future actions here */}
-        </div>
+        <div className="w-full lg:w-[30%] flex items-center justify-end gap-10"></div>
       </div>
-
-      {/* {member &&
-        member?.productsListed &&
-        member?.productsListed?.length > 0 && (
-          <div className="w-full mt-10">
-            <div className="w-full">
-              <h2 className="page-heading">Products</h2>
-
-              <div className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5 mt-6">
-                {member?.productsListed?.map((product, index) => {
-                  return <ProductCard product={product} key={index} />;
-                })}
-              </div>
-            </div>
-          </div>
-        )} */}
     </div>
   );
 };

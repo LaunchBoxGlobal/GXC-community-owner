@@ -1,6 +1,17 @@
-// 📁 src/validation/userValidationSchema.js
-
 import * as Yup from "yup";
+
+export const communityInitialValue = {
+  name: "",
+  urlSlug: "",
+  description: "",
+  location: "",
+  zipcode: "",
+  city: "",
+  state: "",
+  country: "United States",
+  countryId: 233,
+  stateId: "",
+};
 
 export const communitySchema = Yup.object({
   name: Yup.string()
