@@ -22,23 +22,20 @@ const NotificationsPage = () => {
   const handleToggle = async (field) => {
     if (!user) return;
 
-    const currentValue = !!user[field];
-    const nextValue = !currentValue;
-
     try {
       setUpdatingField(field);
 
-      await toggleNotificationSettings({ [field]: nextValue });
+      const res = await toggleNotificationSettings({
+        [field]: !user[field],
+      }).unwrap();
 
-      await refetch();
-
-      dispatch(setUser(data?.data?.user));
+      dispatch(setUser(res.data.user));
 
       enqueueSnackbar("Preferences updated successfully!", {
         variant: "success",
       });
     } catch (error) {
-      console.log(error);
+      console.error(error);
     } finally {
       setUpdatingField(null);
     }

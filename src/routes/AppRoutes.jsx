@@ -25,7 +25,6 @@ import WalletPage from "../pages/Wallet/WalletPage";
 import MemberDetails from "../pages/Members/MemberDetails";
 import ChangePasswordPage from "../pages/Settings/ChangePasswordPage";
 import UserProfilePage from "../pages/Profile/UserProfilePage";
-// import { useAppContext } from "../context/AppContext";
 import SellerStripeSuccess from "../pages/Auth/SellerStripeSuccess";
 import UserDetailsPage from "../pages/Wallet/UserDetailsPage";
 import NotificationsPage from "../pages/Notifications/NotificationsPage";
@@ -34,7 +33,6 @@ import { useSelector } from "react-redux";
 
 const PrivateRoute = ({ element }) => {
   const token = Cookies.get("ownerToken") ? Cookies.get("ownerToken") : null;
-  // const { user } = useAppContext();
   const user = useSelector((state) => state?.user?.user);
 
   // Not logged in → go to login
@@ -52,7 +50,6 @@ const PrivateRoute = ({ element }) => {
 // --- Public Route ---
 const PublicRoute = ({ element }) => {
   const token = Cookies.get("ownerToken") ? Cookies.get("ownerToken") : null;
-  // const { user } = useAppContext();
   const user = useSelector((state) => state?.user?.user);
 
   // Logged in & verified → dashboard
