@@ -16,7 +16,7 @@ const CopyCommunityLinkPopup = ({ isOpen, onClose }) => {
 
   const handleCopyLink = async () => {
     try {
-      const link = `https://user.thegiveXchange.com/community/${slug}`;
+      const link = `invite.app.thegiveXchange.com/${slug}`;
       await navigator.clipboard.writeText(link);
       setCopied(true);
 
