@@ -5,16 +5,22 @@ import { enqueueSnackbar } from "notistack";
 import { handleLogout } from "../utils/handleLogout";
 
 let isErrorToastActive = false;
+let lastToastTime = 0;
 
 const showSingleToast = (message, options = {}) => {
-  if (isErrorToastActive) return;
+  // if (isErrorToastActive) return;
 
-  isErrorToastActive = true;
+  // isErrorToastActive = true;
+  // enqueueSnackbar(message, options);
+
+  // setTimeout(() => {
+  //   isErrorToastActive = false;
+  // }, 2000);
+  const now = Date.now();
+  if (now - lastToastTime < 2000) return;
+
+  lastToastTime = now;
   enqueueSnackbar(message, options);
-
-  setTimeout(() => {
-    isErrorToastActive = false;
-  }, 2000);
 };
 
 const rawBaseQuery = fetchBaseQuery({
@@ -31,6 +37,7 @@ export const baseQuery = async (args, api, extraOptions) => {
 
   if (result?.error) {
     const status = result.error?.status;
+    console.log(result);
 
     switch (status) {
       case 401:
@@ -39,7 +46,7 @@ export const baseQuery = async (args, api, extraOptions) => {
             "Session expired. Please log in again.",
           {
             variant: "error",
-          }
+          },
         );
         handleLogout();
         if (typeof window !== "undefined") {
@@ -50,14 +57,14 @@ export const baseQuery = async (args, api, extraOptions) => {
       case 400:
         showSingleToast(
           result?.error?.data?.message || "Something went wrong.",
-          { variant: "error" }
+          { variant: "error" },
         );
         break;
 
       case 403:
         showSingleToast(
           result?.error?.data?.message || "You do not have permission.",
-          { variant: "error" }
+          { variant: "error" },
         );
         handleLogout();
         break;

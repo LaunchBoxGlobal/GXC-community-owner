@@ -17,13 +17,13 @@ import {
 } from "../../schema/signupSchema";
 import { useSignupMutation } from "../../services/authApi/authApi";
 import { useLazyCheckSlugAvailabilityQuery } from "../../services/communityApi/communityApi";
+import { generateSlug } from "../../utils/generateSlug";
 
 const SignUpForm = () => {
   const navigate = useNavigate();
-  const [slugError, setSlugError] = useState(null);
-
   const [signup, { isLoading }] = useSignupMutation();
   const [checkSlugAvailability] = useLazyCheckSlugAvailabilityQuery();
+  const [baseSlug, setBaseSlug] = useState("");
 
   useEffect(() => {
     document.title = `Sign up - giveXchange`;
@@ -39,34 +39,15 @@ const SignUpForm = () => {
       navigate("/verify-otp", { replace: true });
   }, []);
 
-  const validateSlug = async (slug) => {
-    if (!slug || slug.length < 3) {
-      return "Slug must be at least 3 characters";
-    }
-
-    try {
-      const res = await checkSlugAvailability(slug).unwrap();
-      const available = res?.data?.available;
-
-      if (!available) {
-        return "Slug is already taken";
-      }
-
-      return undefined; // valid
-    } catch {
-      return "Unable to validate slug";
-    }
-  };
-
   const formik = useFormik({
     initialValues: signUpInitialValues,
     validationSchema: signupValidationSchema,
     validateOnChange: false,
     validateOnBlur: true,
     onSubmit: async (values, { resetForm }) => {
-      if (slugError) {
-        return;
-      }
+      // if (slugError) {
+      //   return;
+      // }
       try {
         const formData = new FormData();
         formData.append("firstName", values.firstName.trim());
@@ -106,19 +87,47 @@ const SignUpForm = () => {
   });
 
   useEffect(() => {
+    if (!formik.values.communityName) return;
+    if (formik.touched.urlSlug) return;
+
+    const slug = generateSlug(formik.values.communityName);
+    setBaseSlug(slug);
+    formik.setFieldValue("urlSlug", slug);
+  }, [formik.values.communityName]);
+
+  useEffect(() => {
     if (!formik.values.urlSlug) return;
+    if (!baseSlug) return;
 
     const timer = setTimeout(async () => {
-      const error = await validateSlug(formik.values.urlSlug);
-      if (error) {
-        formik.setFieldError("urlSlug", error);
-      } else {
-        formik.setFieldError("urlSlug", undefined);
+      try {
+        const res = await checkSlugAvailability(baseSlug).unwrap();
+
+        // Base slug taken → show error
+        if (!res?.data?.available) {
+          formik.setFieldError("urlSlug", `"${baseSlug}" is already taken`);
+
+          // Now find a suggestion
+          for (let i = 1; i <= 5; i++) {
+            const suggestion = `${baseSlug}-${i}`;
+            const retry = await checkSlugAvailability(suggestion).unwrap();
+
+            if (retry?.data?.available) {
+              formik.setFieldValue("urlSlug", suggestion);
+              return;
+            }
+          }
+        } else {
+          // Base slug available → clear error
+          formik.setFieldError("urlSlug", undefined);
+        }
+      } catch {
+        formik.setFieldError("urlSlug", "Unable to validate slug");
       }
     }, 600);
 
     return () => clearTimeout(timer);
-  }, [formik.values.urlSlug]);
+  }, [baseSlug]);
 
   return (
     <form
@@ -194,7 +203,7 @@ const SignUpForm = () => {
                 formik.setFieldError("urlSlug", error);
               }
             }}
-            error={formik.errors.urlSlug || slugError}
+            error={formik.errors.urlSlug}
             touched={formik.touched.urlSlug}
             label={`Custom URL`}
           />
