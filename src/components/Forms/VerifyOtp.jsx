@@ -189,11 +189,12 @@ const VerifyOtp = () => {
       >
         <div className="w-full text-center space-y-3 mt-4">
           <h1 className="font-semibold text-[32px] leading-none">
-            Verify 6-digit code
+            {/* Verify 6-digit code */}
+            {t(`verifyOtpPage.verifyCode`)}
           </h1>
           {userEmail ? (
             <p className="text-[var(--secondary-color)]">
-              Verify the code sent at{" "}
+              {t(`verifyOtpPage.verifyCodeSentAt`)}{" "}
               <span className="text-black font-medium">{userEmail}</span>
             </p>
           ) : (
@@ -225,7 +226,7 @@ const VerifyOtp = () => {
           <div className="pt-3">
             <Button
               type="submit"
-              title="Verify"
+              title={t(`buttons.verify`)}
               isLoading={isVerifyingEmail || isVerifyingOtp}
             />
           </div>
@@ -234,14 +235,14 @@ const VerifyOtp = () => {
         <div className="w-full mt-2 flex flex-col items-center gap-4">
           <div className="w-full flex items-center justify-center gap-1">
             <p className="text-[var(--secondary-color)]">
-              Didn't receive the code yet?{" "}
+              {t(`verifyOtpPage.didNotReceiveCode`)}{" "}
             </p>
             <ResentOtp page={page} email={userEmail} />
           </div>
         </div>
 
         <div className="w-full mt-2 flex items-center gap-2 justify-center">
-          <p className="">Entered wrong email?</p>
+          <p className="">{t(`verifyOtpPage.enteredWrongEmail`)}</p>
           <button
             type="button"
             onClick={() => {
@@ -249,7 +250,7 @@ const VerifyOtp = () => {
             }}
             className="text-sm font-medium flex items-center gap-1 text-[var(--primary-color)]"
           >
-            Change Email
+            {t(`buttons.changeEmail`)}
           </button>
         </div>
       </form>
@@ -259,16 +260,19 @@ const VerifyOtp = () => {
         showLinkPopup={showLinkPopup}
         onClose={() => setShowEmailVerificationPopup(false)}
         onShowCommunityLink={() => setShowCommunityLinkPopup(true)}
+        t={t}
       />
 
       <ForgetPasswordEmailVerifiedSuccessPopup
         showEmailVerificationPopup={showEmailVerificationStatus}
         handleContinue={handleConitnueChangePassword}
+        t={t}
       />
 
       <CopyCommunityLinkPopup
         isOpen={showCommunityLinkPopup}
         onClose={() => setShowCommunityLinkPopup(false)}
+        t={t}
       />
     </>
   );

@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
 
-const CopyCommunityLinkPopup = ({ isOpen, onClose }) => {
+const CopyCommunityLinkPopup = ({ isOpen, onClose, t }) => {
   const slug = Cookies.get("slug");
   const navigate = useNavigate();
   const [copied, setCopied] = useState(false);
@@ -45,14 +45,10 @@ const CopyCommunityLinkPopup = ({ isOpen, onClose }) => {
           </div>
 
           <h1 className="font-semibold text-[32px] leading-[1.3] mt-7 mb-2">
-            Your community has been created!
+            {t(`yourCommunityCreated`)}
           </h1>
 
-          <p className="text-[#565656] leading-[1.2]">
-            Members can join the community using the link below. However, they
-            won't be able to list products until the Stripe account setup is
-            completed in the next step.
-          </p>
+          <p className="text-[#565656] leading-[1.2]">{t(`membersCanJoin`)}</p>
 
           <div className="w-full h-[50px] p-1 bg-[#f5f5f5] rounded-[12px] flex items-center justify-between pl-4 mt-5">
             <p className="text-[#565656] overflow-hidden text-ellipsis text-start leading-none">
@@ -64,7 +60,7 @@ const CopyCommunityLinkPopup = ({ isOpen, onClose }) => {
               onClick={handleCopyLink}
               className="bg-[var(--button-bg)] text-white rounded-[8px] font-medium h-full max-w-[110px] px-3 whitespace-nowrap"
             >
-              {copied ? "Link Copied!" : "Copy Link"}
+              {copied ? t(`buttons.linkCopied`) : t(`buttons.copyLink`)}
             </button>
           </div>
         </div>

@@ -5,9 +5,12 @@ export const loginInitialValues = {
   password: "",
 };
 
-export const loginSchema = Yup.object({
-  email: Yup.string()
-    .email("Invalid email address")
-    .required("Email is required"),
-  password: Yup.string().required("Password is required"),
-});
+export const loginSchema = (t) =>
+  Yup.object({
+    email: Yup.string()
+      .email(t(`loginPage.form.errors.invalidEmail`))
+      .required(t(`loginPage.form.errors.emailRequired`)),
+    password: Yup.string().required(
+      t(`loginPage.form.errors.passwordRequired`),
+    ),
+  });

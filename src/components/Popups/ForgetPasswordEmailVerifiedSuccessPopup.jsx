@@ -1,6 +1,7 @@
 const ForgetPasswordEmailVerifiedSuccessPopup = ({
   showEmailVerificationPopup,
   handleContinue,
+  t,
 }) => {
   return (
     showEmailVerificationPopup && (
@@ -15,14 +16,14 @@ const ForgetPasswordEmailVerifiedSuccessPopup = ({
               />
             </div>
             <h1 className="font-semibold text-[32px] leading-[1.3] mt-7 mb-6">
-              Email has been <br /> verified successfully
+              {t(`emailVerified`)}
             </h1>
             <button
               type="button"
               onClick={() => handleContinue()}
               className="w-full bg-[var(--button-bg)] text-white rounded-[8px] font-medium text-center h-[49px] block py-[14px]"
             >
-              Continue
+              {t(`buttons.continue`)}
             </button>
           </div>
         </div>

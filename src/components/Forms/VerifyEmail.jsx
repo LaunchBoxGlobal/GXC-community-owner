@@ -11,9 +11,11 @@ import {
   verifyEmailInitialValues,
   verifyEmailSchema,
 } from "../../schema/verifyEmailSchema";
+import { useTranslation } from "react-i18next";
 
 const VerifyEmail = () => {
   const navigate = useNavigate();
+  const { t } = useTranslation("auth");
 
   const [verifyEmail, { isLoading }] = useVerifyForgotPasswordEmailMutation();
 
@@ -57,10 +59,10 @@ const VerifyEmail = () => {
     >
       <div className="w-full text-center">
         <h2 className="font-semibold text-[32px] leading-none mt-8 mb-3">
-          Forgot Password
+          {t(`forgotPasswordPage.forgotPassword`)}
         </h2>
         <p className="text-[var(--secondary-color)]">
-          Enter your registered email address below
+          {t(`forgotPasswordPage.enterRegisteredEmail`)}
         </p>
       </div>
 
@@ -68,17 +70,21 @@ const VerifyEmail = () => {
         <TextField
           type="text"
           name="email"
-          placeholder="Email Address"
+          placeholder={t(`forgotPasswordPage.form.labels.email`)}
           value={formik.values.email}
           onChange={formik.handleChange}
           onBlur={formik.handleBlur}
           error={formik.errors.email}
           touched={formik.touched.email}
-          label={`Email Address`}
+          label={t(`forgotPasswordPage.form.labels.email`)}
         />
 
         <div className="pt-2 w-full">
-          <Button type={"submit"} title={`Send`} isLoading={isLoading} />
+          <Button
+            type={"submit"}
+            title={t(`buttons.send`)}
+            isLoading={isLoading}
+          />
         </div>
       </div>
 
@@ -90,7 +96,7 @@ const VerifyEmail = () => {
           <div className="w-[18px] h-[18px] bg-[var(--button-bg)] rounded-full flex items-center justify-center">
             <RiArrowLeftSLine className="text-white text-base" />
           </div>
-          Back
+          {t(`buttons.back`)}
         </Link>
       </div>
     </form>

@@ -1,0 +1,13 @@
+{
+    "completeProfile": {
+        "completeProfile": "Complete Profile Details",
+        "completeDetails": "Please complete details to access all features",
+        "basicDetails": "Basic Details",
+        "form": {
+            "imageUpload": {
+                "format": "Only PNG, JPG, and JPEG images are allowed",
+                "uploadProfilePicture": "Upload Profile Picture"
+            }
+        }
+    }
+}

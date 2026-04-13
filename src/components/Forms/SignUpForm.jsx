@@ -18,12 +18,14 @@ import {
 import { useSignupMutation } from "../../services/authApi/authApi";
 import { useLazyCheckSlugAvailabilityQuery } from "../../services/communityApi/communityApi";
 import { generateSlug } from "../../utils/generateSlug";
+import { useTranslation } from "react-i18next";
 
 const SignUpForm = () => {
   const navigate = useNavigate();
   const [signup, { isLoading }] = useSignupMutation();
   const [checkSlugAvailability] = useLazyCheckSlugAvailabilityQuery();
   const [baseSlug, setBaseSlug] = useState("");
+  const { t } = useTranslation("auth");
 
   useEffect(() => {
     document.title = `Sign up - giveXchange`;
@@ -41,7 +43,7 @@ const SignUpForm = () => {
 
   const formik = useFormik({
     initialValues: signUpInitialValues,
-    validationSchema: signupValidationSchema,
+    validationSchema: signupValidationSchema(t),
     validateOnChange: false,
     validateOnBlur: true,
     onSubmit: async (values, { resetForm }) => {
@@ -132,12 +134,14 @@ const SignUpForm = () => {
   return (
     <form
       onSubmit={formik.handleSubmit}
-      className="w-full max-w-[400px] flex flex-col items-start gap-4"
+      className="w-full max-w-[460px] flex flex-col items-start gap-4"
     >
       <div className="w-full text-center space-y-3">
-        <h1 className="font-semibold text-[32px] leading-none">Sign Up</h1>
+        <h1 className="font-semibold text-[32px] leading-none">
+          {t(`buttons.signup`)}
+        </h1>
         <p className="text-[var(--secondary-color)]">
-          Please enter details to continue
+          {t(`signupPage.enterCredentials`)}
         </p>
       </div>
 
@@ -146,55 +150,55 @@ const SignUpForm = () => {
           <TextField
             type="text"
             name="firstName"
-            placeholder="Enter your first name"
+            placeholder={t(`signupPage.form.placeholders.firstName`)}
             value={formik.values.firstName}
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
             error={formik.errors.firstName}
             touched={formik.touched.firstName}
-            label={`First Name`}
+            label={t(`signupPage.form.labels.firstName`)}
           />
           <TextField
             type="text"
             name="lastName"
-            placeholder="Enter your last name"
+            placeholder={t(`signupPage.form.placeholders.lastName`)}
             value={formik.values.lastName}
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
             error={formik.errors.lastName}
             touched={formik.touched.lastName}
-            label={`Last Name`}
+            label={t(`signupPage.form.labels.lastName`)}
           />
         </div>
 
         <TextField
           type="text"
           name="email"
-          placeholder="Enter your email address"
+          placeholder={t(`signupPage.form.placeholders.email`)}
           value={formik.values.email}
           onChange={formik.handleChange}
           onBlur={formik.handleBlur}
           error={formik.errors.email}
           touched={formik.touched.email}
-          label={"Email Address"}
+          label={t(`signupPage.form.labels.emailAddress`)}
         />
 
         <div className="w-full grid grid-cols-1 lg:grid-cols-2 gap-3">
           <TextField
             type="text"
             name="communityName"
-            placeholder="Enter your community name"
+            placeholder={t(`signupPage.form.placeholders.communityName`)}
             value={formik.values.communityName}
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
             error={formik.errors.communityName}
             touched={formik.touched.communityName}
-            label={`Community Name`}
+            label={t(`signupPage.form.labels.communityName`)}
           />
           <TextField
             type="text"
             name="urlSlug"
-            placeholder="Enter your Slug"
+            placeholder={t(`signupPage.form.placeholders.communityUrl`)}
             value={formik.values.urlSlug}
             onChange={formik.handleChange}
             onBlur={async () => {
@@ -205,13 +209,13 @@ const SignUpForm = () => {
             }}
             error={formik.errors.urlSlug}
             touched={formik.touched.urlSlug}
-            label={`Custom URL`}
+            label={t(`signupPage.form.labels.customUrl`)}
           />
         </div>
 
         <div className="w-full flex flex-col gap-1">
           <label htmlFor="description" className="text-sm font-medium">
-            Community Description
+            {t(`signupPage.form.labels.communityDescription`)}
           </label>
           <textarea
             name="description"
@@ -219,7 +223,7 @@ const SignUpForm = () => {
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
             value={formik.values.description}
-            placeholder="Enter description"
+            placeholder={t(`signupPage.form.placeholders.communityDescription`)}
             className={`w-full border bg-[var(--secondary-bg)] min-h-[94px] max-h-[94px] px-[15px] py-[14px] rounded-[8px] outline-none ${
               formik.touched.description && formik.errors.description
                 ? "border-red-500"
@@ -237,7 +241,9 @@ const SignUpForm = () => {
         {/* Country, State, City, Zip */}
         <div className="grid grid-cols-2 gap-4">
           <div className="w-full flex flex-col gap-1">
-            <label className="text-sm font-medium">Community Country</label>
+            <label className="text-sm font-medium">
+              {t(`signupPage.form.labels.communityCountry`)}
+            </label>
             <div className="w-full pointer-events-none">
               <CountrySelect
                 defaultValue={{
@@ -271,7 +277,9 @@ const SignUpForm = () => {
           </div>
 
           <div className="w-full flex flex-col gap-1">
-            <label className="text-sm font-medium">Community State</label>
+            <label className="text-sm font-medium">
+              {t(`signupPage.form.labels.communityState`)}
+            </label>
             <StateSelect
               countryid={formik.values.countryId || 0}
               containerClassName="w-full"
@@ -282,7 +290,7 @@ const SignUpForm = () => {
             : "border-gray-200"
         }
       `}
-              placeHolder="Select State"
+              placeHolder={t(`signupPage.form.placeholders.communityState`)}
               onChange={(val) => {
                 formik.setFieldValue("state", val.name);
                 formik.setFieldValue("stateId", val.id);
@@ -297,7 +305,9 @@ const SignUpForm = () => {
 
         <div className="grid grid-cols-2 gap-4">
           <div className="w-full flex flex-col gap-1">
-            <label className="text-sm font-medium">Community City</label>
+            <label className="text-sm font-medium">
+              {t(`signupPage.form.labels.communityCity`)}
+            </label>
             <CitySelect
               countryid={formik.values.countryId || 0}
               stateid={formik.values.stateId || 0}
@@ -309,7 +319,7 @@ const SignUpForm = () => {
             : "border-gray-200"
         }
       `}
-              placeHolder="Select City"
+              placeHolder={t(`signupPage.form.placeholders.communityCity`)}
               onChange={(val) => formik.setFieldValue("city", val.name)}
             />
             {formik.touched.city && formik.errors.city && (
@@ -320,70 +330,74 @@ const SignUpForm = () => {
           <TextField
             type="text"
             name="zipcode"
-            placeholder="Enter zip code"
+            placeholder={t(`signupPage.form.placeholders.communityZipcode`)}
             value={formik.values.zipcode}
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
             error={formik.errors.zipcode}
             touched={formik.touched.zipcode}
-            label="Community Zip Code"
+            label={t(`signupPage.form.labels.communityZipcode`)}
           />
         </div>
 
         <TextField
           type="text"
           name="location"
-          placeholder="Enter your address"
+          placeholder={t(`signupPage.form.placeholders.suiteApartment`)}
           value={formik.values.location}
           onChange={formik.handleChange}
           onBlur={formik.handleBlur}
           error={formik.errors.location}
           touched={formik.touched.location}
-          label="Suite / Apartment / Street"
+          label={t(`signupPage.form.labels.suiteApartment`)}
         />
 
         <PasswordField
           name="password"
-          placeholder="Enter your password"
+          placeholder={t(`signupPage.form.placeholders.password`)}
           value={formik.values.password}
           onChange={formik.handleChange}
           onBlur={formik.handleBlur}
           error={formik.errors.password}
           touched={formik.touched.password}
-          label={`Password`}
+          label={t(`signupPage.form.labels.password`)}
         />
         <PasswordField
           name="confirmPassword"
-          placeholder="Enter your password"
+          placeholder={t(`signupPage.form.placeholders.password`)}
           value={formik.values.confirmPassword}
           onChange={formik.handleChange}
           onBlur={formik.handleBlur}
           error={formik.errors.confirmPassword}
           touched={formik.touched.confirmPassword}
-          label={`Confirm Password`}
+          label={t(`signupPage.form.labels.confirmPassword`)}
         />
 
         <div className="pt-2">
-          <Button type="submit" title="Sign Up" isLoading={isLoading} />
+          <Button
+            type="submit"
+            title={t(`buttons.signup`)}
+            isLoading={isLoading}
+          />
         </div>
       </div>
 
       <div className="w-full flex items-center justify-between gap-6 mt-4">
         <div className="w-full border border-gray-300" />
-        <p className="text-gray-400 font-medium">OR</p>
+        <p className="text-gray-400 font-medium">{t(`loginPage.or`)}</p>
         <div className="w-full border border-gray-300" />
       </div>
 
       <div className="w-full mt-2 flex flex-col items-center gap-4">
         <div className="w-full flex items-center justify-center gap-1">
           <p className="text-[var(--secondary-color)]">
-            Already have an account?{" "}
+            {t("signupPage.alreadyHaveAccount")}{" "}
           </p>
           <Link
             to={`/login`}
             className="font-medium text-[var(--primary-color)]"
           >
-            Sign In
+            {t(`buttons.signin`)}
           </Link>
         </div>
       </div>

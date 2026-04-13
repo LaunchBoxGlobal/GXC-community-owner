@@ -1,0 +1,238 @@
+{
+    "buttons": {
+        "back": "Atrás",
+        "send": "Enviar",
+        "signup": "Registrarse",
+        "signin": "Iniciar sesión",
+        "login": "Iniciar sesión",
+        "forgotPassword": "Olvidé mi contraseña",
+        "update": "Actualizar",
+        "resend": "Reenviar",
+        "verify": "Verificar",
+        "changeEmail": "Cambiar correo electrónico",
+        "save": "Ahorrar",
+        "continue": "Continuar",
+        "copyLink": "Copiar enlace",
+        "linkCopied": "¡Enlace copiado!"
+    },
+    "loginPage": {
+        "welcomeBack": "Bienvenido de nuevo",
+        "enterCredentials": "Por favor ingrese los datos para continuar",
+        "form": {
+            "labels": {
+                "email": "Correo electrónico",
+                "password": "Contraseña"
+            },
+            "errors": {
+                "invalidEmail": "Correo electrónico inválido",
+                "emailRequired": "El correo electrónico es obligatorio",
+                "passwordRequired": "La contraseña es obligatoria"
+            },
+            "messages": {
+                "verifyEmailBefore": "Por favor verifique su correo electrónico antes de iniciar sesión",
+                "verificationCodeSent": "El código de verificación ha sido enviado a su correo electrónico"
+            }
+        },
+        "DontHaveAccount": "¿No tienes una cuenta?",
+        "signUp": "Registrarse",
+        "or": "O"
+    },
+    "signupPage": {
+        "signUp": "Registrarse",
+        "enterCredentials": "Por favor ingrese los datos para continuar",
+        "form": {
+            "labels": {
+                "firstName": "Nombre",
+                "lastName": "Apellido",
+                "emailAddress": "Correo electrónico",
+                "communityName": "Nombre de la comunidad",
+                "customUrl": "URL personalizada",
+                "communityDescription": "Descripción de la comunidad",
+                "communityCountry": "País de la comunidad",
+                "communityState": "Estado de la comunidad",
+                "communityCity": "Ciudad de la comunidad",
+                "communityZipcode": "Código postal de la comunidad",
+                "suiteApartment": "Suite / Apartamento / Calle",
+                "password": "Contraseña",
+                "confirmPassword": "Confirmar contraseña"
+            },
+            "placeholders": {
+                "firstName": "Ingrese su nombre",
+                "lastName": "Ingrese su apellido",
+                "email": "Ingrese su correo electrónico",
+                "communityName": "Ingrese el nombre de su comunidad",
+                "communityUrl": "Ingrese su slug",
+                "communityDescription": "Ingrese la descripción",
+                "communityState": "Seleccione el estado",
+                "communityCity": "Seleccione la ciudad",
+                "communityZipcode": "Ingrese el código postal",
+                "suiteApartment": "Ingrese su dirección",
+                "password": "Ingrese su contraseña"
+            },
+            "errors": {
+                "firstName": {
+                    "required": "El nombre es obligatorio",
+                    "min": "El nombre debe tener al menos 3 caracteres",
+                    "max": "El nombre debe tener como máximo 10 caracteres",
+                    "invalid": "El nombre solo puede contener letras y espacios",
+                    "trim": "El nombre no puede comenzar ni terminar con espacios"
+                },
+                "lastName": {
+                    "required": "El apellido es obligatorio",
+                    "min": "El apellido debe tener al menos 3 caracteres",
+                    "max": "El apellido debe tener como máximo 10 caracteres",
+                    "invalid": "El apellido solo puede contener letras y espacios",
+                    "trim": "El apellido no puede comenzar ni terminar con espacios"
+                },
+                "communityName": {
+                    "required": "El nombre de la comunidad es obligatorio",
+                    "min": "El nombre de la comunidad debe tener al menos 3 caracteres",
+                    "max": "El nombre de la comunidad debe tener como máximo 35 caracteres",
+                    "trim": "El nombre de la comunidad no puede comenzar ni terminar con espacios"
+                },
+                "urlSlug": {
+                    "required": "El slug es obligatorio",
+                    "min": "El slug no puede tener menos de 3 caracteres",
+                    "max": "El slug no puede tener más de 50 caracteres",
+                    "invalid": "El slug solo puede contener letras minúsculas, números y guiones",
+                    "trim": "El slug no puede comenzar ni terminar con espacios"
+                },
+                "description": {
+                    "required": "La descripción es obligatoria",
+                    "min": "La descripción no puede tener menos de 11 caracteres",
+                    "max": "La descripción no puede tener más de 150 caracteres",
+                    "trim": "La descripción no puede comenzar ni terminar con espacios"
+                },
+                "email": {
+                    "required": "El correo electrónico es obligatorio",
+                    "invalid": "Correo electrónico inválido",
+                    "format": "Por favor ingrese un correo electrónico válido",
+                    "noConsecutive": "El correo no puede contener caracteres especiales consecutivos",
+                    "trim": "El correo electrónico no puede comenzar ni terminar con espacios"
+                },
+                "password": {
+                    "required": "La contraseña es obligatoria",
+                    "min": "La contraseña debe tener al menos 8 caracteres",
+                    "max": "La contraseña no puede tener más de 25 caracteres",
+                    "uppercase": "La contraseña debe contener al menos una letra mayúscula",
+                    "lowercase": "La contraseña debe contener al menos una letra minúscula",
+                    "number": "La contraseña debe contener al menos un número",
+                    "special": "La contraseña debe contener al menos un carácter especial",
+                    "trim": "La contraseña no puede comenzar ni terminar con espacios"
+                },
+                "confirmPassword": {
+                    "required": "Debe confirmar la contraseña",
+                    "match": "Las contraseñas no coinciden"
+                },
+                "location": {
+                    "required": "Por favor ingrese su ubicación",
+                    "min": "La dirección no puede tener menos de 1 carácter",
+                    "max": "La dirección no puede tener más de 30 caracteres",
+                    "trim": "La dirección no puede comenzar ni terminar con espacios"
+                },
+                "zipcode": {
+                    "required": "Ingrese su código postal",
+                    "invalid": "Por favor ingrese un código postal válido",
+                    "trim": "El código postal no puede comenzar ni terminar con espacios"
+                },
+                "city": {
+                    "required": "Ingrese su ciudad"
+                },
+                "state": {
+                    "required": "Ingrese su estado"
+                },
+                "country": {
+                    "required": "Ingrese su país"
+                }
+            }
+        },
+        "alreadyHaveAccount": "¿Ya tienes una cuenta?"
+    },
+    "forgotPasswordPage": {
+        "forgotPassword": "Olvidé mi contraseña",
+        "enterRegisteredEmail": "Ingrese su correo electrónico registrado a continuación",
+        "form": {
+            "labels": {
+                "email": "Correo electrónico"
+            },
+            "errors": {
+                "email": {
+                    "trim": "El correo electrónico no puede comenzar ni terminar con espacios",
+                    "invalid": "Correo electrónico inválido",
+                    "required": "El correo electrónico es obligatorio"
+                }
+            }
+        }
+    },
+    "changeEmailPage": {
+        "changeEmail": "Cambiar correo electrónico",
+        "enterNewEmail": "Ingrese su nuevo correo electrónico a continuación",
+        "form": {
+            "labels": {
+                "emailAddress": "Correo electrónico"
+            },
+            "placeholders": {
+                "emailAddress": "Correo electrónico"
+            },
+            "errors": {
+                "email": {
+                    "trim": "El correo electrónico no puede comenzar ni terminar con espacios",
+                    "invalid": "Correo electrónico inválido",
+                    "required": "El correo electrónico es obligatorio"
+                }
+            }
+        },
+        "passwordResetFailed": "Password reset failed",
+        "passwordUpdated": "¡Contraseña actualizada!",
+        "passwordUpdatedSuccessfully": "Tu contraseña se ha actualizado correctamente."
+    },
+    "changePasswordPage": {
+        "setNewPassword": "Establecer nueva contraseña",
+        "enterNewPassword": "Ingrese una nueva contraseña para continuar",
+        "form": {
+            "labels": {
+                "newPassword": "Nueva contraseña",
+                "confirmPassword": "Confirmar contraseña"
+            },
+            "placeholders": {
+                "newPassword": "Nueva contraseña",
+                "confirmPassword": "Confirmar contraseña"
+            },
+            "errors": {
+                "password": {
+                    "trim": "La contraseña no puede comenzar ni terminar con espacios",
+                    "min": "La contraseña debe tener al menos 8 caracteres",
+                    "max": "La contraseña no puede tener más de 25 caracteres",
+                    "matcheUppercase": "La contraseña debe contener al menos una letra mayúscula",
+                    "matchLowercase": "La contraseña debe contener al menos una letra minúscula",
+                    "matchNumber": "La contraseña debe contener al menos un número",
+                    "matchSpecialChar": "La contraseña debe contener al menos un carácter especial",
+                    "required": "La contraseña es obligatoria"
+                },
+                "confirmPassword": {
+                    "dontMatch": "Las contraseñas no coinciden",
+                    "required": "La contraseña es obligatoria"
+                }
+            },
+            "messages": {
+                "verifyEmail": "Por favor verifique su correo electrónico."
+            }
+        }
+    },
+    "resendOtp": {
+        "somethingWentWrong": "Algo salió mal.",
+        "resendIn": "Reenviar en"
+    },
+    "verifyOtpPage": {
+        "somethingWentWrong": "Algo salió mal.",
+        "verifyCode": "Verificar código de 6 dígitos",
+        "verifyCodeSentAt": "Verifique el código enviado a",
+        "didNotReceiveCode": "¿No recibiste el código?",
+        "enteredWrongEmail": "¿Ingresaste un correo incorrecto?",
+        "otpRequired": "El OTP es obligatorio",
+        "otpMustBe6Digits": "El OTP debe tener 6 dígitos"
+    },
+    "emailVerified": "El correo electrónico ha sido verificado correctamente.",
+    "yourCommunityCreated": "¡Tu comunidad ha sido creada!",
+    "membersCanJoin": "Los miembros pueden unirse a la comunidad mediante el enlace que aparece a continuación. Sin embargo, no podrán publicar productos hasta que completen la configuración de su cuenta de Stripe en el siguiente paso."
+}

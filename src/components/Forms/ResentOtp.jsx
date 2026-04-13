@@ -5,9 +5,11 @@ import {
   useResendOtpMutation,
   useVerifyForgotPasswordEmailMutation,
 } from "../../services/authApi/authApi";
+import { useTranslation } from "react-i18next";
 
 const ResentOtp = ({ email, page }) => {
   const [timer, setTimer] = useState(60);
+  const { t } = useTranslation(`auth`);
 
   const [resendOtp, { isLoading: isResending }] = useResendOtpMutation();
 
@@ -44,9 +46,12 @@ const ResentOtp = ({ email, page }) => {
 
       setTimer(60);
     } catch (error) {
-      enqueueSnackbar(error?.data?.message || "Something went wrong.", {
-        variant: "error",
-      });
+      enqueueSnackbar(
+        error?.data?.message || t(`resendOtp.somethingWentWrong`),
+        {
+          variant: "error",
+        },
+      );
     }
   };
 
@@ -61,7 +66,7 @@ const ResentOtp = ({ email, page }) => {
       onClick={handleResendOtp}
       disabled={isDisabled}
     >
-      {timer > 0 ? `Resend in ${timer}s` : "Resend"}
+      {timer > 0 ? `${t(`resendOtp.resendIn`)} ${timer}s` : t(`buttons.resend`)}
     </button>
   );
 };

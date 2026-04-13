@@ -1,4 +1,4 @@
-const PasswordUpdateSuccessModal = ({ showPopup, handleTogglePopup }) => {
+const PasswordUpdateSuccessModal = ({ showPopup, handleTogglePopup, t }) => {
   if (!showPopup) return null;
   return (
     // showPopup && (
@@ -12,17 +12,17 @@ const PasswordUpdateSuccessModal = ({ showPopup, handleTogglePopup }) => {
           />
         </div>
         <h2 className="text-[24px] font-semibold leading-[1.3] text-center">
-          Password Updated!
+          {t(`changePasswordPage.passwordUpdated`)}
         </h2>
         <p className="text-[var(--secondary-color)] text-center leading-[1.3]">
-          Your password has been updated successfully
+          {t(`changePasswordPage.passwordUpdatedSuccessfully`)}
         </p>
         <button
           type={"button"}
           onClick={() => handleTogglePopup()}
           className="w-full bg-[var(--button-bg)] text-white h-[49px] mt-2.5 rounded-[8px] text-center font-medium"
         >
-          Continue
+          {t(`buttons.continue`)}
         </button>
       </div>
     </main>

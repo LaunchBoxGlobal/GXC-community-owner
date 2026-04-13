@@ -6,6 +6,7 @@ const EmailVerificationStatusPage = ({
   showLinkPopup,
   onClose,
   onShowCommunityLink,
+  t,
 }) => {
   const navigate = useNavigate();
 
@@ -38,7 +39,7 @@ const EmailVerificationStatusPage = ({
           </div>
 
           <h1 className="font-semibold text-[32px] leading-[1.3] mt-7 mb-6">
-            Email has been <br /> verified successfully
+            {t(`emailVerified`)}
           </h1>
 
           <button
@@ -46,7 +47,7 @@ const EmailVerificationStatusPage = ({
             onClick={handleContinue}
             className="w-full bg-[var(--button-bg)] text-white rounded-[8px] font-medium h-[49px]"
           >
-            Continue
+            {t(`buttons.continue`)}
           </button>
         </div>
       </div>

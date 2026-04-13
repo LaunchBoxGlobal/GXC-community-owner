@@ -1,0 +1,238 @@
+{
+    "buttons": {
+        "back": "Back",
+        "send": "Send",
+        "signup": "Sign Up",
+        "signin": "Sign In",
+        "login": "Login",
+        "forgotPassword": "Forgot Password?",
+        "update": "Update",
+        "resend": "Resend",
+        "verify": "Verify",
+        "changeEmail": "Change Email",
+        "save": "Save",
+        "continue": "Continue",
+        "copyLink": "Copy Link",
+        "linkCopied": "Link Copied!"
+    },
+    "loginPage": {
+        "welcomeBack": "Welcome Back",
+        "enterCredentials": "Please enter details to continue",
+        "form": {
+            "labels": {
+                "email": "Email Address",
+                "password": "Password"
+            },
+            "errors": {
+                "invalidEmail": "Invalid email address",
+                "emailRequired": "Email is required",
+                "passwordRequired": "Password is required"
+            },
+            "messages": {
+                "verifyEmailBefore": "Please verify your email before logging in",
+                "verificationCodeSent": "Verification code has been sent on your email address"
+            }
+        },
+        "DontHaveAccount": "Don't have an account?",
+        "signUp": "Sign Up",
+        "or": "OR"
+    },
+    "signupPage": {
+        "signUp": "Sign Up",
+        "enterCredentials": "Please enter details to continue",
+        "form": {
+            "labels": {
+                "firstName": "First Name",
+                "lastName": "Last Name",
+                "emailAddress": "Email Address",
+                "communityName": "Community Name",
+                "customUrl": "Custom URL",
+                "communityDescription": "Community Description",
+                "communityCountry": "Community Country",
+                "communityState": "Community State",
+                "communityCity": "Community City",
+                "communityZipcode": "Community Zip Code",
+                "suiteApartment": "Suite / Apartment / Street",
+                "password": "Password",
+                "confirmPassword": "Confirm Password"
+            },
+            "placeholders": {
+                "firstName": "Enter your first name",
+                "lastName": "Enter your last name",
+                "email": "Enter your email address",
+                "communityName": "Enter your community name",
+                "communityUrl": "Enter your slug",
+                "communityDescription": "Enter description",
+                "communityState": "Select State",
+                "communityCity": "Select City",
+                "communityZipcode": "Enter zip code",
+                "suiteApartment": "Enter your address",
+                "password": "Enter your password"
+            },
+            "errors": {
+                "firstName": {
+                    "required": "First name is required",
+                    "min": "First name must contain at least 3 characters",
+                    "max": "First name must be 10 characters or less",
+                    "invalid": "First name must contain only letters and spaces",
+                    "trim": "First name cannot start or end with spaces"
+                },
+                "lastName": {
+                    "required": "Last name is required",
+                    "min": "Last name must contain at least 3 characters",
+                    "max": "Last name must be 10 characters or less",
+                    "invalid": "Last name must contain only letters and spaces",
+                    "trim": "Last name cannot start or end with spaces"
+                },
+                "communityName": {
+                    "required": "Community name is required",
+                    "min": "Community name must contain at least 3 characters",
+                    "max": "Community name must be 35 characters or less",
+                    "trim": "Community name cannot start or end with spaces"
+                },
+                "urlSlug": {
+                    "required": "Slug is required",
+                    "min": "Slug cannot be less than 3 characters",
+                    "max": "Slug cannot be more than 50 characters",
+                    "invalid": "Slug can only contain lowercase letters, numbers, and hyphens",
+                    "trim": "Slug cannot start or end with spaces"
+                },
+                "description": {
+                    "required": "Description is required",
+                    "min": "Description cannot be less than 11 characters",
+                    "max": "Description cannot be more than 150 characters",
+                    "trim": "Description cannot start or end with spaces"
+                },
+                "email": {
+                    "required": "Email address is required",
+                    "invalid": "Invalid email address",
+                    "format": "Please enter a valid email address",
+                    "noConsecutive": "Email cannot contain consecutive special characters",
+                    "trim": "Email address cannot start or end with spaces"
+                },
+                "password": {
+                    "required": "Password is required",
+                    "min": "Password must be at least 8 characters",
+                    "max": "Password cannot be more than 25 characters",
+                    "uppercase": "Password must contain at least one uppercase letter",
+                    "lowercase": "Password must contain at least one lowercase letter",
+                    "number": "Password must contain at least one number",
+                    "special": "Password must contain at least one special character",
+                    "trim": "Password cannot start or end with spaces"
+                },
+                "confirmPassword": {
+                    "required": "Confirm password is required",
+                    "match": "Passwords do not match"
+                },
+                "location": {
+                    "required": "Please enter your location",
+                    "min": "Address cannot be less than 1 character",
+                    "max": "Address cannot be more than 30 characters",
+                    "trim": "Address cannot start or end with spaces"
+                },
+                "zipcode": {
+                    "required": "Enter your zip code",
+                    "invalid": "Please enter a valid zip code",
+                    "trim": "Zip code cannot start or end with spaces"
+                },
+                "city": {
+                    "required": "Enter your city"
+                },
+                "state": {
+                    "required": "Enter your state"
+                },
+                "country": {
+                    "required": "Enter your country"
+                }
+            }
+        },
+        "alreadyHaveAccount": "Already have an account?"
+    },
+    "forgotPasswordPage": {
+        "forgotPassword": "Forgot Password",
+        "enterRegisteredEmail": "Enter your registered email address below",
+        "form": {
+            "labels": {
+                "email": "Email Address"
+            },
+            "errors": {
+                "email": {
+                    "trim": "Email address can not start or end with spaces",
+                    "invalid": "Invalid email address",
+                    "required": "Email addres is required"
+                }
+            }
+        }
+    },
+    "changeEmailPage": {
+        "changeEmail": "Change Email Address",
+        "enterNewEmail": "Enter your new email address below",
+        "form": {
+            "labels": {
+                "emailAddress": "Email Address"
+            },
+            "placeholders": {
+                "emailAddress": "Email Address"
+            },
+            "errors": {
+                "email": {
+                    "trim": "Email address can not start or end with spaces",
+                    "invalid": "Invalid email address",
+                    "required": "Email addres is required"
+                }
+            }
+        }
+    },
+    "changePasswordPage": {
+        "setNewPassword": "Set New Password",
+        "enterNewPassword": "Enter new password to continue",
+        "form": {
+            "labels": {
+                "newPassword": "New Password",
+                "confirmPassword": "Confirm Password"
+            },
+            "placeholders": {
+                "newPassword": "New Password",
+                "confirmPassword": "Confirm Password"
+            },
+            "errors": {
+                "password": {
+                    "trim": "Password can not start or end with spaces",
+                    "min": "Password must be at least 8 characters",
+                    "max": "Password cannot be more than 25 characters",
+                    "matcheUppercase": "Password must contain at least one uppercase letter",
+                    "matchLowercase": "Password must contain at least one lowercase letter",
+                    "matchNumber": "Password must contain at least one number",
+                    "matchSpecialChar": "Password must contain at least one special character",
+                    "required": "Password is required"
+                },
+                "confirmPassword": {
+                    "dontMatch": "Passwords do not match",
+                    "required": "Password is required"
+                }
+            },
+            "messages": {
+                "verifyEmail": "Please verify your email."
+            }
+        },
+        "passwordResetFailed": "Password reset failed",
+        "passwordUpdated": "Password Updated!",
+        "passwordUpdatedSuccessfully": "Your password has been updated successfully"
+    },
+    "resendOtp": {
+        "somethingWentWrong": "Something went wrong.",
+        "resendIn": "Resend in"
+    },
+    "verifyOtpPage": {
+        "somethingWentWrong": "Something went wrong.",
+        "verifyCode": "Verify 6-digit code",
+        "verifyCodeSentAt": "Verify the code sent at",
+        "didNotReceiveCode": "Didn't receive the code yet?",
+        "enteredWrongEmail": "Entered wrong email?",
+        "otpRequired": "OTP is required",
+        "otpMustBe6Digits": "OTP must be 6 digits"
+    },
+    "emailVerified": "Email has been verified successfully",
+    "yourCommunityCreated": "Your community has been created!",
+    "membersCanJoin": "Members can join the community using the link below. However, they won't be able to list products until the Stripe account setup is completed in the next step."
+}
