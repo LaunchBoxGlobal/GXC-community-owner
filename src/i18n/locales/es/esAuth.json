@@ -95,7 +95,8 @@
                     "min": "El slug no puede tener menos de 3 caracteres",
                     "max": "El slug no puede tener más de 50 caracteres",
                     "invalid": "El slug solo puede contener letras minúsculas, números y guiones",
-                    "trim": "El slug no puede comenzar ni terminar con espacios"
+                    "trim": "El slug no puede comenzar ni terminar con espacios",
+                    "unable": "No se pudo validar el slug."
                 },
                 "description": {
                     "required": "La descripción es obligatoria",

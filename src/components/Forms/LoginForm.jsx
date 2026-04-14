@@ -14,10 +14,13 @@ import {
 import { loginInitialValues, loginSchema } from "../../schema/loginSchema";
 import { useDispatch } from "react-redux";
 import { setUser } from "../../features/userSlice/userSlice";
+import { useTranslation } from "react-i18next";
 
 const LoginForm = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+
+  const { t } = useTranslation("auth");
 
   const [login, { isLoading }] = useLoginMutation();
   const [resendOtp, { isLoading: isResendingOtp }] = useResendOtpMutation();
@@ -28,7 +31,7 @@ const LoginForm = () => {
 
   const formik = useFormik({
     initialValues: loginInitialValues,
-    validationSchema: loginSchema,
+    validationSchema: loginSchema(t),
     validateOnChange: true,
     validateOnBlur: true,
     onSubmit: async (values, { resetForm }) => {
@@ -68,10 +71,10 @@ const LoginForm = () => {
               Cookies.set("userEmail", values.email);
               enqueueSnackbar(
                 resendRes?.message ||
-                  "Verification code has been sent on your email address",
+                  t(`loginPage.form.messages.verificationCodeSent`),
                 {
                   variant: "success",
-                }
+                },
               );
               navigate("/verify-otp", {
                 state: {
@@ -102,9 +105,11 @@ const LoginForm = () => {
         className="w-[167px] lg:w-[267px] object-contain mx-auto"
       />
       <div className="w-full text-center space-y-3">
-        <h2 className="font-semibold text-[32px] leading-none">Welcome Back</h2>
+        <h2 className="font-semibold text-[32px] leading-none">
+          {t(`loginPage.welcomeBack`)}
+        </h2>
         <p className="text-[var(--secondary-color)]">
-          Please enter details to continue
+          {t(`loginPage.enterCredentials`)}
         </p>
       </div>
 
@@ -118,30 +123,30 @@ const LoginForm = () => {
           onBlur={formik.handleBlur}
           error={formik.errors.email}
           touched={formik.touched.email}
-          label={`Email Address`}
+          label={t(`loginPage.form.labels.email`)}
         />
 
         <PasswordField
           name={`password`}
-          placeholder={`Password`}
+          placeholder={t(`loginPage.form.labels.password`)}
           value={formik.values.password}
           onChange={formik.handleChange}
           onBlur={formik.handleBlur}
           error={formik.errors.password}
           touched={formik.touched.password}
-          label={`Password`}
+          label={t(`loginPage.form.labels.password`)}
         />
 
         <div className="w-full text-end">
           <Link to={`/forgot-password`} className="text-xs font-medium">
-            Forgot Password?
+            {t(`buttons.forgotPassword`)}
           </Link>
         </div>
 
         <div className="pt-2 w-full">
           <Button
             type={"submit"}
-            title={`Login`}
+            title={t(`buttons.login`)}
             isLoading={isLoading || isResendingOtp}
           />
         </div>
@@ -149,20 +154,20 @@ const LoginForm = () => {
 
       <div className="w-full flex items-center justify-between gap-6 mt-4">
         <div className="w-full border border-gray-300" />
-        <p className="text-gray-400 font-medium">OR</p>
+        <p className="text-gray-400 font-medium">{t(`loginPage.or`)}</p>
         <div className="w-full border border-gray-300" />
       </div>
 
       <div className="w-full mt-2 flex flex-col items-center gap-4">
         <div className="w-full flex items-center justify-center gap-1">
           <p className="text-[var(--secondary-color)]">
-            Don't have an account?{" "}
+            {t(`loginPage.DontHaveAccount`)}{" "}
           </p>
           <Link
             to={`/signup`}
             className="font-medium text-[var(--primary-color)]"
           >
-            Sign Up
+            {t(`buttons.signup`)}
           </Link>
         </div>
       </div>

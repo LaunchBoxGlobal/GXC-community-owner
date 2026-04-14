@@ -12,6 +12,7 @@ import {
   useLazyCheckStripeStatusQuery,
   useCreateStripeAccountMutation,
 } from "../../services/userApi/userApi";
+import { useTranslation } from "react-i18next";
 
 const CommunitiesPage = () => {
   const navigate = useNavigate();
@@ -19,6 +20,7 @@ const CommunitiesPage = () => {
   const [communityUrl, setCommunityUrl] = useState(null);
   const [showSuccessPopup, setShowSuccessPopup] = useState(false);
   const [showConfirmationModal, setShowConfirmationModal] = useState(false);
+  const { t } = useTranslation("communities");
 
   useEffect(() => {
     document.title = "Communities - giveXchange";
@@ -36,7 +38,7 @@ const CommunitiesPage = () => {
       }
     } catch (error) {
       enqueueSnackbar(
-        error?.data?.message || "Something went wrong. Try again.",
+        error?.data?.message || t(`communitiesPage.somethingWentWrong`),
         { variant: "error" },
       );
     } finally {
@@ -59,15 +61,18 @@ const CommunitiesPage = () => {
       } else if (status === "pending") {
         setShowConfirmationModal(true);
       } else {
-        enqueueSnackbar("Something went wrong. Try again.", {
+        enqueueSnackbar(t(`communitiesPage.somethingWentWrong`), {
           variant: "error",
         });
       }
     } catch (error) {
       if (error?.status === 404) setShowConfirmationModal(true);
-      enqueueSnackbar(error?.data?.message || "Something went wrong.", {
-        variant: "error",
-      });
+      enqueueSnackbar(
+        error?.data?.message || t(`communitiesPage.somethingWentWrong`),
+        {
+          variant: "error",
+        },
+      );
     }
   };
 
@@ -85,30 +90,34 @@ const CommunitiesPage = () => {
       {/* Header */}
       <div className="w-full grid grid-cols-1 lg:grid-cols-2">
         <h3 className="text-[24px] lg:text-[32px] font-semibold leading-none">
-          Communities
+          {t(`communitiesPage.communities`)}
         </h3>
 
         <div className="w-full lg:max-w-1/2 flex flex-wrap mt-5 lg:mt-0 justify-end gap-4">
           {/* Search input */}
           <div className="w-full md:max-w-[252px]">
-            <SearchField />
+            <SearchField t={t} />
           </div>
 
           {/* Add new community button */}
-          <div className="min-w-[201px]">
+          <div className="min-w-[210px]">
             <button
               type="button"
               disabled={checkStripeAccountStatus}
               onClick={handleCheckStripeAccountStatus}
               className="button"
             >
-              {checkStripeAccountStatus ? <Loader /> : "Add New Community"}
+              {checkStripeAccountStatus ? (
+                <Loader />
+              ) : (
+                t(`communitiesPage.buttons.addCommunity`)
+              )}
             </button>
           </div>
         </div>
       </div>
 
-      <CommunitiesList limit={12} />
+      <CommunitiesList limit={12} t={t} />
 
       {/* Stripe permission modal */}
       <PermissionModal
@@ -116,6 +125,7 @@ const CommunitiesPage = () => {
         loading={createStripe}
         showConfirmationModal={showConfirmationModal}
         setShowConfirmationModal={setShowConfirmationModal}
+        t={t}
       />
 
       <AddCommunity
@@ -124,11 +134,13 @@ const CommunitiesPage = () => {
         togglePopup={toggleCommunityPopup}
         setShowAddCommunityPopup={setShowAddCommunityPopup}
         setShowSuccessPopup={setShowSuccessPopup}
+        t={t}
       />
       <CommunitySuccessPopup
         showPopup={showSuccessPopup}
         togglePopup={handleCloseSuccessPopup}
         setShowSuccessPopup={setShowSuccessPopup}
+        t={t}
       />
     </main>
   );

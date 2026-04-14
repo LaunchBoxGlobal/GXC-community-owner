@@ -6,6 +6,7 @@ export const PermissionModal = ({
   loading,
   showConfirmationModal,
   setShowConfirmationModal,
+  t,
 }) => {
   return (
     showConfirmationModal && (
@@ -15,10 +16,10 @@ export const PermissionModal = ({
             <MdPayments className="text-white text-5xl" />
           </div>
           <h2 className="text-[24px] font-semibold leading-none">
-            Stripe Account Required
+            {t(`dashboardPage.stripeAccountRequired`)}
           </h2>
           <p className="text-base font-normal text-[#565656]">
-            You need to create a stripe account to continue.
+            {t(`dashboardPage.youNeedToCreateStripeAccount`)}
           </p>
           <div className="w-full grid grid-cols-2 gap-3 mt-2">
             <button
@@ -26,14 +27,14 @@ export const PermissionModal = ({
               onClick={() => setShowConfirmationModal((prev) => !prev)}
               className="bg-[#ECECEC] h-[48px] rounded-[12px] text-center font-medium"
             >
-              No
+              {t(`dashboardPage.buttons.no`)}
             </button>
             <button
               type="button"
               onClick={() => handleCreateStripeAccount()}
               className="bg-[var(--button-bg)] h-[48px] rounded-[12px] text-center font-medium text-white"
             >
-              {loading ? <Loader /> : "Continue"}
+              {loading ? <Loader /> : t(`dashboardPage.buttons.yes`)}
             </button>
           </div>
         </div>

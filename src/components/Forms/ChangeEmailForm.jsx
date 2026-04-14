@@ -8,9 +8,11 @@ import { useEffect } from "react";
 import Cookies from "js-cookie";
 import { enqueueSnackbar } from "notistack";
 import { useResendOtpMutation } from "../../services/authApi/authApi";
+import { useTranslation } from "react-i18next";
 
 const ChangeEmailForm = () => {
   const navigate = useNavigate();
+  const { t } = useTranslation("auth");
 
   useEffect(() => {
     document.title = `Change Email - giveXchange`;

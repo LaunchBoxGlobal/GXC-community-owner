@@ -1,0 +1,22 @@
+{
+    "dashboardPage": {
+        "hello": "Hola",
+        "welceomToGivexchange": "Bienvenido a giveXchange",
+        "recentCommunities": "Comunidades recientes",
+        "errors": {
+            "somethingWentWrong": "Algo salió mal. Inténtalo de nuevo."
+        },
+        "Total Communities": "Total de comunidades",
+        "Total Members": "Total de miembros",
+        "Active Links": "Enlaces activos",
+        "Total Earnings": "Ganancias totales",
+        "No communities found for the search term": "No se encontraron comunidades para el término de búsqueda",
+        "You have not created any community yet.": "Aún no has creado ninguna comunidad.",
+        "stripeAccountRequired": "Se requiere una cuenta de Stripe.",
+        "youNeedToCreateStripeAccount": "Necesitas crear una cuenta de Stripe para continuar.",
+        "buttons": {
+            "no": "No",
+            "yes": "Sí"
+        }
+    }
+}

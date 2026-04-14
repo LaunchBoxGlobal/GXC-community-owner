@@ -12,7 +12,7 @@ import {
 } from "../../services/communityApi/communityApi";
 import SearchField from "../../components/Common/SearchField";
 
-const MemberList = ({ communityId }) => {
+const MemberList = ({ communityId, t }) => {
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
 
@@ -58,14 +58,14 @@ const MemberList = ({ communityId }) => {
 
   const members =
     listType === "blocked"
-      ? data?.data?.bannedMembers ?? []
-      : data?.data?.members ?? [];
+      ? (data?.data?.bannedMembers ?? [])
+      : (data?.data?.members ?? []);
 
   return (
     <div className="w-full">
       {/* Header + Search */}
       <div className="w-full flex items-center justify-between flex-wrap gap-5">
-        <h2 className="page-heading">Members</h2>
+        <h2 className="page-heading">{t(`communitiesPage.buttons.members`)}</h2>
 
         <div className="w-full md:max-w-[252px]">
           <SearchField />
@@ -80,7 +80,7 @@ const MemberList = ({ communityId }) => {
               key={type}
               onClick={() => {
                 const currentParams = Object.fromEntries(
-                  searchParams.entries()
+                  searchParams.entries(),
                 );
                 setSearchParams({
                   ...currentParams,
@@ -95,7 +95,9 @@ const MemberList = ({ communityId }) => {
                   : "bg-[#E6E6E6]"
               }`}
             >
-              {type === "active" ? "Active Members" : "Blocked Members"}
+              {type === "active"
+                ? t(`communitiesPage.buttons.activeMembers`)
+                : t(`communitiesPage.buttons.blockedMembers`)}
             </button>
           ))}
         </div>
@@ -130,11 +132,12 @@ const MemberList = ({ communityId }) => {
           <div className="w-full min-h-[50vh] pt-28 text-center px-4">
             {search ? (
               <p className="mt-5 text-sm font-medium text-gray-500">
-                No members found for the search term "{search}".
+                {t(`communityPage.No members found for the search term`)}"
+                {search}".
               </p>
             ) : (
               <p className="mt-5 text-sm font-medium text-gray-500">
-                No members found in this community.
+                {t(`communityPage.No members found in this community.`)}
               </p>
             )}
           </div>
@@ -170,16 +173,16 @@ const MemberList = ({ communityId }) => {
       <UserBlockedSuccessPopup
         showPopup={isBanned}
         setShowPopup={setIsBanned}
-        title="Member Blocked Successfully"
-        description="The selected member has been blocked."
+        title={t(`communityPage.Member Blocked Successfully`)}
+        description={t(`communityPage.The selected member has been blocked.`)}
       />
 
       {/* user removed success modal */}
       <UserBlockedSuccessPopup
         showPopup={isRemoved}
         setShowPopup={setIsRemoved}
-        title="Member Removed Successfully"
-        description="The member has been removed."
+        title={t(`communityPage.Member Removed Successfully`)}
+        description={t(`communityPage.The member has been removed.`)}
       />
     </div>
   );

@@ -1,0 +1,104 @@
+{
+    "communitiesPage": {
+        "somethingWentWrong": "Algo salió mal. Inténtalo de nuevo.",
+        "communities": "Comunidades",
+        "buttons": {
+            "addCommunity": "Agregar nueva comunidad",
+            "viewCommunityDetails": "Ver detalles de la comunidad",
+            "submit": "Agregar comunidad",
+            "products": "Productos",
+            "members": "Miembros",
+            "disableCommunity": "Desactivar comunidad",
+            "enableCommunity": "Activar comunidad",
+            "editCommunity": "Editar comunidad",
+            "inviteMembers": "Invitar miembros",
+            "activeMembers": "Miembros activos",
+            "blockedMembers": "Miembros bloqueados",
+            "createStripeAccount": "Crear cuenta de Stripe"
+        },
+        "search": "Buscar",
+        "noCommunitiesFound": "No se encontraron comunidades para el término de búsqueda",
+        "notCreatedAnyCommunity": "Aún no has creado ninguna comunidad.",
+        "communityCard": {
+            "members": "Miembros",
+            "totalProducts": "Total de productos"
+        },
+        "communityCreated": "Comunidad creada con éxito",
+        "communityCreatedSuccessfully": "Tu comunidad ha sido creada con éxito",
+        "addCommunity": {
+            "title": "Agregar nueva comunidad",
+            "placeholders": {
+                "name": "Nombre de la comunidad",
+                "slug": "Slug de la comunidad",
+                "description": "Descripción de la comunidad...",
+                "zipcode": "Ingrese el código postal",
+                "location": "Suite / Apartamento / Calle",
+                "country": "Seleccione el país",
+                "state": "Seleccione el estado",
+                "city": "Seleccione la ciudad"
+            },
+            "slugValidation": {
+                "min": "El slug debe tener al menos 3 caracteres",
+                "taken": "El slug ya está en uso",
+                "error": "No se pudo verificar la disponibilidad del slug"
+            },
+            "errors": {
+                "name": {
+                    "required": "El nombre de la comunidad es obligatorio",
+                    "min": "El nombre de la comunidad debe tener al menos 3 caracteres",
+                    "max": "El nombre de la comunidad debe tener como máximo 35 caracteres"
+                },
+                "urlSlug": {
+                    "required": "El slug de la comunidad es obligatorio",
+                    "min": "El slug de la comunidad no puede tener menos de 3 caracteres",
+                    "max": "El slug de la comunidad no puede tener más de 50 caracteres",
+                    "invalid": "El slug de la comunidad solo puede contener letras minúsculas, números y guiones"
+                },
+                "description": {
+                    "required": "La descripción de la comunidad es obligatoria",
+                    "min": "La descripción no puede tener menos de 11 caracteres",
+                    "max": "La descripción no puede tener más de 150 caracteres"
+                },
+                "location": {
+                    "required": "Por favor ingrese su ubicación",
+                    "min": "La dirección no puede tener menos de 1 carácter",
+                    "max": "La dirección no puede tener más de 30 caracteres",
+                    "trim": "La dirección no puede comenzar ni terminar con espacios"
+                },
+                "zipcode": {
+                    "required": "Ingrese su código postal",
+                    "invalid": "Por favor ingrese un código postal válido",
+                    "trim": "El código postal no puede comenzar ni terminar con espacios"
+                },
+                "city": {
+                    "required": "Ingrese su ciudad"
+                },
+                "state": {
+                    "required": "Ingrese su estado"
+                },
+                "country": {
+                    "required": "Ingrese su país"
+                }
+            }
+        }
+    },
+    "dashboardPage": {
+        "stripeAccountRequired": "Se requiere una cuenta de Stripe",
+        "youNeedToCreateStripeAccount": "Necesitas crear una cuenta de Stripe para continuar.",
+        "buttons": {
+            "no": "No",
+            "yes": "Sí"
+        }
+    },
+    "communityPage": {
+        "communityDetails": "Detalles de la comunidad",
+        "community": "Comunidad",
+        "slug": "Slug",
+        "description": "Descripción",
+        "address": "Dirección",
+        "communityHasBeenSuspended": "Esta comunidad ha sido suspendida por el administrador."
+    },
+    "errors": {
+        "somethingWentWrong": "Algo salió mal."
+    }
+}

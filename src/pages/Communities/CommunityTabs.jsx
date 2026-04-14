@@ -1,13 +1,7 @@
 import { useSearchParams } from "react-router-dom";
 
-const CommunityTabs = ({ activeTab }) => {
+const CommunityTabs = ({ activeTab, t }) => {
   const [searchParams, setSearchParams] = useSearchParams();
-
-  // const handleTabClick = (tab) => {
-  //   const currentParams = Object.fromEntries(searchParams.entries());
-  //   currentParams.activeTab = tab;
-  //   setSearchParams(currentParams);
-  // };
 
   const handleTabClick = (tab) => {
     const currentParams = Object.fromEntries(searchParams.entries());
@@ -30,7 +24,7 @@ const CommunityTabs = ({ activeTab }) => {
               : "bg-white text-black"
           }`}
         >
-          Products
+          {t(`communitiesPage.buttons.products`)}
         </button>
         <button
           type="button"
@@ -41,7 +35,7 @@ const CommunityTabs = ({ activeTab }) => {
               : "bg-white text-black"
           }`}
         >
-          Members
+          {t(`communitiesPage.buttons.members`)}
         </button>
       </div>
     </div>

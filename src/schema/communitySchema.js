@@ -13,35 +13,50 @@ export const communityInitialValue = {
   stateId: "",
 };
 
-export const communitySchema = Yup.object({
-  name: Yup.string()
-    .min(3, "Community name must contain at least 3 characters")
-    .max(35, "Community name must be 35 characters or less")
-    .required("Community name is required"),
-  urlSlug: Yup.string()
-    .min(3, "Community slug can not be less than 3 characters")
-    .max(50, "Community slug can not be more than 50 characters")
-    .matches(
-      /^[a-z0-9-]+$/,
-      "Community slug can only contain lowercase letters, numbers, and hyphens"
-    )
-    .required("Community slug is required"),
-  description: Yup.string()
-    .min(11, `Description can not be less than 11 characters`)
-    .max(150, `Description can not be more than 150 characters`)
-    .required("Community description is required"),
-  location: Yup.string()
-    .trim("Address can not start or end with spaces")
-    .min(1, "Address can not be less than 1 character")
-    .max(30, "Address can not be more than 30 characters")
-    .required("Please enter your location"),
+export const communitySchema = (t) =>
+  Yup.object({
+    name: Yup.string()
+      .min(3, t("communitiesPage.addCommunity.errors.name.min"))
+      .max(35, t("communitiesPage.addCommunity.errors.name.max"))
+      .required(t("communitiesPage.addCommunity.errors.name.required")),
 
-  zipcode: Yup.string()
-    .trim("Zip code can not start or end with spaces")
-    .matches(/^[A-Za-z0-9\- ]{4,10}$/, "Please enter a valid zip code")
-    .required("Enter your zip code"),
+    urlSlug: Yup.string()
+      .min(3, t("communitiesPage.addCommunity.errors.urlSlug.min"))
+      .max(50, t("communitiesPage.addCommunity.errors.urlSlug.max"))
+      .matches(
+        /^[a-z0-9-]+$/,
+        t("communitiesPage.addCommunity.errors.urlSlug.invalid"),
+      )
+      .required(t("communitiesPage.addCommunity.errors.urlSlug.required")),
 
-  city: Yup.string().required("Enter your city"),
-  state: Yup.string().required("Enter your state"),
-  country: Yup.string().required("Enter your country"),
-});
+    description: Yup.string()
+      .min(11, t("communitiesPage.addCommunity.errors.description.min"))
+      .max(150, t("communitiesPage.addCommunity.errors.description.max"))
+      .required(t("communitiesPage.addCommunity.errors.description.required")),
+
+    location: Yup.string()
+      .trim(t("communitiesPage.addCommunity.errors.location.trim"))
+      .min(1, t("communitiesPage.addCommunity.errors.location.min"))
+      .max(30, t("communitiesPage.addCommunity.errors.location.max"))
+      .required(t("communitiesPage.addCommunity.errors.location.required")),
+
+    zipcode: Yup.string()
+      .trim(t("communitiesPage.addCommunity.errors.zipcode.trim"))
+      .matches(
+        /^[A-Za-z0-9\- ]{4,10}$/,
+        t("communitiesPage.addCommunity.errors.zipcode.invalid"),
+      )
+      .required(t("communitiesPage.addCommunity.errors.zipcode.required")),
+
+    city: Yup.string().required(
+      t("communitiesPage.addCommunity.errors.city.required"),
+    ),
+
+    state: Yup.string().required(
+      t("communitiesPage.addCommunity.errors.state.required"),
+    ),
+
+    country: Yup.string().required(
+      t("communitiesPage.addCommunity.errors.country.required"),
+    ),
+  });

@@ -95,7 +95,8 @@
                     "min": "Slug cannot be less than 3 characters",
                     "max": "Slug cannot be more than 50 characters",
                     "invalid": "Slug can only contain lowercase letters, numbers, and hyphens",
-                    "trim": "Slug cannot start or end with spaces"
+                    "trim": "Slug cannot start or end with spaces",
+                    "unable": "Unable to validate slug"
                 },
                 "description": {
                     "required": "Description is required",

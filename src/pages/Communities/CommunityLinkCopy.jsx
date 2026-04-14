@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import { IoClose } from "react-icons/io5";
 
 const CommunityLinkCopy = ({
@@ -7,13 +8,14 @@ const CommunityLinkCopy = ({
   setShowCopyLinkPopup,
   slug,
 }) => {
+  const { t } = useTranslation("communities");
   return (
     showCopyLinkPopup && (
       <div className="w-full h-screen bg-[rgba(0,0,0,0.4)] p-5 flex items-center justify-center fixed inset-0 z-50">
         <div className="bg-white w-full max-w-[471px] p-5 rounded-[18px]">
           <div className="w-full flex items-center justify-between">
             <h3 className="text-xl lg:text-[24px] font-semibold">
-              Invite Members
+              {t(`communitiesPage.buttons.inviteMembers`)}
             </h3>
             <button
               type="button"
@@ -35,7 +37,7 @@ const CommunityLinkCopy = ({
             className="button"
             onClick={() => {
               navigator.clipboard.writeText(
-                `invite.app.thegiveXchange.com/${slug}`
+                `invite.app.thegiveXchange.com/${slug}`,
               );
 
               setCopyLinkPopup(true);
@@ -46,7 +48,9 @@ const CommunityLinkCopy = ({
               }, 2000);
             }}
           >
-            {copyLinkPopup ? "Link Copied" : "Copy Link"}
+            {copyLinkPopup
+              ? t(`communitiesPage.buttons.linkCopied`)
+              : t(`communitiesPage.buttons.copyLink`)}
           </button>
         </div>
       </div>

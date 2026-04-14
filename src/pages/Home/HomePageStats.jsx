@@ -32,7 +32,7 @@ export const DASHBOARD_STATS = [
   },
 ];
 
-const HomePageStats = () => {
+const HomePageStats = ({ t }) => {
   const {
     data: statsRes,
     isLoading: fetchingStats,
@@ -60,18 +60,18 @@ const HomePageStats = () => {
                 {/* --- Left Section --- */}
                 <div className="flex-1">
                   <p className="text-[#565656] font-medium text-sm">
-                    {st?.title}
+                    {t(`dashboardPage.${st?.title}`)}
                   </p>
                   <p className="text-lg sm:text-xl xl:text-[24px] font-semibold mt-1">
                     {st?.title === "Total Communities"
                       ? stats?.activeCommunities
                       : st?.title === "Total Members"
-                      ? stats?.totalMembers
-                      : st?.title === "Active Links"
-                      ? stats?.activeLinks
-                      : st?.title === "Total Earnings"
-                      ? stats?.totalEarnings
-                      : 0}
+                        ? stats?.totalMembers
+                        : st?.title === "Active Links"
+                          ? stats?.activeLinks
+                          : st?.title === "Total Earnings"
+                            ? stats?.totalEarnings
+                            : 0}
                   </p>
                 </div>
 

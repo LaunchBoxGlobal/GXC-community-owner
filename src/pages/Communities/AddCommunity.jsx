@@ -26,6 +26,7 @@ const AddCommunity = ({
   setCommunityUrl,
   setShowAddCommunityPopup,
   setShowSuccessPopup,
+  t,
 }) => {
   const [slugError, setSlugError] = useState(null);
 
@@ -34,7 +35,7 @@ const AddCommunity = ({
 
   const handleCheckSlugAvailability = async (slug) => {
     if (!slug || slug.length < 3) {
-      setSlugError("Slug must be at least 3 characters");
+      setSlugError(t(`communitiesPage.addCommunity.slugValidation.min`));
       return;
     }
 
@@ -43,19 +44,19 @@ const AddCommunity = ({
       const available = res?.data?.available;
 
       if (!available) {
-        setSlugError("Slug is already taken");
+        setSlugError(t(`communitiesPage.addCommunity.slugValidation.taken`));
       } else {
         setSlugError(null);
       }
     } catch {
-      setSlugError("Could not check slug availability");
+      setSlugError(t(`communitiesPage.addCommunity.slugValidation.error`));
     }
   };
 
   const formik = useFormik({
     enableReinitialize: true,
     initialValues: communityInitialValue,
-    validationSchema: communitySchema,
+    validationSchema: communitySchema(t),
     onSubmit: async (values, { resetForm }) => {
       if (slugError) return;
 
@@ -103,7 +104,7 @@ const AddCommunity = ({
           {/* Header */}
           <div className="w-full flex items-center justify-between gap-5">
             <h3 className="text-[18px] sm:text-[20px] lg:text-[24px] font-semibold leading-none max-w-[80%]">
-              Add New Community
+              {t(`communitiesPage.addCommunity.title`)}
             </h3>
 
             <button
@@ -122,7 +123,7 @@ const AddCommunity = ({
             <TextField
               type="text"
               name="name"
-              placeholder="Community name"
+              placeholder={t("communitiesPage.addCommunity.placeholders.name")}
               value={formik.values.name}
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
@@ -134,7 +135,7 @@ const AddCommunity = ({
             <TextField
               type="text"
               name="urlSlug"
-              placeholder="Community slug"
+              placeholder={t("communitiesPage.addCommunity.placeholders.slug")}
               value={formik.values.urlSlug}
               onChange={formik.handleChange}
               onBlur={(e) => {
@@ -154,7 +155,9 @@ const AddCommunity = ({
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
                 value={formik.values.description}
-                placeholder="Community description..."
+                placeholder={t(
+                  "communitiesPage.addCommunity.placeholders.description",
+                )}
                 className={`w-full h-[120px] sm:h-[140px] px-[15px] py-[12px] rounded-[8px] bg-[var(--secondary-bg)] outline-none resize-none
                 ${
                   formik.touched.description && formik.errors.description
@@ -191,7 +194,9 @@ const AddCommunity = ({
                     : "border-gray-200"
                 }
               `}
-                placeHolder="Select Country"
+                placeHolder={t(
+                  "communitiesPage.addCommunity.placeholders.country",
+                )}
                 onChange={(val) => {
                   formik.setFieldValue("country", val.name);
                   formik.setFieldValue("countryId", val.id);
@@ -217,7 +222,9 @@ const AddCommunity = ({
                     : "border-gray-200"
                 }
               `}
-                placeHolder="Select State"
+                placeHolder={t(
+                  "communitiesPage.addCommunity.placeholders.state",
+                )}
                 onChange={(val) => {
                   formik.setFieldValue("state", val.name);
                   formik.setFieldValue("stateId", val.id);
@@ -244,7 +251,9 @@ const AddCommunity = ({
                     : "border-gray-200"
                 }
               `}
-                placeHolder="Select City"
+                placeHolder={t(
+                  "communitiesPage.addCommunity.placeholders.city",
+                )}
                 onChange={(val) => formik.setFieldValue("city", val.name)}
               />
               {formik.touched.city && formik.errors.city && (
@@ -255,7 +264,9 @@ const AddCommunity = ({
             <TextField
               type="text"
               name="zipcode"
-              placeholder="Enter zip code"
+              placeholder={t(
+                "communitiesPage.addCommunity.placeholders.zipcode",
+              )}
               value={formik.values.zipcode}
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
@@ -269,7 +280,9 @@ const AddCommunity = ({
           <TextField
             type="text"
             name="location"
-            placeholder="Suite / Apartment / Street"
+            placeholder={t(
+              "communitiesPage.addCommunity.placeholders.location",
+            )}
             value={formik.values.location}
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
@@ -280,7 +293,11 @@ const AddCommunity = ({
 
           {/* Submit Button */}
           <div className="w-full mt-4 sm:mt-5">
-            <Button type="submit" isLoading={loading} title="Add Community" />
+            <Button
+              type="submit"
+              isLoading={loading}
+              title={t("communitiesPage.buttons.submit")}
+            />
           </div>
         </form>
       </div>

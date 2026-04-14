@@ -1,0 +1,142 @@
+{
+    "communitiesPage": {
+        "somethingWentWrong": "Something went wrong. Try again.",
+        "communities": "Communities",
+        "buttons": {
+            "addCommunity": "Add New Community",
+            "viewCommunityDetails": "View Community Details",
+            "submit": "Add Community",
+            "products": "Products",
+            "members": "Members",
+            "disableCommunity": "Disable Community",
+            "enableCommunity": "Enable Community",
+            "editCommunity": "Edit Community",
+            "inviteMembers": "Invite Members",
+            "activeMembers": "Active Members",
+            "blockedMembers": "Blocked Members",
+            "createStripeAccount": "Create Stripe Account",
+            "no": "No",
+            "yes": "Yes",
+            "blockMember": "Block member",
+            "copyLink": "Copy Link",
+            "linkCopied": "Link Copied"
+        },
+        "search": "Search",
+        "noCommunitiesFound": "No communities found for the search term",
+        "notCreatedAnyCommunity": "You have not created any community yet.",
+        "communityCard": {
+            "members": "Members",
+            "totalProducts": "Total Products"
+        },
+        "communityCreated": "Community Created Successfully",
+        "communityCreatedSuccessfully": "Your community has been created successfully",
+        "addCommunity": {
+            "title": "Add New Community",
+            "placeholders": {
+                "name": "Community name",
+                "slug": "Community slug",
+                "description": "Community description...",
+                "zipcode": "Enter zip code",
+                "location": "Suite / Apartment / Street",
+                "country": "Select Country",
+                "state": "Select State",
+                "city": "Select City"
+            },
+            "slugValidation": {
+                "min": "Slug must be at least 3 characters",
+                "taken": "Slug is already taken",
+                "error": "Could not check slug availability"
+            },
+            "errors": {
+                "name": {
+                    "required": "Community name is required",
+                    "min": "Community name must contain at least 3 characters",
+                    "max": "Community name must be 35 characters or less"
+                },
+                "urlSlug": {
+                    "required": "Community slug is required",
+                    "min": "Community slug can not be less than 3 characters",
+                    "max": "Community slug can not be more than 50 characters",
+                    "invalid": "Community slug can only contain lowercase letters, numbers, and hyphens"
+                },
+                "description": {
+                    "required": "Community description is required",
+                    "min": "Description can not be less than 11 characters",
+                    "max": "Description can not be more than 150 characters"
+                },
+                "location": {
+                    "required": "Please enter your location",
+                    "min": "Address can not be less than 1 character",
+                    "max": "Address can not be more than 30 characters",
+                    "trim": "Address can not start or end with spaces"
+                },
+                "zipcode": {
+                    "required": "Enter your zip code",
+                    "invalid": "Please enter a valid zip code",
+                    "trim": "Zip code can not start or end with spaces"
+                },
+                "city": {
+                    "required": "Enter your city"
+                },
+                "state": {
+                    "required": "Enter your state"
+                },
+                "country": {
+                    "required": "Enter your country"
+                }
+            }
+        }
+    },
+    "dashboardPage": {
+        "stripeAccountRequired": "Stripe Account Required",
+        "youNeedToCreateStripeAccount": "You need to create a stripe account to continue.",
+        "buttons": {
+            "no": "No",
+            "yes": "Yes"
+        }
+    },
+    "communityPage": {
+        "communityDetails": "Community Details",
+        "community": "Community",
+        "slug": "Slug",
+        "description": "Description",
+        "address": "Address",
+        "communityHasBeenSuspended": "This community has been suspended by admin.",
+        "No products found for the search term": "No products found for the search term",
+        "No products have been added in this community.": "No products have been added in this community.",
+        "No members found in this community.": "No members found in this community.",
+        "No members found for the search term": "No members found for the search term",
+        "Member Blocked Successfully": "Member Blocked Successfully",
+        "The selected member has been blocked.": "The selected member has been blocked.",
+        "Member Removed Successfully": "Member Removed Successfully",
+        "The member has been removed.": "The member has been removed.",
+        "Remove member": "Remove member",
+        "Are you sure you want to remove this member from the community?": "Are you sure you want to remove this member from the community?",
+        "Are you sure you want to block this member?": "Are you sure you want to block this member?",
+        "When you block a member, they’ll be removed from the community. To let them rejoin using an invite link, you’ll need to unblock them in the Blocked Members tab.": "When you block a member, they’ll be removed from the community. To let them rejoin using an invite link, you’ll need to unblock them in the Blocked Members tab."
+    },
+    "errors": {
+        "somethingWentWrong": "Something went wrong.",
+        "CommunityID is not defined": "Community ID is not defined",
+        "User ID is not defined": "User ID is not defined"
+    },
+    "editCommunity": {
+        "form": {
+            "labels": {
+                "comunityName": "Comunity Name",
+                "communitySlug": "Community Slug",
+                "communityDescription": "Community Description",
+                "country": "Country",
+                "state": "State",
+                "city": "City",
+                "zipcode": "Zip Code"
+            },
+            "placeholders": {
+                "communityName": "Community Name",
+                "urlSlug": "URL Slug",
+                "communityDescription": "Community description"
+            },
+            "errors": {}
+        }
+    }
+}

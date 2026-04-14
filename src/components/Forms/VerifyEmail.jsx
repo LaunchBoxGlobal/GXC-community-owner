@@ -25,7 +25,7 @@ const VerifyEmail = () => {
 
   const formik = useFormik({
     initialValues: verifyEmailInitialValues,
-    validationSchema: verifyEmailSchema,
+    validationSchema: verifyEmailSchema(t),
     validateOnChange: true,
     validateOnBlur: true,
     onSubmit: async (values, { resetForm }) => {

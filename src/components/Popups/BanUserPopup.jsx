@@ -1,6 +1,7 @@
 import { enqueueSnackbar } from "notistack";
 import Loader from "../Loader/Loader";
 import { useBanUserMutation } from "../../services/userApi/userApi";
+import { t } from "i18next";
 
 const BanUserPopup = ({
   showPopup,
@@ -15,13 +16,13 @@ const BanUserPopup = ({
 
   const handleBlockUser = async () => {
     if (!communityId) {
-      enqueueSnackbar("Community ID is not defined", {
+      enqueueSnackbar(t(`errors.Community ID is not defined`), {
         variant: "error",
       });
       return;
     }
     if (!userId) {
-      enqueueSnackbar("User ID is not defined", {
+      enqueueSnackbar(t(`errors.User ID is not defined`), {
         variant: "error",
       });
       return;
@@ -72,15 +73,15 @@ const BanUserPopup = ({
             />
           </div>
           <h2 className="text-[24px] font-semibold leading-[1.3] text-center">
-            Block member
+            {t(`communitiesPage.buttons.Block member`)}
           </h2>
           <p className="text-[var(--secondary-color)] text-center leading-[1.3]">
-            Are you sure you want to block this member?
+            {t(`communityPage.Are you sure you want to block this member?`)}
           </p>
           <p className="text-[var(--secondary-color)] text-center leading-[1.3]">
-            When you block a member, they’ll be removed from the community. To
+            {t(`communityPage.When you block a member, they’ll be removed from the community. To
             let them rejoin using an invite link, you’ll need to unblock them in
-            the Blocked Members tab.
+            the Blocked Members tab.`)}
           </p>
           <div className="w-full grid grid-cols-2 gap-2 mt-2">
             <button
@@ -91,7 +92,7 @@ const BanUserPopup = ({
               }}
               className="w-full bg-[#F0F0F0] text-black h-[49px] rounded-[8px] text-center font-medium"
             >
-              No
+              {t(`communitiesPage.buttons.no`)}
             </button>
             <button
               type={"button"}
@@ -99,7 +100,7 @@ const BanUserPopup = ({
               onClick={() => handleBlockUser()}
               className="w-full bg-[var(--button-bg)] text-white h-[49px] rounded-[8px] text-center font-medium"
             >
-              {isLoading ? <Loader /> : "Yes"}
+              {isLoading ? <Loader /> : t(`communitiesPage.buttons.yes`)}
             </button>
           </div>
         </div>

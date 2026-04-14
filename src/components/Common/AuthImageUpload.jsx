@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { FiPlus } from "react-icons/fi";
 
-const AuthImageUpload = ({ name, setFieldValue, error }) => {
+const AuthImageUpload = ({ name, setFieldValue, error, t }) => {
   const [preview, setPreview] = useState(null);
   const [fileError, setFileError] = useState("");
 
@@ -12,7 +12,7 @@ const AuthImageUpload = ({ name, setFieldValue, error }) => {
     const allowedTypes = ["image/png", "image/jpeg", "image/jpg"];
 
     if (!allowedTypes.includes(file.type)) {
-      setFileError("Only PNG, JPG, and JPEG images are allowed");
+      setFileError(t(`completeProfile.form.imageUpload.format`));
       setPreview(null);
       setFieldValue(name, null);
       return;
@@ -54,7 +54,7 @@ const AuthImageUpload = ({ name, setFieldValue, error }) => {
             !error && !fileError ? "text-[var(--primary-blue)]" : "text-red-500"
           }`}
         >
-          Upload Profile Picture
+          {t(`completeProfile.form.imageUpload.uploadProfilePicture`)}
         </label>
 
         {(error || fileError) && (

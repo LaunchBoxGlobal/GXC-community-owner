@@ -2,6 +2,7 @@ import { useState } from "react";
 import { enqueueSnackbar } from "notistack";
 import Loader from "../Loader/Loader";
 import { useRemoveUserFromCommunityMutation } from "../../services/communityApi/communityApi";
+import { useTranslation } from "react-i18next";
 
 const RemoveUserPopup = ({
   showPopup,
@@ -15,16 +16,17 @@ const RemoveUserPopup = ({
   const [loading, setLoading] = useState(false);
   const [removeUserFromCommunity, { isLoading }] =
     useRemoveUserFromCommunityMutation();
+  const { t } = useTranslation("communities");
 
   const handleBlockUser = async () => {
     if (!communityId) {
-      enqueueSnackbar("Community ID is not defined", {
+      enqueueSnackbar(t(`errors.Community ID is not defined`), {
         variant: "error",
       });
       return;
     }
     if (!userId) {
-      enqueueSnackbar("User ID is not defined", {
+      enqueueSnackbar(t(`errors.User ID is not defined`), {
         variant: "error",
       });
       return;
@@ -76,10 +78,12 @@ const RemoveUserPopup = ({
           </div>
 
           <h2 className="text-[24px] font-semibold leading-[1.3] text-center">
-            Remove member
+            {t(`communityPage.Remove member`)}
           </h2>
           <p className="text-[var(--secondary-color)] text-center leading-[1.3]">
-            Are you sure you want to remove this member from the community?
+            {t(
+              `communityPage.Are you sure you want to remove this member from the community?`,
+            )}
           </p>
           <div className="w-full grid grid-cols-2 gap-2 mt-2">
             <button
@@ -90,14 +94,14 @@ const RemoveUserPopup = ({
               }}
               className="w-full bg-[#F0F0F0] text-black h-[49px] rounded-[8px] text-center font-medium"
             >
-              No
+              {t(`communitiesPage.buttons.no`)}
             </button>
             <button
               type={"button"}
               onClick={() => handleBlockUser()}
               className="w-full bg-[var(--button-bg)] text-white h-[49px] rounded-[8px] text-center font-medium"
             >
-              {loading ? <Loader /> : "Yes"}
+              {loading ? <Loader /> : t(`communitiesPage.buttons.yes`)}
             </button>
           </div>
         </div>

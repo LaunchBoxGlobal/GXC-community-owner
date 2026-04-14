@@ -4,7 +4,7 @@ import Loader from "../../components/Loader/Loader";
 import SearchField from "../../components/Common/SearchField";
 import { useGetCommunityProductsQuery } from "../../services/communityApi/communityApi";
 
-const ProductList = ({ community }) => {
+const ProductList = ({ community, t }) => {
   const limit = 10;
   const [searchParams] = useSearchParams();
   const page = parseInt(searchParams.get("page")) || 1;
@@ -21,7 +21,7 @@ const ProductList = ({ community }) => {
     },
     {
       skip: !communityId,
-    }
+    },
   );
 
   const products = data?.data?.products;
@@ -38,7 +38,7 @@ const ProductList = ({ community }) => {
     return (
       <div className="w-full min-h-[80vh] relative flex items-center justify-center bg-white rounded-[12px] custom-shadow">
         <p className="text-gray-500 text-sm">
-          {error?.data?.message || "Something went wrong."}
+          {error?.data?.message || t(`errors.somethingWentWrong`)}
         </p>
       </div>
     );
@@ -48,7 +48,7 @@ const ProductList = ({ community }) => {
     <div className="w-full mt-6">
       <div className="w-full flex items-center justify-between flex-wrap gap-5">
         <h3 className="page-heading">
-          Products{" "}
+          {t(`communitiesPage.buttons.products`)}{" "}
           {products?.length > 0 ? (
             <span>{`(${products?.length})`}</span>
           ) : (
@@ -71,11 +71,14 @@ const ProductList = ({ community }) => {
           <div className="w-full min-h-[50vh] pt-28 text-center px-4">
             {search ? (
               <p className="mt-5 text-sm font-medium text-gray-500">
-                No products found for the search term "{search}".
+                {t(`communityPage.No products found for the search term`)} "
+                {search}".
               </p>
             ) : (
               <p className="mt-5 text-sm font-medium text-gray-500">
-                No products have been added in this community.
+                {t(
+                  `communityPage.No products have been added in this community.`,
+                )}
               </p>
             )}
           </div>

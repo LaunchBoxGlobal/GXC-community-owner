@@ -14,6 +14,7 @@ const CommunityHeader = ({
   setShowCopyLinkPopup,
   isCommunitySuspended,
   refetch,
+  t,
 }) => {
   const [showInvitationButton, setShowInvitationButton] = useState(false);
   const [stripeAccountStatus, setAccountStripeStatus] = useState(null);
@@ -83,7 +84,9 @@ const CommunityHeader = ({
   return (
     <div className="w-full relative">
       <div className="w-full flex items-center justify-between flex-col md:flex-row gap-5">
-        <h2 className="page-heading whitespace-nowrap">Community</h2>
+        <h2 className="page-heading whitespace-nowrap">
+          {t(`communityPage.community`)}
+        </h2>
         {isCommunitySuspended ? (
           <></>
         ) : (
@@ -96,7 +99,7 @@ const CommunityHeader = ({
                   onClick={() => setShowEditCommunityPopup(true)}
                   className="button px-3 md:px-5 max-w-[190px] disabled:cursor-not-allowed"
                 >
-                  Edit Community
+                  {t(`communitiesPage.buttons.editCommunity`)}
                 </button>
 
                 <button
@@ -107,7 +110,7 @@ const CommunityHeader = ({
                   onClick={() => setShowCopyLinkPopup(true)}
                   className="button px-3 md:px-5 max-w-[160px] disabled:cursor-not-allowed disabled:opacity-60"
                 >
-                  Invite Members
+                  {t(`communitiesPage.buttons.inviteMembers`)}
                 </button>
               </div>
             ) : (
@@ -118,7 +121,11 @@ const CommunityHeader = ({
                   onClick={() => handleCreateStripeAccount()}
                   className="button px-3 md:px-5 max-w-[220px] disabled:cursor-not-allowed"
                 >
-                  {createStripe ? <Loader /> : "Create Stripe Account"}
+                  {createStripe ? (
+                    <Loader />
+                  ) : (
+                    t(`communitiesPage.buttons.createStripeAccount`)
+                  )}
                 </button>
               </div>
             )}
@@ -131,20 +138,24 @@ const CommunityHeader = ({
           <h2 className="page-heading">{community?.community?.name}</h2>
           {community?.community?.slug && (
             <p className="text-base text-[var(--secondary-color)] leading-[1.3] mt-2 break-words">
-              <span className="font-semibold">Slug: </span>
+              <span className="font-semibold">{t(`communityPage.slug`)}: </span>
               {community?.community?.slug}
             </p>
           )}
           {community?.community?.description && (
             <p className="text-base text-[var(--secondary-color)] leading-[1.3] mt-2 break-words">
-              <span className="font-semibold">Description: </span>
+              <span className="font-semibold">
+                {t(`communityPage.description`)}:{" "}
+              </span>
               {community?.community?.description}
             </p>
           )}
 
           {community?.community?.address && (
             <p className="text-base text-[var(--secondary-color)] leading-[1.3] mt-2 break-words">
-              <span className="font-semibold">Address: </span>
+              <span className="font-semibold">
+                {t(`communityPage.address`)}:{" "}
+              </span>
               {community?.community?.address} {community?.community?.city}{" "}
               {community?.community?.state} {community?.community?.zipcode}{" "}
               {community?.community?.country}
@@ -158,7 +169,7 @@ const CommunityHeader = ({
           <>
             <div className="w-full lg:w-[30%] flex items-center justify-between md:justify-end flex-wrap md:gap-10">
               <div className="text-center space-y-1">
-                <h4>Members</h4>
+                <h4>{t(`communitiesPage.buttons.members`)}</h4>
                 <p className="font-semibold text-[var(--primary-color)] text-[24px] leading-none">
                   {community?.community?.memberCount &&
                   community?.community?.memberCount > 0
@@ -168,7 +179,7 @@ const CommunityHeader = ({
               </div>
 
               <div className="text-center space-y-1">
-                <h4>Products</h4>
+                <h4>{t(`communitiesPage.buttons.products`)}</h4>
                 <p className="font-semibold text-[var(--primary-color)] text-[24px] leading-none">
                   {community?.community?.productCount &&
                   community?.community?.productCount > 0
@@ -179,8 +190,8 @@ const CommunityHeader = ({
               <div className="space-y-1.5 pt-1">
                 <h4>
                   {community?.community?.inviteLinkActive
-                    ? "Disable Community"
-                    : "Enable Community"}
+                    ? t(`communitiesPage.buttons.disableCommunity`)
+                    : t(`communitiesPage.buttons.enableCommunity`)}
                 </h4>
                 <label className="inline-flex items-center cursor-pointer">
                   <input

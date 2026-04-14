@@ -4,9 +4,10 @@ export const verifyEmailInitialValues = {
   email: "",
 };
 
-export const verifyEmailSchema = Yup.object({
-  email: Yup.string()
-    .trim("Email address can not start or end with spaces")
-    .email("Invalid email address")
-    .required("Email addres is required"),
-});
+export const verifyEmailSchema = (t) =>
+  Yup.object({
+    email: Yup.string()
+      .trim(t(`forgotPasswordPage.form.errors.email.trim`))
+      .email(t(`forgotPasswordPage.form.errors.email.invalid`))
+      .required(t(`forgotPasswordPage.form.errors.email.required`)),
+  });

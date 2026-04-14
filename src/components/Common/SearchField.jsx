@@ -13,7 +13,6 @@ const SearchField = () => {
     setValue(searchParams.get("search") || "");
   }, [searchParams]);
 
-  // 🧠 Debounce effect — update URL only after 500ms of no typing
   useEffect(() => {
     const handler = setTimeout(() => {
       const params = new URLSearchParams(searchParams);

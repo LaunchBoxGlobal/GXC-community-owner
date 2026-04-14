@@ -29,10 +29,10 @@ const ProductCard = ({ product }) => {
                 {product?.deliveryMethod === "both"
                   ? "Pickup / Community Pickup"
                   : product?.deliveryMethod === "pickup"
-                  ? "Pickup"
-                  : product?.deliveryMethod === "delivery"
-                  ? "Community Pickup"
-                  : null}
+                    ? "Pickup"
+                    : product?.deliveryMethod === "delivery"
+                      ? "Community Pickup"
+                      : null}
               </p>
               <p className="text-[16px] font-medium leading-none tracking-tight">
                 ${product?.price}

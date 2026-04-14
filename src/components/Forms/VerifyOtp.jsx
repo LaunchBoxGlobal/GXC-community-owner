@@ -18,11 +18,13 @@ import {
 } from "../../services/authApi/authApi";
 import { setUser } from "../../features/userSlice/userSlice";
 import { useDispatch } from "react-redux";
+import { useTranslation } from "react-i18next";
 
 const VerifyOtp = () => {
   const inputRefs = useRef([]);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const { t } = useTranslation("auth");
 
   const userEmail = Cookies.get(`ownerEmail`)
     ? Cookies.get(`ownerEmail`)
@@ -65,7 +67,9 @@ const VerifyOtp = () => {
       const otp = values.otp.join("");
 
       if (!userEmail) {
-        enqueueSnackbar("Something went wrong!", { variant: "error" });
+        enqueueSnackbar(t(`verifyOtpPage.somethingWentWrong`), {
+          variant: "error",
+        });
         return;
       }
 

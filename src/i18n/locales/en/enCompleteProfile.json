@@ -3,10 +3,81 @@
         "completeProfile": "Complete Profile Details",
         "completeDetails": "Please complete details to access all features",
         "basicDetails": "Basic Details",
+        "buttons": {
+            "skip": "Skip",
+            "save": "Save"
+        },
         "form": {
+            "labels": {
+                "firstName": "First Name",
+                "lastName": "Last Name",
+                "email": "Email Address",
+                "phoneNumber": "Phone Number",
+                "country": "Country",
+                "state": "State",
+                "city": "City",
+                "zipcode": "Zip Code",
+                "location": "Suite / Apartment / Street"
+            },
+            "placeholders": {
+                "firstName": "First Name",
+                "lastName": "Last Name",
+                "email": "Email Address",
+                "phoneNumber": "+000 0000 00",
+                "state": "Select State",
+                "city": "Select City",
+                "zipcode": "Enter zip code",
+                "location": "Enter your address",
+                "country": "Select Country"
+            },
             "imageUpload": {
                 "format": "Only PNG, JPG, and JPEG images are allowed",
                 "uploadProfilePicture": "Upload Profile Picture"
+            },
+            "errors": {
+                "firstName": {
+                    "required": "First name is required",
+                    "min": "First name must contain at least 3 characters",
+                    "max": "First name must be 10 characters or less",
+                    "invalid": "First name must contain only letters and spaces",
+                    "trim": "First name cannot start or end with spaces"
+                },
+                "lastName": {
+                    "required": "Last name is required",
+                    "min": "Last name must contain at least 3 characters",
+                    "max": "Last name must be 10 characters or less",
+                    "invalid": "Last name must contain only letters and spaces",
+                    "trim": "Last name cannot start or end with spaces"
+                },
+                "email": {
+                    "required": "Email is required",
+                    "invalid": "Invalid email address",
+                    "trim": "Email address cannot start or end with spaces"
+                },
+                "phoneNumber": {
+                    "required": "Phone number is required",
+                    "invalid": "Invalid phone number"
+                },
+                "location": {
+                    "required": "Please enter your location",
+                    "min": "Address cannot be less than 1 character",
+                    "max": "Address cannot be more than 30 characters",
+                    "trim": "Address cannot start or end with spaces"
+                },
+                "zipcode": {
+                    "required": "Enter your zip code",
+                    "invalid": "Please enter a valid zip code",
+                    "trim": "Zip code cannot start or end with spaces"
+                },
+                "city": {
+                    "required": "Enter your city"
+                },
+                "state": {
+                    "required": "Enter your state"
+                },
+                "country": {
+                    "required": "Enter your country"
+                }
             }
         }
     }

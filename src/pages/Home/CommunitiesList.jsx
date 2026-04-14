@@ -4,7 +4,7 @@ import Pagination from "../../components/Common/Pagination";
 import { useGetMyCommunitiesQuery } from "../../services/communityApi/communityApi";
 import Loader from "../../components/Loader/Loader";
 
-const CommunitiesList = ({ limit }) => {
+const CommunitiesList = ({ limit, t }) => {
   const [searchParams] = useSearchParams();
   const page = Number(searchParams.get("page")) || 1;
   const searchTerm = searchParams.get("search") || "";
@@ -19,7 +19,7 @@ const CommunitiesList = ({ limit }) => {
       refetchOnFocus: true,
       refetchOnMountOrArgChange: true,
       refetchOnReconnect: true,
-    }
+    },
   );
   const communities = communitiesRes?.data?.communities || [];
   const paginationData = communitiesRes?.data?.pagination || null;
@@ -42,11 +42,11 @@ const CommunitiesList = ({ limit }) => {
             <div className="w-full text-center min-h-[60vh] flex flex-col justify-center items-center px-4">
               {searchTerm ? (
                 <p className="mt-5 text-sm font-medium text-gray-500">
-                  No communities found for the search term "{searchTerm}".
+                  {t(`communitiesPage.noCommunitiesFound`)} "{searchTerm}".
                 </p>
               ) : (
                 <p className="mt-5 text-sm font-medium text-gray-500">
-                  You have not created any community yet.
+                  {t(`communitiesPage.notCreatedAnyCommunity`)}
                 </p>
               )}
             </div>

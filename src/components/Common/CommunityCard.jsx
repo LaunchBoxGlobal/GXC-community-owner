@@ -1,7 +1,8 @@
-import { HiOutlineDotsVertical } from "react-icons/hi";
+import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 
 const CommunityCard = ({ community }) => {
+  const { t } = useTranslation("communities");
   return (
     <Link to={`/communities/details/${community?.slug}?activeTab=products`}>
       <div className="w-full bg-white p-5 rounded-[20px] custom-shadow overflow-hidden">
@@ -24,7 +25,9 @@ const CommunityCard = ({ community }) => {
         </div>
 
         <div className="w-full flex items-center justify-between">
-          <p className="text-sm font-normal text-[#202020]">Members</p>
+          <p className="text-sm font-normal text-[#202020]">
+            {t(`communitiesPage.communityCard.members`)}
+          </p>
           <p className="text-sm font-semibold text-[#202020]">
             {community?.memberCount}
           </p>
@@ -33,7 +36,9 @@ const CommunityCard = ({ community }) => {
         <div className="w-full border my-3" />
 
         <div className="w-full flex items-center justify-between">
-          <p className="text-sm font-normal text-[#202020]">Total Products</p>
+          <p className="text-sm font-normal text-[#202020]">
+            {t(`communitiesPage.communityCard.totalProducts`)}
+          </p>
           <p className="text-sm font-semibold text-[#202020]">
             {community?.productCount > 0 ? community?.productCount : 0}
           </p>

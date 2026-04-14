@@ -13,6 +13,7 @@ import {
 import "react-country-state-city/dist/react-country-state-city.css";
 import { communitySchema } from "../../schema/communitySchema";
 import { useEditCommunityMutation } from "../../services/communityApi/communityApi";
+import { useTranslation } from "react-i18next";
 
 const EditCommunity = ({
   setShowEditCommunityPopup,
@@ -21,6 +22,8 @@ const EditCommunity = ({
   fetchCommunityDetails,
 }) => {
   const [editCommunity, { isLoading: loading }] = useEditCommunityMutation();
+
+  const { t } = useTranslation("communities");
 
   const formik = useFormik({
     enableReinitialize: true,
@@ -36,7 +39,7 @@ const EditCommunity = ({
       countryId: 233,
       stateId: "",
     },
-    validationSchema: communitySchema,
+    validationSchema: communitySchema(t),
     onSubmit: async (values, { resetForm }) => {
       try {
         const res = await editCommunity({
@@ -71,7 +74,7 @@ const EditCommunity = ({
         .then((data) => {
           const usa = data.data.find((c) => c.name === "United States");
           const selectedState = usa.states.find(
-            (s) => s.name.toLowerCase() === community.state.toLowerCase()
+            (s) => s.name.toLowerCase() === community.state.toLowerCase(),
           );
           if (selectedState) {
             formik.setFieldValue("stateId", selectedState?.id);
@@ -90,7 +93,7 @@ const EditCommunity = ({
         >
           <div className="w-full flex items-center justify-between gap-5">
             <h3 className="text-[20px] lg:text-[24px] font-semibold leading-none max-w-[80%]">
-              Edit Community
+              {t(`communitiesPage.buttons.editCommunity`)}
             </h3>
             <button
               type="button"
@@ -107,7 +110,7 @@ const EditCommunity = ({
             <TextField
               type="text"
               name="name"
-              placeholder="Full Name"
+              placeholder="Community Name"
               value={formik.values.name}
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
@@ -139,7 +142,7 @@ const EditCommunity = ({
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
                 value={formik.values.description}
-                placeholder="Describe yourself"
+                placeholder="Community description"
                 className={`w-full border h-[124px] px-[15px] py-[14px] rounded-[8px] bg-[var(--secondary-bg)] outline-none ${
                   formik.touched.description && formik.errors.description
                     ? "border-red-500"

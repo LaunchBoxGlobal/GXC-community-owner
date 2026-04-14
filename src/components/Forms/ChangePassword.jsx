@@ -11,10 +11,12 @@ import {
   changePasswordSchema,
 } from "../../schema/changePasswordSchema";
 import { useResetPasswordMutation } from "../../services/authApi/authApi";
+import { useTranslation } from "react-i18next";
 
 const ChangePassword = () => {
   const navigate = useNavigate();
   const [showPopup, setShowPopup] = useState(false);
+  const { t } = useTranslation("auth");
 
   const [resetPassword, { isLoading }] = useResetPasswordMutation();
 
@@ -28,13 +30,17 @@ const ChangePassword = () => {
       const userCode = Cookies.get("otp");
 
       if (!userEmail) {
-        enqueueSnackbar("Please verify your email.", { variant: "error" });
+        enqueueSnackbar(t(`changePasswordPage.form.messages.verifyEmail`), {
+          variant: "error",
+        });
         navigate("/forgot-password");
         return;
       }
 
       if (!userCode) {
-        enqueueSnackbar("Please verify your email.", { variant: "error" });
+        enqueueSnackbar(t(`changePasswordPage.form.messages.verifyEmail`), {
+          variant: "error",
+        });
         navigate("/forgot-password");
         return;
       }
@@ -55,8 +61,10 @@ const ChangePassword = () => {
         }
       } catch (error) {
         enqueueSnackbar(
-          error?.data?.message || error?.message || "Password reset failed",
-          { variant: "error" }
+          error?.data?.message ||
+            error?.message ||
+            t(`changePasswordPage.passwordResetFailed`),
+          { variant: "error" },
         );
       }
     },
@@ -79,37 +87,41 @@ const ChangePassword = () => {
       >
         <div className="w-full text-center">
           <h2 className="font-semibold text-[32px] leading-none mt-8 mb-3">
-            Set New Password
+            {t(`changePasswordPage.setNewPassword`)}
           </h2>
           <p className="text-[var(--secondary-color)]">
-            Enter new password to continue
+            {t(`changePasswordPage.enterNewPassword`)}
           </p>
         </div>
 
         <div className="w-full space-y-3 mt-4">
           <PasswordField
             name={`password`}
-            placeholder={`New Password`}
+            placeholder={t(`changePasswordPage.form.labels.newPassword`)}
             value={formik.values.password}
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
             error={formik.errors.password}
             touched={formik.touched.password}
-            label={"New Password"}
+            label={t(`changePasswordPage.form.labels.newPassword`)}
           />
           <PasswordField
             name={`confirmPassword`}
-            placeholder={`Confirm Password`}
+            placeholder={t(`changePasswordPage.form.labels.confirmPassword`)}
             value={formik.values.confirmPassword}
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
             error={formik.errors.confirmPassword}
             touched={formik.touched.confirmPassword}
-            label={"Confirm Password"}
+            label={t(`changePasswordPage.form.labels.confirmPassword`)}
           />
 
           <div className="pt-2">
-            <Button type={"submit"} title={`Save`} isLoading={isLoading} />
+            <Button
+              type={"submit"}
+              title={t(`buttons.save`)}
+              isLoading={isLoading}
+            />
           </div>
         </div>
       </form>

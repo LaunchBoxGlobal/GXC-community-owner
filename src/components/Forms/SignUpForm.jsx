@@ -124,7 +124,10 @@ const SignUpForm = () => {
           formik.setFieldError("urlSlug", undefined);
         }
       } catch {
-        formik.setFieldError("urlSlug", "Unable to validate slug");
+        formik.setFieldError(
+          "urlSlug",
+          t(`signupPage.form.errors.urlSlug.unable`),
+        );
       }
     }, 600);
 

@@ -9,10 +9,12 @@ import {
   useLazyCheckStripeStatusQuery,
 } from "../../services/userApi/userApi";
 import { useSelector } from "react-redux";
+import { useTranslation } from "react-i18next";
 
 const HomePage = () => {
   const user = useSelector((state) => state?.user?.user);
   const [showConfirmationModal, setShowConfirmationModal] = useState(false);
+  const { t } = useTranslation("dashboard");
 
   const [checkStripeStatus, { isLoading }] = useLazyCheckStripeStatusQuery();
 
@@ -58,19 +60,19 @@ const HomePage = () => {
     <main className="w-full p-5 rounded-[10px] bg-white custom-shadow min-h-[78.6vh]">
       {user && (
         <h1 className="text-base font-medium text-[var(--secondary-color)]">
-          Hello {user.fullName},
+          {t(`dashboardPage.hello`)} {user.fullName},
         </h1>
       )}
       <h2 className="text-[24px] lg:text-[32px] font-semibold leading-none">
-        Welcome to giveXchange
+        {t(`dashboardPage.welceomToGivexchange`)}
       </h2>
 
       {/* Stats */}
-      <HomePageStats />
+      <HomePageStats t={t} />
 
       <div className="w-full mt-5">
         <h2 className="text-[24px] lg:text-[32px] font-semibold">
-          Recent Communities
+          {t(`dashboardPage.recentCommunities`)}
         </h2>
         <CommunitiesList limit={12} />
       </div>
@@ -85,7 +87,8 @@ const HomePage = () => {
               }
             } catch (error) {
               enqueueSnackbar(
-                error?.data?.message || "Something went wrong. Try again.",
+                error?.data?.message ||
+                  t(`dashboardPage.errors.somethingWentWrong`),
                 { variant: "error" },
               );
             } finally {
@@ -95,6 +98,7 @@ const HomePage = () => {
           loading={createStripe}
           showConfirmationModal={showConfirmationModal}
           setShowConfirmationModal={setShowConfirmationModal}
+          t={t}
         />
       )}
     </main>
