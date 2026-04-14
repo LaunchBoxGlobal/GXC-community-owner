@@ -7,11 +7,13 @@ import { useDispatch } from "react-redux";
 import { removeUser } from "../../features/userSlice/userSlice";
 import { authApi } from "../../services/authApi/authApi";
 import { communityApi } from "../../services/communityApi/communityApi";
+import { useTranslation } from "react-i18next";
 
 const Sidebar = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const dispatch = useDispatch();
+  const { t } = useTranslation("common");
 
   const [logoutUser, { isLoading }] = useLogoutUserMutation();
 
@@ -59,7 +61,6 @@ const Sidebar = () => {
             <li className={`w-full text-black h-[49px]`} key={index}>
               <button
                 type="button"
-                // to={link?.page}
                 onClick={() => navigateToLink(link.page, link.title)}
                 className={`text-sm flex items-center gap-x-2.5 font-medium w-full h-[49px] px-4 rounded-[12px] outline-none ${
                   isActive
@@ -76,7 +77,7 @@ const Sidebar = () => {
                     isActive ? "invert brightness-0" : "brightness-0 opacity-70"
                   }`}
                 />
-                <span>{link?.title}</span>
+                <span>{t(`sidebar.${link?.title}`)}</span>
               </button>
             </li>
           );
@@ -88,7 +89,7 @@ const Sidebar = () => {
         onClick={handleLogoutUser}
         className={`absolute bottom-6 group text-sm font-medium w-full h-[49px] max-w-[145px] px-4 rounded-[12px] outline-none bg-[var(--button-bg)] text-white text-center`}
       >
-        {isLoading ? <Loader /> : "Logout"}
+        {isLoading ? <Loader /> : t("sidebar.Logout")}
       </button>
     </div>
   );

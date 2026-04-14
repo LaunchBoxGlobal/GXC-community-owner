@@ -17,7 +17,7 @@ const ReportDetailsModal = ({
   const [initialSlide, setInitialSlide] = useState(0);
 
   const { data, isLoading, isError, refetch } = useGetReportByIdQuery(
-    reportDetails?.id
+    reportDetails?.id,
   );
 
   const report = data?.data || null;

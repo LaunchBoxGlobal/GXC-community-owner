@@ -6,20 +6,18 @@ export const settingsChangePasswordInitialValues = {
   confirmPassword: "",
 };
 
-export const settingsChangePasswordSchema = Yup.object({
-  currentPassword: Yup.string().required("Enter your current password"),
-  password: Yup.string()
-    .min(8, "Password must be at least 8 characters")
-    .max(25, "Password cannot be more than 25 characters")
-    .matches(/[A-Z]/, "Password must contain at least one uppercase letter")
-    .matches(/[a-z]/, "Password must contain at least one lowercase letter")
-    .matches(/\d/, "Password must contain at least one number")
-    .matches(
-      /[@$!%*?&^#_.-]/,
-      "Password must contain at least one special character"
-    )
-    .required("Enter your new password"),
-  confirmPassword: Yup.string()
-    .oneOf([Yup.ref("password"), null], "Passwords do not match")
-    .required("Confirm password is required"),
-});
+export const settingsChangePasswordSchema = (t) =>
+  Yup.object({
+    currentPassword: Yup.string().required(t(`currentPassword`)),
+    password: Yup.string()
+      .min(8, t(`passwordMin`))
+      .max(25, t(`passwordMax`))
+      .matches(/[A-Z]/, t(`passwordUppercase`))
+      .matches(/[a-z]/, t(`passwordLowercase`))
+      .matches(/\d/, t(`passwordNumber`))
+      .matches(/[@$!%*?&^#_.-]/, t(`passwordSpecialChar`))
+      .required(t(`passwordRequired`)),
+    confirmPassword: Yup.string()
+      .oneOf([Yup.ref("password"), null], t(`passwordMatch`))
+      .required(t(`confirmPassRequired`)),
+  });

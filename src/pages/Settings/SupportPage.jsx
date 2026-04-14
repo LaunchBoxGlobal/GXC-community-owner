@@ -8,19 +8,21 @@ import {
   appBugReportValidationSchema,
 } from "../../schema/appBugReportSchema";
 import { useSubmitBugReportMutation } from "../../services/reportsApi/reportsApi";
+import { useTranslation } from "react-i18next";
 
 const ReportingPage = () => {
   const [submitBugReport, { isLoading: loading }] =
     useSubmitBugReportMutation();
+  const { t } = useTranslation("settings");
 
   useEffect(() => {
-    document.title = "Reporting - giveXchange";
+    document.title = `${t(`Reporting`)} - giveXchange`;
   }, []);
 
   const formik = useFormik({
     initialValues: appBugReportInitialValues,
 
-    validationSchema: appBugReportValidationSchema,
+    validationSchema: appBugReportValidationSchema(t),
 
     onSubmit: async (values, { resetForm }) => {
       try {
@@ -35,19 +37,12 @@ const ReportingPage = () => {
 
         if (response?.success) {
           enqueueSnackbar(
-            response?.message || "Bug report submitted successfully",
-            { variant: "success" }
+            response?.message || t("Bug report submitted successfully"),
+            { variant: "success" },
           );
           resetForm();
         }
-      } catch (error) {
-        // enqueueSnackbar(
-        //   error?.data?.message ||
-        //     error?.message ||
-        //     "Something went wrong on the server.",
-        //   { variant: "error" }
-        // );
-      }
+      } catch (error) {}
     },
   });
 
@@ -59,17 +54,17 @@ const ReportingPage = () => {
       >
         <div className="w-full">
           <h2 className="text-lg lg:text-[24px] font-semibold leading-none">
-            Make a Report
+            {t(`Make a Report`)}
           </h2>
         </div>
         <div className="w-full border my-5" />
         <div className="w-full bg-[var(--light-bg)] rounded-[30px] relative p-4">
           <div className="w-full">
             <h2 className="font-medium text-[var(--button-bg)]">
-              Having trouble using the app?
+              {t(`Having trouble using the app?`)}
             </h2>
             <p className="font-medium">
-              Send us a report and we'll look into it right away.
+              {t(`Send us a report and we'll look into it right away.`)}
             </p>
           </div>
 
@@ -99,7 +94,7 @@ const ReportingPage = () => {
 
         <div className="w-full flex justify-end mt-10">
           <div className="w-full max-w-[190px]">
-            <Button title={"Send"} type={"submit"} isLoading={loading} />
+            <Button title={t("Send")} type={"submit"} isLoading={loading} />
           </div>
         </div>
       </form>

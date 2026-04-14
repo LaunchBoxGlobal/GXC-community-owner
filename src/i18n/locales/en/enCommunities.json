@@ -123,20 +123,46 @@
     "editCommunity": {
         "form": {
             "labels": {
-                "comunityName": "Comunity Name",
+                "communityName": "Comunity Name",
                 "communitySlug": "Community Slug",
                 "communityDescription": "Community Description",
                 "country": "Country",
                 "state": "State",
                 "city": "City",
-                "zipcode": "Zip Code"
+                "zipcode": "Zip Code",
+                "location": "Community Address"
             },
             "placeholders": {
                 "communityName": "Community Name",
                 "urlSlug": "URL Slug",
-                "communityDescription": "Community description"
+                "communityDescription": "Community description",
+                "location": "Suite / Apartment / Street",
+                "zipcode": "Enter zip code",
+                "city": "Select City",
+                "Select State": "Select State",
+                "country": "Select Country"
             },
-            "errors": {}
+            "buttons": {
+                "save": "Save"
+            }
         }
-    }
+    },
+    "search": "Search",
+    "Community Created Successfully": "Community Created Successfully",
+    "Your community has been created successfully": "Your community has been created successfully",
+    "View Community Details": "View Community Details",
+    "Something went wrong while fetching images.": "Something went wrong while fetching images.",
+    "Member unbanned successfully!": "Member unbanned successfully!",
+    "Unblock": "Unblock",
+    "Remove Member": "Remove Member",
+    "Block Member": "Block Member",
+    "Go Back": "Go Back",
+    "Product Details": "Product Details",
+    "Description": "Description",
+    "Pickup Address": "Pickup Address",
+    "Community Pickup": "Community Pickup",
+    "Pickup / Community Pickup": "Pickup / Community Pickup",
+    "Address": "Address",
+    "City": "City",
+    "State": "State"
 }

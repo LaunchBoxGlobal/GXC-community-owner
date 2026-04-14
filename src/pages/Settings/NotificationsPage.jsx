@@ -1,20 +1,16 @@
 import { enqueueSnackbar } from "notistack";
 import { useState } from "react";
-import {
-  useGetMyProfileQuery,
-  useToggleNotificationSettingsMutation,
-} from "../../services/userApi/userApi";
+import { useToggleNotificationSettingsMutation } from "../../services/userApi/userApi";
 import { useDispatch, useSelector } from "react-redux";
 import { setUser } from "../../features/userSlice/userSlice";
+import { useTranslation } from "react-i18next";
 
 const NotificationsPage = () => {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user.user);
+  const { t } = useTranslation("settings");
 
   const [updatingField, setUpdatingField] = useState(null);
-  const { data, refetch } = useGetMyProfileQuery(undefined, {
-    refetchOnMountOrArgChange: true,
-  });
 
   const [toggleNotificationSettings, { isLoading }] =
     useToggleNotificationSettingsMutation();
@@ -31,7 +27,7 @@ const NotificationsPage = () => {
 
       dispatch(setUser(res.data.user));
 
-      enqueueSnackbar("Preferences updated successfully!", {
+      enqueueSnackbar(t("Preferences updated successfully!"), {
         variant: "success",
       });
     } catch (error) {
@@ -46,7 +42,9 @@ const NotificationsPage = () => {
 
   return (
     <div className="w-full relative pt-2">
-      <h2 className="text-[24px] font-semibold leading-none">Notifications</h2>
+      <h2 className="text-[24px] font-semibold leading-none">
+        {t(`Notifications`)}
+      </h2>
       <div className="w-full border my-5" />
 
       <div className="w-full space-y-4">
@@ -54,10 +52,10 @@ const NotificationsPage = () => {
         <div className="w-full bg-[#F5F5F5] rounded-[12px] p-5 flex items-center justify-between">
           <div className="w-full max-w-[80%]">
             <h3 className="font-semibold text-lg leading-none">
-              New Product Alerts
+              {t(`New Product Alerts`)}
             </h3>
             <p className="leading-none mt-2">
-              Receive instant alerts for newly listed products.
+              {t(`Receive instant alerts for newly listed products.`)}
             </p>
           </div>
 
@@ -85,11 +83,11 @@ const NotificationsPage = () => {
         <div className="w-full bg-[#F5F5F5] rounded-[12px] p-5 flex items-center justify-between">
           <div className="w-full max-w-[80%]">
             <h3 className="font-semibold text-lg leading-none">
-              Order Updates
+              {t(`Order Updates`)}
             </h3>
             <p className="leading-none mt-2">
-              Stay informed about order confirmations, shipments, and
-              deliveries.
+              {t(`Stay informed about order confirmations, shipments, and
+              deliveries.`)}
             </p>
           </div>
 

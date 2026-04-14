@@ -4,12 +4,14 @@ import Loader from "../../components/Loader/Loader";
 import SearchField from "../../components/Common/SearchField";
 import { useGetTransactionHistoryQuery } from "../../services/transactionHistoryApi/transactionHistoryApi";
 import TransactionsTable from "./TransactionsTable";
+import { useTranslation } from "react-i18next";
 
 const TransactionHistory = () => {
   const [searchParams] = useSearchParams();
   const LIMIT = 10;
   const page = Number(searchParams.get("page") || 1);
   const searchTerm = searchParams.get("search") || "";
+  const { t } = useTranslation("transactionHistory");
 
   const { data, error, isError, isLoading } = useGetTransactionHistoryQuery({
     page: searchTerm ? 1 : page,
@@ -24,7 +26,7 @@ const TransactionHistory = () => {
     return (
       <div className="w-full min-h-[80vh] relative flex items-center justify-center bg-white rounded-[12px] custom-shadow">
         <p className="text-gray-500 text-sm font-medium text-center">
-          {error?.data?.message || "Something went wrong."}
+          {error?.data?.message || t("Something went wrong.")}
         </p>
       </div>
     );
@@ -34,7 +36,7 @@ const TransactionHistory = () => {
     <div className="w-full bg-white min-h-screen relative mt-8">
       <div className="w-full flex items-center justify-between flex-wrap gap-5">
         <h3 className="text-[24px] lg:text-[32px] font-semibold leading-none">
-          Transaction History
+          {t(`Transaction History`)}
         </h3>
         <div className="w-full md:max-w-[252px]">
           <SearchField />
@@ -51,11 +53,12 @@ const TransactionHistory = () => {
             <div className="w-full min-h-[70vh] flex items-center justify-center px-4">
               {searchTerm ? (
                 <p className="mt-5 text-sm font-medium text-gray-500">
-                  No transactions found for the search term "{searchTerm}".
+                  {t(`No transactions found for the search term`)} "{searchTerm}
+                  ".
                 </p>
               ) : (
                 <p className="mt-5 text-sm font-medium text-gray-500">
-                  No transactions found.
+                  {t(`No transactions found.`)}
                 </p>
               )}
             </div>

@@ -1,4 +1,5 @@
 import React from "react";
+import { useTranslation } from "react-i18next";
 
 const Pagination = ({
   pagination,
@@ -6,6 +7,7 @@ const Pagination = ({
   handlePageChange,
   page,
 }) => {
+  const { t } = useTranslation("reports");
   return (
     <div className="w-full relative overflow-hidden">
       {pagination && pagination.totalPages > 1 && (
@@ -25,7 +27,7 @@ const Pagination = ({
                     : "text-gray-600 hover:bg-[var(--button-bg)] hover:text-white"
                 }`}
               >
-                Previous
+                {t(`Previous`)}
               </button>
             </li>
 
@@ -43,7 +45,7 @@ const Pagination = ({
                     : "text-gray-600 hover:bg-[var(--button-bg)] hover:text-white"
                 }`}
               >
-                Next
+                {t(`Next`)}
               </button>
             </li>
           </ul>

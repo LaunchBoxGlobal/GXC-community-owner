@@ -1,10 +1,12 @@
 import { useState } from "react";
 import { formatDate } from "../../utils/formatDate";
 import ReportDetailsModal from "./ReportDetailsModal";
+import { useTranslation } from "react-i18next";
 
 const ReportList = ({ reports, fetchReports }) => {
   const [showReportDetailsModal, setShowReportDetailsModal] = useState(false);
   const [reportDetails, setReportDetails] = useState(null);
+  const { t } = useTranslation("reportedProducts");
 
   const handleToggleReportDetailsModal = (report) => {
     setReportDetails(report);
@@ -19,28 +21,28 @@ const ReportList = ({ reports, fetchReports }) => {
               scope="col"
               className="px-6 py-4 text-sm font-medium rounded-l-[12px]"
             >
-              Report Product
+              {t(`Report Product`)}
             </th>
             <th scope="col" className="px-6 py-4 text-sm font-medium">
-              Reporter
+              {t(`Reporter`)}
             </th>
             <th scope="col" className="px-6 py-4 text-sm font-medium">
-              Seller
+              {t(`Seller`)}
             </th>
             <th scope="col" className="px-6 py-4 text-sm font-medium">
-              Reason
+              {t(`Reason`)}
             </th>
             <th scope="col" className="px-6 py-4 text-sm font-medium">
-              Status
+              {t(`Status`)}
             </th>
             <th scope="col" className="px-6 py-4 text-sm font-medium">
-              Date
+              {t(`Date`)}
             </th>
             <th
               scope="col"
               className="px-6 py-4 text-sm font-medium rounded-r-[12px]"
             >
-              Action
+              {t(`Action`)}
             </th>
           </tr>
         </thead>
@@ -108,10 +110,10 @@ const ReportList = ({ reports, fetchReports }) => {
                         report?.status === "pending"
                           ? "text-[#FF7700] bg-orange-100"
                           : report?.status === "resolved"
-                          ? "text-green-500 bg-green-100"
-                          : report?.status === "rejected"
-                          ? "text-red-500 bg-red-100"
-                          : "text-gray-500"
+                            ? "text-green-500 bg-green-100"
+                            : report?.status === "rejected"
+                              ? "text-red-500 bg-red-100"
+                              : "text-gray-500"
                       }`}
                     >
                       {report?.status.charAt(0).toUpperCase() +
@@ -125,7 +127,7 @@ const ReportList = ({ reports, fetchReports }) => {
                       onClick={() => handleToggleReportDetailsModal(report)}
                       className="underline text-[var(--button-bg)] font-medium text-sm"
                     >
-                      View Details
+                      {t(`View Details`)}
                     </button>
                   </td>
                 </tr>

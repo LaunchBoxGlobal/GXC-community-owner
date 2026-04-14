@@ -1,7 +1,9 @@
 import React from "react";
+import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 
 const TransactionsTable = ({ transactions }) => {
+  const { t } = useTranslation("transactionHistory");
   return (
     <div className="relative overflow-x-auto mt-5 bg-white min-h-screen custom-shadow rounded-[12px] p-3">
       <table className="w-full text-sm text-left rtl:text-right text-gray-500 border-separate border-spacing-0 rounded-[8px] overflow-hidden">
@@ -11,25 +13,25 @@ const TransactionsTable = ({ transactions }) => {
               scope="col"
               className="px-6 py-4 text-sm font-medium rounded-l-[8px]"
             >
-              Order ID
+              {t(`Order ID`)}
             </th>
             <th scope="col" className="px-6 py-4 text-sm font-medium">
-              Transaction ID
+              {t(`Transaction ID`)}
             </th>
             <th scope="col" className="px-6 py-4 text-sm font-medium">
-              Product
+              {t(`Product`)}
             </th>
             <th scope="col" className="px-6 py-4 text-sm font-medium">
-              Seller
+              {t(`Seller`)}
             </th>
             <th scope="col" className="px-6 py-4 text-sm font-medium">
-              Buyer
+              {t(`Buyer`)}
             </th>
             <th scope="col" className="px-6 py-4 text-sm font-medium">
-              Price
+              {t(`Price`)}
             </th>
             <th scope="col" className="px-6 py-4 text-sm font-medium">
-              Status
+              {t(`Status`)}
             </th>
           </tr>
         </thead>

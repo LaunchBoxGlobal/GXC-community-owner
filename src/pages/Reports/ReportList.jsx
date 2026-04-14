@@ -1,10 +1,12 @@
 import { useState } from "react";
 import { formatDate } from "../../utils/formatDate";
 import ReportDetailsModal from "./ReportDetailsModal";
+import { useTranslation } from "react-i18next";
 
 const ReportList = ({ reports, searchTerm }) => {
   const [showReportDetailsModal, setShowReportDetailsModal] = useState(false);
   const [reportDetails, setReportDetails] = useState(null);
+  const { t } = useTranslation("reports");
 
   const handleToggleReportDetailsModal = (report) => {
     setReportDetails(report);
@@ -16,11 +18,11 @@ const ReportList = ({ reports, searchTerm }) => {
         <div className="w-full min-h-[70vh] flex items-center justify-center px-4">
           {searchTerm ? (
             <p className="mt-5 text-sm font-medium text-gray-500">
-              No reports found for the search term "{searchTerm}".
+              {t(`No reports found for the search term`)} "{searchTerm}".
             </p>
           ) : (
             <p className="mt-5 text-sm font-medium text-gray-500">
-              No reports found.
+              {t(`No reports found.`)}
             </p>
           )}
         </div>
@@ -32,25 +34,25 @@ const ReportList = ({ reports, searchTerm }) => {
                 scope="col"
                 className="px-6 py-4 text-sm font-medium rounded-l-[12px]"
               >
-                Report ID
+                {t(`Report ID`)}
               </th>
               <th scope="col" className="px-6 py-4 text-sm font-medium">
-                Reporter
+                {t(`Reporter`)}
               </th>
               <th scope="col" className="px-6 py-4 text-sm font-medium">
-                Reported User
+                {t(`Reported User`)}
               </th>
               <th scope="col" className="px-6 py-4 text-sm font-medium">
-                Reason
+                {t(`Reason`)}
               </th>
               <th scope="col" className="px-6 py-4 text-sm font-medium">
-                Date
+                {t(`Date`)}
               </th>
               <th
                 scope="col"
                 className="px-6 py-4 text-sm font-medium rounded-r-[12px]"
               >
-                Action
+                {t(`Action`)}
               </th>
             </tr>
           </thead>
@@ -106,7 +108,7 @@ const ReportList = ({ reports, searchTerm }) => {
                         onClick={() => handleToggleReportDetailsModal(report)}
                         className="underline text-[var(--button-bg)] font-medium text-sm"
                       >
-                        View Details
+                        {t(`View Details`)}
                       </button>
                     </td>
                   </tr>

@@ -34,7 +34,7 @@ const CommunitiesList = ({ limit, t }) => {
         ) : communities.length ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 mt-7">
             {communities.map((c, i) => (
-              <CommunityCard community={c} key={i} />
+              <CommunityCard community={c} key={i} t={t} />
             ))}
           </div>
         ) : (

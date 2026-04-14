@@ -4,6 +4,7 @@ import { enqueueSnackbar } from "notistack";
 import ImageSlider from "./ImageSlider";
 import { IoClose } from "react-icons/io5";
 import { useBanUserMutation } from "../../services/userApi/userApi";
+import { useTranslation } from "react-i18next";
 
 const ReportDetailsModal = ({
   reportDetails,
@@ -11,11 +12,12 @@ const ReportDetailsModal = ({
   showReportDetailsModal,
 }) => {
   const [isBanned, setIsBanned] = useState(
-    reportDetails?.reportedUser?.isBanned || false
+    reportDetails?.reportedUser?.isBanned || false,
   );
   const [showImageModal, setShowImageModal] = useState(false);
   const [initialSlide, setInitialSlide] = useState(0);
 
+  const { t } = useTranslation("reports");
   const [banUser, { isLoading }] = useBanUserMutation();
 
   const toggleBanStatus = async () => {
@@ -30,11 +32,11 @@ const ReportDetailsModal = ({
         setIsBanned(!isBanned);
         enqueueSnackbar(
           isBanned
-            ? "User has been unbanned successfully."
-            : "User has been banned successfully.",
+            ? t("User has been unbanned successfully.")
+            : t("User has been banned successfully."),
           {
             variant: isBanned ? "info" : "success",
-          }
+          },
         );
       }
     } catch (error) {
@@ -49,7 +51,7 @@ const ReportDetailsModal = ({
       <div className="bg-white w-full max-w-[461px] p-5 rounded-[16px] relative">
         <div className="w-full flex items-center justify-between">
           <h2 className="text-[24px] font-semibold leading-none">
-            User Report
+            {t(`User Report`)}
           </h2>
           <button
             type="button"
@@ -67,7 +69,7 @@ const ReportDetailsModal = ({
 
         <div className="w-full mt-4 grid grid-cols-2">
           <div className="border-r-2">
-            <h4 className="font-medium">Reporter</h4>
+            <h4 className="font-medium">{t(`Reporter`)}</h4>
             <div className="inline-flex items-center gap-2 mt-1.5">
               <img
                 src={
@@ -85,7 +87,7 @@ const ReportDetailsModal = ({
             </div>
           </div>
           <div className="pl-4">
-            <h4 className="font-medium">Reported Date</h4>
+            <h4 className="font-medium">{t(`Reported Date`)}</h4>
             <p className="text-[17px] font-medium mt-1.5">
               {formatDate(reportDetails?.createdAt)}
             </p>
@@ -95,7 +97,7 @@ const ReportDetailsModal = ({
         <div className="w-full border mt-3" />
 
         <div className="w-full mt-4">
-          <h4 className="font-medium">Description</h4>
+          <h4 className="font-medium">{t(`Description`)}</h4>
           <p className="leading-[1.2]">{reportDetails?.description}</p>
         </div>
 
@@ -103,7 +105,7 @@ const ReportDetailsModal = ({
           <>
             <div className="w-full border mt-3" />
             <div className="w-full mt-4">
-              <h4 className="font-medium">Images</h4>
+              <h4 className="font-medium">{t(`Images`)}</h4>
               <div className="w-full mt-1.5 flex items-center gap-1.5">
                 {reportDetails?.images?.map((image, i) => {
                   return (
@@ -127,7 +129,7 @@ const ReportDetailsModal = ({
 
         <div className="w-full mt-4 flex items-center justify-between">
           <div>
-            <h4 className="font-medium">Reported User</h4>
+            <h4 className="font-medium">{t(`Reported User`)}</h4>
             <div className="inline-flex items-center gap-2 mt-1.5">
               <img
                 src={
@@ -148,7 +150,7 @@ const ReportDetailsModal = ({
           {/* Toggle Button */}
           <div className="flex flex-col items-end gap-1.5">
             <label htmlFor="disable" className="font-medium text-sm">
-              {isBanned ? "Banned" : "Disable"}
+              {isBanned ? t("Banned") : t("Disable")}
             </label>
             <label className="inline-flex items-center cursor-pointer">
               <input

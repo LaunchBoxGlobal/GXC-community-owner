@@ -6,17 +6,19 @@ import { useDispatch, useSelector } from "react-redux";
 import PageLoader from "../../components/Loader/PageLoader";
 import { setUser } from "../../features/userSlice/userSlice";
 import CommunitiesList from "../Home/CommunitiesList";
+import { useTranslation } from "react-i18next";
 
 const UserProfilePage = () => {
   const [showPopup, setShowPopup] = useState(false);
   const dispatch = useDispatch();
   const user = useSelector((state) => state?.user?.user);
+  const { t } = useTranslation("profile");
 
   const { data, error, isError, isLoading, refetch } = useGetMyProfileQuery(
     undefined,
     {
       refetchOnReconnect: true,
-    }
+    },
   );
 
   useEffect(() => {
@@ -30,7 +32,7 @@ const UserProfilePage = () => {
   };
 
   useEffect(() => {
-    document.title = "My Profile - giveXchange";
+    document.title = `${t(`My Profile`)} - giveXchange`;
   }, []);
 
   if (isLoading) return <PageLoader />;
@@ -39,7 +41,9 @@ const UserProfilePage = () => {
     <>
       <div className="w-full rounded-[10px] bg-[var(--page-bg)]">
         <div className="mb-10">
-          <h1 className="text-[32px] font-semibold leading-none">My Profile</h1>
+          <h1 className="text-[32px] font-semibold leading-none">
+            {t(`My Profile`)}
+          </h1>
 
           <div className="w-full bg-white p-5 flex items-center flex-col md:flex-row justify-between rounded-[15px] mt-5 gap-5 custom-shadow">
             <div className="w-full lg:max-w-[70%] flex items-start lg:items-center gap-3">
@@ -77,7 +81,7 @@ const UserProfilePage = () => {
                 onClick={() => togglePopup()}
                 className="button px-10"
               >
-                Edit Profile
+                {t(`Edit Profile`)}
               </button>
             </div>
           </div>
@@ -86,9 +90,9 @@ const UserProfilePage = () => {
         {/* <CommunitiesPage /> */}
         <div className="w-full rounded-[12px] bg-white custom-shadow pb-5 px-5">
           <h3 className="text-lg lg:text-[32px] font-semibold leading-none pt-5 px-4">
-            Communities
+            {t(`Communities`)}
           </h3>
-          <CommunitiesList />
+          <CommunitiesList t={t} />
         </div>
       </div>
 

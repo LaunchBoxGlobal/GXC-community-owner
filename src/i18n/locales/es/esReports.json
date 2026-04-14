@@ -1,0 +1,23 @@
+{
+    "Something went wrong.": "Algo salió mal.",
+    "Reports": "Informes",
+    "No reports found for the search term": "No se encontraron informes para el término de búsqueda",
+    "No reports found.": "No se encontraron informes.",
+    "Report ID": "ID del informe",
+    "Reporter": "Reportador",
+    "Reported User": "Usuario reportado",
+    "Reason": "Motivo",
+    "Date": "Fecha",
+    "Action": "Acción",
+    "View Details": "Ver detalles",
+    "User has been unbanned successfully.": "El usuario ha sido desbloqueado con éxito.",
+    "User has been banned successfully.": "El usuario ha sido bloqueado con éxito.",
+    "User Report": "Informe de usuario",
+    "Reported Date": "Fecha del reporte",
+    "Description": "Descripción",
+    "Images": "Imágenes",
+    "Banned": "Bloqueado",
+    "Disable": "Desactivar",
+    "Previous": "Anterior",
+    "Next": "Siguiente"
+}

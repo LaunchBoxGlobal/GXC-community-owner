@@ -2,23 +2,25 @@ import { useEffect } from "react";
 import { useParams } from "react-router-dom";
 import PageLoader from "../../components/Loader/PageLoader";
 import { useGetMemberPublicProfileQuery } from "../../services/userApi/userApi";
+import { useTranslation } from "react-i18next";
 
 const UserDetailsPage = () => {
   const params = useParams();
   const userId = params?.userId;
+  const { t } = useTranslation("transactionHistory");
 
   const { data, error, isError, isLoading } = useGetMemberPublicProfileQuery(
     { userId },
     {
       skip: !userId,
       refetchOnReconnect: true,
-    }
+    },
   );
 
   const member = data?.data?.user || null;
 
   useEffect(() => {
-    document.title = "Member Details - giveXchange";
+    document.title = `${t(`Member Details`)} - giveXchange`;
   }, []);
 
   if (isLoading) {
@@ -33,7 +35,7 @@ const UserDetailsPage = () => {
     return (
       <div className="w-full bg-white custom-shadow rounded-[10px] p-7 mt-5 min-h-[70vh] flex items-center justify-center">
         <p className="text-red-500 font-medium">
-          {error?.data?.message || "Something went wrong."}
+          {error?.data?.message || t("Something went wrong.")}
         </p>
       </div>
     );
@@ -42,14 +44,16 @@ const UserDetailsPage = () => {
   if (!member) {
     return (
       <div className="w-full bg-white custom-shadow rounded-[10px] p-7 mt-5 min-h-[70vh] flex items-center justify-center">
-        <p className="text-gray-500">No member details found.</p>
+        <p className="text-gray-500">{t(`No member details found.`)}</p>
       </div>
     );
   }
 
   return (
     <div className="w-full bg-white custom-shadow min-h-screen rounded-lg md:rounded-xl lg:rounded-[24px] p-7">
-      <h2 className="text-[24px] lg:text-[32px] font-semibold">User Details</h2>
+      <h2 className="text-[24px] lg:text-[32px] font-semibold">
+        {t(`User Details`)}
+      </h2>
       <div className="w-full bg-white custom-shadow rounded-lg md:rounded-xl lg:rounded-[24px] p-7 mt-5 flex items-center justify-between flex-wrap gap-6 lg:gap-0">
         <div className="w-full lg:w-[70%] flex items-start flex-col lg:flex-row lg:items-center justify-start gap-2">
           <div className="w-full flex items-center gap-2 lg:w-auto">

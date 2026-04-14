@@ -1,0 +1,91 @@
+{
+    "My Profile": "Mi perfil",
+    "Edit Profile": "Editar perfil",
+    "Communities": "Comunidades",
+    "Profile Updated Successfully!": "¡Perfil actualizado con éxito!",
+    "completeProfile": {
+        "completeProfile": "Completar detalles del perfil",
+        "completeDetails": "Por favor completa los detalles para acceder a todas las funciones",
+        "basicDetails": "Detalles básicos",
+        "buttons": {
+            "skip": "Saltar",
+            "save": "Guardar"
+        },
+        "form": {
+            "labels": {
+                "firstName": "Nombre",
+                "lastName": "Apellido",
+                "email": "Correo electrónico",
+                "phoneNumber": "Número de teléfono",
+                "country": "País",
+                "state": "Estado",
+                "city": "Ciudad",
+                "zipcode": "Código postal",
+                "location": "Suite / Apartamento / Calle"
+            },
+            "placeholders": {
+                "firstName": "Nombre",
+                "lastName": "Apellido",
+                "email": "Correo electrónico",
+                "phoneNumber": "+000 0000 00",
+                "state": "Seleccionar estado",
+                "city": "Seleccionar ciudad",
+                "zipcode": "Ingresar código postal",
+                "location": "Ingresar tu dirección",
+                "country": "Seleccionar país"
+            },
+            "imageUpload": {
+                "format": "Solo se permiten imágenes PNG, JPG y JPEG",
+                "uploadProfilePicture": "Subir foto de perfil"
+            },
+            "errors": {
+                "firstName": {
+                    "required": "El nombre es obligatorio",
+                    "min": "El nombre debe tener al menos 3 caracteres",
+                    "max": "El nombre debe tener como máximo 10 caracteres",
+                    "invalid": "El nombre solo debe contener letras y espacios",
+                    "trim": "El nombre no puede comenzar ni terminar con espacios"
+                },
+                "lastName": {
+                    "required": "El apellido es obligatorio",
+                    "min": "El apellido debe tener al menos 3 caracteres",
+                    "max": "El apellido debe tener como máximo 10 caracteres",
+                    "invalid": "El apellido solo debe contener letras y espacios",
+                    "trim": "El apellido no puede comenzar ni terminar con espacios"
+                },
+                "email": {
+                    "required": "El correo electrónico es obligatorio",
+                    "invalid": "Correo electrónico inválido",
+                    "trim": "El correo electrónico no puede comenzar ni terminar con espacios"
+                },
+                "phoneNumber": {
+                    "required": "El número de teléfono es obligatorio",
+                    "invalid": "Número de teléfono inválido"
+                },
+                "location": {
+                    "required": "Por favor ingresa tu ubicación",
+                    "min": "La dirección no puede tener menos de 1 carácter",
+                    "max": "La dirección no puede tener más de 30 caracteres",
+                    "trim": "La dirección no puede comenzar ni terminar con espacios"
+                },
+                "zipcode": {
+                    "required": "Ingresa tu código postal",
+                    "invalid": "Por favor ingresa un código postal válido",
+                    "trim": "El código postal no puede comenzar ni terminar con espacios"
+                },
+                "city": {
+                    "required": "Ingresa tu ciudad"
+                },
+                "state": {
+                    "required": "Ingresa tu estado"
+                },
+                "country": {
+                    "required": "Ingresa tu país"
+                }
+            }
+        }
+    },
+    "Only PNG, JPG, or JPEG images are allowed.": "Solo se permiten imágenes PNG, JPG o JPEG.",
+    "File size must be less than 2MB.": "El tamaño del archivo debe ser menor a 2MB.",
+    "Update Profile": "Actualizar perfil"
+}

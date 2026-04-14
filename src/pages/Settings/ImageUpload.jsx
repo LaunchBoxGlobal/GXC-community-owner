@@ -1,8 +1,11 @@
 import { enqueueSnackbar } from "notistack";
 import React from "react";
+import { useTranslation } from "react-i18next";
 import { IoClose } from "react-icons/io5";
 
 const ImageUpload = ({ images, setImages }) => {
+  const { t } = useTranslation("settings");
+
   const handleFileSelect = (e) => {
     let files = Array.from(e.target.files);
 
@@ -10,19 +13,19 @@ const ImageUpload = ({ images, setImages }) => {
 
     files.forEach((file) => {
       const isValidType = ["image/jpeg", "image/jpg", "image/png"].includes(
-        file.type
+        file.type,
       );
       const isValidSize = file.size <= 5 * 1024 * 1024;
 
       if (!isValidType) {
-        enqueueSnackbar("Only JPG, JPEG, PNG allowed", {
+        enqueueSnackbar(t("Only JPG, JPEG, PNG allowed"), {
           variant: "error",
         });
         return;
       }
 
       if (!isValidSize) {
-        enqueueSnackbar("Each image must be under 5MB", {
+        enqueueSnackbar(t("Each image must be under 5MB"), {
           variant: "error",
         });
         return;
@@ -32,7 +35,7 @@ const ImageUpload = ({ images, setImages }) => {
     });
 
     if (images.length + validFiles.length > 5) {
-      enqueueSnackbar("Maximum 5 images allowed", {
+      enqueueSnackbar(t("Maximum 5 images allowed"), {
         variant: "error",
       });
       return;
@@ -58,12 +61,14 @@ const ImageUpload = ({ images, setImages }) => {
             <img src="/picture-icon.png" alt="image icon" width={30} />
             <p className="mt-3 text-sm">
               <span className="text-[var(--button-bg)] font-medium">
-                Click to upload image
+                {t(`Click to upload image`)}
               </span>
             </p>
-            <p className="text-sm font-medium text-[#959393]">Or drag & drop</p>
+            <p className="text-sm font-medium text-[#959393]">
+              {t(`Or drag & drop`)}
+            </p>
             <p className="text-xs mt-1 text-gray-500">
-              Max 5 images • JPG, PNG • 5MB each
+              {t(`Max 5 images • JPG, PNG • 5MB each`)}
             </p>
           </div>
 

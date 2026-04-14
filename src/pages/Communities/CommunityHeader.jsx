@@ -108,7 +108,7 @@ const CommunityHeader = ({
                     !community?.community?.inviteLinkActive || isLoading
                   }
                   onClick={() => setShowCopyLinkPopup(true)}
-                  className="button px-3 md:px-5 max-w-[160px] disabled:cursor-not-allowed disabled:opacity-60"
+                  className="button px-3 md:px-5 max-w-[180px] disabled:cursor-not-allowed disabled:opacity-60"
                 >
                   {t(`communitiesPage.buttons.inviteMembers`)}
                 </button>

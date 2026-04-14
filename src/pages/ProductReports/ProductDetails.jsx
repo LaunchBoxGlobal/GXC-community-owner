@@ -1,13 +1,15 @@
 import { Link } from "react-router-dom";
 import { enqueueSnackbar } from "notistack";
 import { useDelistProductMutation } from "../../services/reportedProductsApi/reportedProductsApi";
+import { useTranslation } from "react-i18next";
 
 const ProductDetails = ({ report, refetch }) => {
   const [delistProduct] = useDelistProductMutation();
+  const { t } = useTranslation("reportedProducts");
 
   const handleDeleteProduct = async (productId) => {
     if (!productId) {
-      enqueueSnackbar("Product ID not found!", { variant: "error" });
+      enqueueSnackbar(t("Product ID not found!"), { variant: "error" });
       return;
     }
 
@@ -15,27 +17,19 @@ const ProductDetails = ({ report, refetch }) => {
       const res = await delistProduct(productId).unwrap();
 
       if (res?.success) {
-        enqueueSnackbar("Product deleted successfully!", {
+        enqueueSnackbar(t("Product deleted successfully!"), {
           variant: "success",
         });
 
         refetch();
       }
-    } catch (error) {
-      //   enqueueSnackbar(
-      //     error?.data?.message ||
-      //       error?.message ||
-      //       "Product delisted successfully!",
-      //     { variant: "success" }
-      //   );
-      console.log("delete product error >> ", error);
-    }
+    } catch (error) {}
   };
 
   return (
     <div className="w-full mt-4 flex items-center justify-between">
       <div>
-        <h4 className="font-medium">Product</h4>
+        <h4 className="font-medium">{t(`Product`)}</h4>
         <div className="inline-flex items-center gap-2 mt-1.5">
           <img
             src={report?.product?.image || "/profile-icon.png"}
@@ -56,7 +50,7 @@ const ProductDetails = ({ report, refetch }) => {
       {/* Toggle Button */}
       <div className="flex flex-col items-end gap-1.5">
         <label htmlFor="disable" className="font-medium text-sm">
-          {report?.product?.status === "delisted" ? "Delisted" : "Delist"}
+          {report?.product?.status === "delisted" ? t("Delisted") : t("Delist")}
         </label>
         <label className="inline-flex items-center cursor-pointer">
           <input

@@ -1,7 +1,10 @@
+import { useTranslation } from "react-i18next";
+
 const ReporterDetails = ({ report }) => {
+  const { t } = useTranslation("reportedProducts");
   return (
     <div className="w-full">
-      <h4 className="font-medium">Reporter</h4>
+      <h4 className="font-medium">{t(`Reporter`)}</h4>
       <div className="w-full mt-1 5 flex items-center justify-between">
         <div className="inline-flex items-center gap-2 w-full">
           <img

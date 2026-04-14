@@ -3,10 +3,12 @@ import {
   useRemoveSellerFromCommunityMutation,
   useToggleSellerStatusMutation,
 } from "../../services/reportedProductsApi/reportedProductsApi";
+import { useTranslation } from "react-i18next";
 
 const SellerDetails = ({ report, refetch }) => {
   const [toggleSellerStatus] = useToggleSellerStatusMutation();
   const [removeSeller] = useRemoveSellerFromCommunityMutation();
+  const { t } = useTranslation("reportedProducts");
 
   const toggleBanStatus = async () => {
     try {
@@ -28,7 +30,7 @@ const SellerDetails = ({ report, refetch }) => {
 
   const handleBlockUser = async () => {
     if (!report?.communityId || !report?.seller?.id) {
-      enqueueSnackbar("Invalid seller or community", { variant: "error" });
+      enqueueSnackbar(t("Invalid seller or community"), { variant: "error" });
       return;
     }
 
@@ -47,7 +49,7 @@ const SellerDetails = ({ report, refetch }) => {
 
   return (
     <div className="w-full">
-      <h4 className="font-medium">Seller</h4>
+      <h4 className="font-medium">{t(`Seller`)}</h4>
       <div className="flex items-center justify-between gap-5">
         <div className="inline-flex items-center gap-2 mt-1.5 w-full">
           <img
@@ -68,7 +70,7 @@ const SellerDetails = ({ report, refetch }) => {
             onClick={() => handleBlockUser()}
             className="bg-gray-200 font-medium text-sm px-4 py-2 rounded-lg disabled:cursor-not-allowed disabled:opacity-50"
           >
-            Remove
+            {t(`Remove`)}
           </button>
           <button
             type="button"
@@ -76,7 +78,7 @@ const SellerDetails = ({ report, refetch }) => {
             onClick={() => toggleBanStatus()}
             className="bg-[var(--primary-color)] font-medium text-white text-sm px-4 py-2 rounded-lg disabled:cursor-not-allowed disabled:opacity-50"
           >
-            {report?.seller?.status === "active" ? "Block" : "Unblock"}
+            {report?.seller?.status === "active" ? t("Block") : "Unblock"}
           </button>
         </div>
       </div>

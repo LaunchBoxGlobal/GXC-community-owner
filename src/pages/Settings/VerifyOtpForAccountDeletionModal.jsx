@@ -8,6 +8,7 @@ import {
 import { handleLogout } from "../../utils/handleLogout";
 import { useDispatch, useSelector } from "react-redux";
 import { removeUser } from "../../features/userSlice/userSlice";
+import { useTranslation } from "react-i18next";
 
 const VerifyOtpForAccountDeletionModal = ({ onClose, showModal }) => {
   const user = useSelector((state) => state?.user?.user);
@@ -16,6 +17,7 @@ const VerifyOtpForAccountDeletionModal = ({ onClose, showModal }) => {
   const [timer, setTimer] = useState(60);
   const inputsRef = useRef([]);
   const dispatch = useDispatch();
+  const { t } = useTranslation("settings");
 
   const [requestDeleteAccountOtp, { isLoading: resending }] =
     useRequestDeleteAccountOtpMutation();
@@ -82,7 +84,7 @@ const VerifyOtpForAccountDeletionModal = ({ onClose, showModal }) => {
       const res = await requestDeleteAccountOtp({}).unwrap();
 
       if (res?.success) {
-        enqueueSnackbar("OTP resent successfully", { variant: "success" });
+        enqueueSnackbar(t("OTP resent successfully"), { variant: "success" });
         setTimer(60);
       }
     } catch (error) {
@@ -106,8 +108,8 @@ const VerifyOtpForAccountDeletionModal = ({ onClose, showModal }) => {
 
       if (res?.success) {
         enqueueSnackbar(
-          res?.message || "Your account has been deleted successfully.",
-          { variant: "success" }
+          res?.message || t("Your account has been deleted successfully."),
+          { variant: "success" },
         );
         handleLogout();
         dispatch(removeUser());
@@ -125,7 +127,7 @@ const VerifyOtpForAccountDeletionModal = ({ onClose, showModal }) => {
         <div className="bg-white w-full max-w-[471px] rounded-[32px] p-6 relative">
           <div className="w-full flex items-center justify-between">
             <h2 className="text-[24px] font-semibold leading-none">
-              Delete Account
+              {t(`Delete Account`)}
             </h2>
             <button type="button" onClick={onClose}>
               <img
@@ -138,7 +140,7 @@ const VerifyOtpForAccountDeletionModal = ({ onClose, showModal }) => {
           </div>
 
           <p className="mt-2">
-            The code was sent to{" "}
+            {t(`The code was sent to`)}{" "}
             <span className="font-medium">{user?.email}</span>
           </p>
 
@@ -162,10 +164,10 @@ const VerifyOtpForAccountDeletionModal = ({ onClose, showModal }) => {
           </div>
 
           <p className="mt-3 mb-6 text-start text-sm">
-            Didn’t receive code?{" "}
+            {t(`Didn’t receive code?`)}{" "}
             {timer > 0 ? (
               <span className="font-medium text-gray-500">
-                Resend code in {timer}s
+                {t(`Resend code in`)} {timer}s
               </span>
             ) : (
               <button
@@ -174,7 +176,7 @@ const VerifyOtpForAccountDeletionModal = ({ onClose, showModal }) => {
                 onClick={() => handleResendOtp()}
                 className="font-medium text-[var(--button-bg)] hover:underline disabled:opacity-50"
               >
-                {resending ? "Resending..." : "Resend code"}
+                {resending ? t(`"Resending..."`) : t("Resend code")}
               </button>
             )}
           </p>
@@ -185,7 +187,7 @@ const VerifyOtpForAccountDeletionModal = ({ onClose, showModal }) => {
             onClick={handleVerify}
             disabled={deletingAccount}
           >
-            {deletingAccount ? "Verifying..." : "Verify"}
+            {deletingAccount ? t("Verifying...") : t("Verify")}
           </button>
         </div>
       </div>

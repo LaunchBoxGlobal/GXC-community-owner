@@ -20,6 +20,7 @@ import {
   useUploadProfilePictureMutation,
 } from "../../services/userApi/userApi";
 import { useSelector } from "react-redux";
+import { useTranslation } from "react-i18next";
 
 const EditProfile = ({ togglePopup, showPopup, fetchUserProfile }) => {
   const [preview, setPreview] = useState(null);
@@ -27,6 +28,7 @@ const EditProfile = ({ togglePopup, showPopup, fetchUserProfile }) => {
   const [loading, setLoading] = useState(false);
   const [fileError, setFileError] = useState(null);
   const user = useSelector((state) => state?.user?.user);
+  const { t } = useTranslation("profile");
 
   const [updateProfile, { isLoading }] = useCompleteUserProfileMutation();
   const [uploadProfilePicture, { isLoading: isUploadingProfile }] =
@@ -54,7 +56,7 @@ const EditProfile = ({ togglePopup, showPopup, fetchUserProfile }) => {
       zipcode: user?.zipcode || "",
       location: user?.address || "",
     },
-    validationSchema: completeProfileValidationSchema,
+    validationSchema: completeProfileValidationSchema(t),
     onSubmit: async (values, { resetForm }) => {
       try {
         setLoading(true);
@@ -82,7 +84,7 @@ const EditProfile = ({ togglePopup, showPopup, fetchUserProfile }) => {
           resetForm();
           togglePopup();
           fetchUserProfile();
-          enqueueSnackbar("Profile Updated Successfully!", {
+          enqueueSnackbar(t("Profile Updated Successfully!"), {
             variant: "success",
           });
         }
@@ -99,10 +101,9 @@ const EditProfile = ({ togglePopup, showPopup, fetchUserProfile }) => {
     const file = e.target.files[0];
     if (!file) return;
 
-    // ✅ Validate file type
     const validTypes = ["image/png", "image/jpeg", "image/jpg"];
     if (!validTypes.includes(file.type)) {
-      setFileError("Only PNG, JPG, or JPEG images are allowed.");
+      setFileError(t("Only PNG, JPG, or JPEG images are allowed."));
       e.target.value = ""; // reset input
       setPreview(null);
       formik.setFieldValue("profileImage", null);
@@ -112,7 +113,7 @@ const EditProfile = ({ togglePopup, showPopup, fetchUserProfile }) => {
     // ✅ Validate file size (2MB)
     const maxSize = 2 * 1024 * 1024;
     if (file.size > maxSize) {
-      setFileError("File size must be less than 2MB.");
+      setFileError(t("File size must be less than 2MB."));
       e.target.value = "";
       setPreview(null);
       formik.setFieldValue("profileImage", null);
@@ -134,7 +135,7 @@ const EditProfile = ({ togglePopup, showPopup, fetchUserProfile }) => {
         >
           <div className="overflow-y-auto max-h-[80vh] pr-5">
             <div className="w-full flex items-center justify-between gap-5">
-              <h2 className="text-[24px] font-semibold">Edit Profile</h2>
+              <h2 className="text-[24px] font-semibold">{t(`Edit Profile`)}</h2>
               <button
                 type="button"
                 className="text-2xl"
@@ -181,7 +182,9 @@ const EditProfile = ({ togglePopup, showPopup, fetchUserProfile }) => {
                           : "text-[var(--primary-blue)] hover:opacity-80"
                       }`}
                     >
-                      Upload Profile Picture
+                      {t(
+                        `completeProfile.form.imageUpload.uploadProfilePicture`,
+                      )}
                     </label>
                     {fileError && (
                       <p className="text-red-500 text-xs font-medium mt-1">
@@ -206,6 +209,7 @@ const EditProfile = ({ togglePopup, showPopup, fetchUserProfile }) => {
                   onBlur={formik.handleBlur}
                   error={formik.errors.firstName}
                   touched={formik.touched.firstName}
+                  label={t(`completeProfile.form.labels.firstName`)}
                 />
                 <TextField
                   type="text"
@@ -216,18 +220,20 @@ const EditProfile = ({ togglePopup, showPopup, fetchUserProfile }) => {
                   onBlur={formik.handleBlur}
                   error={formik.errors.lastName}
                   touched={formik.touched.lastName}
+                  label={t("completeProfile.form.labels.lastName")}
                 />
               </div>
               <TextField
                 type="text"
                 name="email"
                 disabled={true}
-                placeholder="Email Address"
+                placeholder={t("completeProfile.form.labels.email")}
                 value={formik.values.email}
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
                 error={formik.errors.email}
                 touched={formik.touched.email}
+                label={t("completeProfile.form.labels.email")}
               />
               <PhoneNumberField
                 type="text"
@@ -238,11 +244,13 @@ const EditProfile = ({ togglePopup, showPopup, fetchUserProfile }) => {
                 onBlur={formik.handleBlur}
                 error={formik.errors.phoneNumber}
                 touched={formik.touched.phoneNumber}
-                label={null}
+                label={t("completeProfile.form.labels.phoneNumber")}
               />
               <div className="w-full grid grid-cols-2 gap-3">
                 <div className="w-full flex flex-col gap-1">
-                  <label className="text-sm font-medium">Country</label>
+                  <label className="text-sm font-medium">
+                    {t("completeProfile.form.labels.country")}
+                  </label>
                   <div className="w-full pointer-events-none">
                     <CountrySelect
                       defaultValue={{
@@ -258,7 +266,9 @@ const EditProfile = ({ togglePopup, showPopup, fetchUserProfile }) => {
                           ? "border-red-500"
                           : "border-gray-200"
                       } disabled:cursor-not-allowed`}
-                      placeHolder="Select Country"
+                      placeHolder={t(
+                        "completeProfile.form.placeholders.country",
+                      )}
                       onChange={(val) => {
                         formik.setFieldValue("country", val.name);
                         formik.setFieldValue("countryId", val.id);
@@ -274,7 +284,9 @@ const EditProfile = ({ togglePopup, showPopup, fetchUserProfile }) => {
                   )}
                 </div>
                 <div className="w-full flex flex-col gap-1">
-                  <label className="text-sm font-medium">State</label>
+                  <label className="text-sm font-medium">
+                    {t("completeProfile.form.labels.state")}
+                  </label>
                   <StateSelect
                     countryid={formik.values.countryId || undefined}
                     containerClassName="w-full"
@@ -283,7 +295,7 @@ const EditProfile = ({ togglePopup, showPopup, fetchUserProfile }) => {
                         ? "border-red-500"
                         : "border-gray-200"
                     }`}
-                    placeHolder="Select State"
+                    placeHolder={t("completeProfile.form.placeholders.state")}
                     onChange={(val) => {
                       formik.setFieldValue("state", val.name);
                       formik.setFieldValue("stateId", val.id);
@@ -301,7 +313,9 @@ const EditProfile = ({ togglePopup, showPopup, fetchUserProfile }) => {
                 </div>
               </div>
               <div className="w-full flex flex-col gap-1 mt-3">
-                <label className="text-sm font-medium">City</label>
+                <label className="text-sm font-medium">
+                  {t("completeProfile.form.labels.city")}
+                </label>
                 <CitySelect
                   countryid={formik.values.countryId || undefined}
                   stateid={formik.values.stateId || undefined}
@@ -311,7 +325,7 @@ const EditProfile = ({ togglePopup, showPopup, fetchUserProfile }) => {
                       ? "border-red-500"
                       : "border-gray-200"
                   }`}
-                  placeHolder="Select City"
+                  placeHolder={t("completeProfile.form.placeholders.city")}
                   onChange={(val) => formik.setFieldValue("city", val.name)}
                   defaultValue={
                     formik.values.city ? { name: formik.values.city } : null
@@ -325,24 +339,24 @@ const EditProfile = ({ togglePopup, showPopup, fetchUserProfile }) => {
               <TextField
                 type="text"
                 name="zipcode"
-                placeholder="Enter zip code"
+                placeholder={t("completeProfile.form.placeholders.zipcode")}
                 value={formik.values.zipcode}
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
                 error={formik.errors.zipcode}
                 touched={formik.touched.zipcode}
-                label="Zip Code"
+                label={t("completeProfile.form.labels.zipcode")}
               />
               <TextField
                 type="text"
                 name="location"
-                placeholder="Enter address"
+                placeholder={t("completeProfile.form.placeholders.location")}
                 value={formik.values.location}
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
                 error={formik.errors.location}
                 touched={formik.touched.location}
-                label="Suite / Apartment / Street"
+                label={t("completeProfile.form.labels.location")}
               />
 
               <div className="w-full">
@@ -351,7 +365,7 @@ const EditProfile = ({ togglePopup, showPopup, fetchUserProfile }) => {
                   disabled={loading || isUploadingProfile}
                   className="button"
                 >
-                  {isLoading ? <Loader /> : "Update Profile"}
+                  {isLoading ? <Loader /> : t("Update Profile")}
                 </button>
               </div>
             </div>

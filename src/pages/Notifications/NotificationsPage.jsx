@@ -4,11 +4,13 @@ import { formatDateTime } from "../../utils/formateDateTime";
 import { useGetNotificationsQuery } from "../../services/notificationsApi/notificationsApi";
 import { useSearchParams } from "react-router-dom";
 import Pagination from "../../components/Common/Pagination";
+import { useTranslation } from "react-i18next";
 
 const NotificationsPage = () => {
   const LIMIT = 15;
   const [searchParams] = useSearchParams();
   const page = Number(searchParams.get("page")) || 1;
+  const { t } = useTranslation("notifications");
 
   const { data, error, isError, isLoading } = useGetNotificationsQuery(
     {
@@ -18,14 +20,14 @@ const NotificationsPage = () => {
     {
       refetchOnFocus: true,
       refetchOnReconnect: true,
-    }
+    },
   );
 
   const notifications = data?.data?.notifications || [];
   const pagination = data?.data?.pagination || null;
 
   useEffect(() => {
-    document.title = "Notifications - giveXchange";
+    document.title = `${t(`Notifications`)} - giveXchange`;
   }, []);
 
   if (error || isError) {
@@ -41,7 +43,7 @@ const NotificationsPage = () => {
   return (
     <div className="w-full relative bg-white p-5 lg:p-7 rounded-[12px] min-h-[80vh] lg:rounded-[24px] custom-shadow">
       <div className="w-full relative flex items-center justify-between gap-5">
-        <h2 className="page-heading">Notifications</h2>
+        <h2 className="page-heading">{t(`Notifications`)}</h2>
       </div>
 
       <div className="w-full border mt-4 mb-2" />
@@ -53,7 +55,7 @@ const NotificationsPage = () => {
       ) : notifications.length === 0 ? (
         <div className="w-full min-h-[70vh] flex items-center justify-center px-4">
           <p className="mt-5 text-sm font-medium text-gray-500">
-            No notifications found.
+            {t(`No notifications found.`)}
           </p>
         </div>
       ) : (

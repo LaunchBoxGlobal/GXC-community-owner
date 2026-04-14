@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { IoClose } from "react-icons/io5";
 import { LuSearch } from "react-icons/lu";
 import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
@@ -8,7 +9,7 @@ const SearchField = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const [value, setValue] = useState(searchParams.get("search") || "");
-
+  const { t } = useTranslation("communities");
   useEffect(() => {
     setValue(searchParams.get("search") || "");
   }, [searchParams]);
@@ -31,7 +32,7 @@ const SearchField = () => {
         <LuSearch className="text-xl text-[var(--secondary-color)]" />
         <input
           type="text"
-          placeholder="Search"
+          placeholder={t(`search`)}
           value={value}
           onChange={(e) => setValue(e.target.value)}
           className="w-full outline-none border-none"

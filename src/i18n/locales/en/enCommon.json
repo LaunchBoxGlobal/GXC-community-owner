@@ -1,0 +1,12 @@
+{
+    "sidebar": {
+        "Logout": "Logout",
+        "Dashboard": "Dashboard",
+        "Communities": "Communities",
+        "Reports": "Reports",
+        "Transaction History": "Transaction History",
+        "Reported Products": "Reported Products",
+        "Notifications": "Notifications",
+        "Settings": "Settings"
+    }
+}

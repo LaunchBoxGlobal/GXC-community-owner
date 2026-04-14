@@ -4,12 +4,14 @@ import Loader from "../../components/Loader/Loader";
 import { useRequestDeleteAccountOtpMutation } from "../../services/userApi/userApi";
 import { useSelector } from "react-redux";
 import { extractEmailDomain } from "../../utils/extractEmailDomain";
+import { useTranslation } from "react-i18next";
 
 const DeleteAccountPage = () => {
   const [showModal, setShowModal] = useState(false);
   const [requestDeleteAccountOtp, { isLoading }] =
     useRequestDeleteAccountOtpMutation();
   const user = useSelector((state) => state.user.user);
+  const { t } = useTranslation("settings");
 
   const handleCloseModal = () => {
     setShowModal((prev) => !prev);
@@ -29,24 +31,26 @@ const DeleteAccountPage = () => {
 
   return (
     <div className="w-full relative pt-2">
-      <h2 className="text-[24px] font-semibold leading-none">Delete Account</h2>
+      <h2 className="text-[24px] font-semibold leading-none">
+        {t(`Delete Account`)}
+      </h2>
       <div className="w-full border my-5" />
 
       <div className="w-full flex items-center justify-between flex-wrap gap-5">
         <div className="w-full max-w-[80%]">
           <h3 className="font-medium text-lg leading-[1.3]">
-            We will send 6 digits code to{" "}
+            {t(`We will send 6 digits code to`)}{" "}
             {user?.email && (
               <span className="font-semibold">
                 {`${user?.email?.slice(0, 2)}********${extractEmailDomain(
-                  user?.email
+                  user?.email,
                 )}`}{" "}
               </span>
             )}
-            to confirm deletion.
+            {t(`to confirm deletion.`)}
           </h3>
           <p className="leading-none mt-2 lg:mt-0">
-            Your data will be removed from our database permanently.
+            {t(`Your data will be removed from our database permanently.`)}
           </p>
         </div>
         <div className="">
@@ -56,7 +60,7 @@ const DeleteAccountPage = () => {
             onClick={() => handleSendOtp()}
             className="button min-w-[150px]"
           >
-            {isLoading ? <Loader /> : "Send"}
+            {isLoading ? <Loader /> : t("Send")}
           </button>
         </div>
       </div>

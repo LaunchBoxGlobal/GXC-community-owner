@@ -4,6 +4,7 @@ import { enqueueSnackbar } from "notistack";
 import Loader from "../../components/Loader/Loader";
 import { HiOutlineDotsVertical } from "react-icons/hi";
 import { useBanUserMutation } from "../../services/userApi/userApi";
+import { useTranslation } from "react-i18next";
 
 const MemberCard = ({
   member,
@@ -18,6 +19,7 @@ const MemberCard = ({
   getMembers,
 }) => {
   const dropdownRef = useRef(null);
+  const { t } = useTranslation("communities");
 
   const [banUser, { isLoading }] = useBanUserMutation();
 
@@ -30,9 +32,12 @@ const MemberCard = ({
       }).unwrap();
 
       if (res?.success) {
-        enqueueSnackbar(res?.data?.message || "Member unbanned successfully!", {
-          variant: "success",
-        });
+        enqueueSnackbar(
+          res?.data?.message || t("Member unbanned successfully!"),
+          {
+            variant: "success",
+          },
+        );
         getMembers();
       }
     } catch (error) {
@@ -97,7 +102,7 @@ const MemberCard = ({
             onClick={() => handleUnblockUser()}
             className="w-[97px] h-[37px] bg-[#E6E6E6] rounded-[12px] text-sm"
           >
-            {isLoading ? <Loader /> : "Unblock"}
+            {isLoading ? <Loader /> : t("Unblock")}
           </button>
         ) : (
           <button
@@ -127,7 +132,7 @@ const MemberCard = ({
                 alt="remove-member-button-icon"
                 className="w-[24px] h-[24px]"
               />
-              <span className="text-lg font-medium">Remove Member</span>
+              <span className="text-lg font-medium">{t(`Remove Member`)}</span>
             </button>
 
             <div className="w-full border" />
@@ -145,7 +150,7 @@ const MemberCard = ({
                 alt="block-member-icon"
                 className="w-[24px] h-[24px]"
               />
-              <span className="text-lg font-medium">Block Member</span>
+              <span className="text-lg font-medium">{t(`Block Member`)}</span>
             </button>
           </div>
         )}

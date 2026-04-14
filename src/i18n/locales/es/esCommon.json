@@ -1,0 +1,12 @@
+{
+    "sidebar": {
+        "Logout": "Cerrar sesión",
+        "Dashboard": "Panel",
+        "Communities": "Comunidades",
+        "Reports": "Informes",
+        "Transaction History": "Historial de transacciones",
+        "Reported Products": "Productos reportados",
+        "Notifications": "Notificaciones",
+        "Settings": "Configuración"
+    }
+}

@@ -110,31 +110,31 @@ const EditCommunity = ({
             <TextField
               type="text"
               name="name"
-              placeholder="Community Name"
+              placeholder={t(`editCommunity.form.placeholders.communityName`)}
               value={formik.values.name}
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
               error={formik.errors.name}
               touched={formik.touched.name}
-              label={"Comunity Name"}
+              label={t(`editCommunity.form.labels.communityName`)}
             />
 
             <TextField
               type="text"
               name="urlSlug"
-              placeholder="URL Slug"
+              placeholder={t(`editCommunity.form.labels.urlSlug`)}
               value={formik.values.urlSlug}
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
               disabled={true}
               error={formik.errors.urlSlug}
               touched={formik.touched.urlSlug}
-              label={"Community Slug"}
+              label={t(`editCommunity.form.labels.communitySlug`)}
             />
 
             <div className="">
               <label htmlFor="description" className="text-sm font-medium">
-                Community Description
+                {t(`editCommunity.form.labels.communityDescription`)}
               </label>
               <textarea
                 name="description"
@@ -142,7 +142,9 @@ const EditCommunity = ({
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
                 value={formik.values.description}
-                placeholder="Community description"
+                placeholder={t(
+                  `editCommunity.form.placeholders.communityDescription`,
+                )}
                 className={`w-full border h-[124px] px-[15px] py-[14px] rounded-[8px] bg-[var(--secondary-bg)] outline-none ${
                   formik.touched.description && formik.errors.description
                     ? "border-red-500"
@@ -160,6 +162,9 @@ const EditCommunity = ({
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-3">
               {/* Country */}
               <div className="w-full flex flex-col gap-1">
+                <label htmlFor="description" className="text-sm font-medium">
+                  {t(`editCommunity.form.labels.country`)}
+                </label>
                 <CountrySelect
                   defaultValue={{
                     id: 233,
@@ -176,7 +181,7 @@ const EditCommunity = ({
                     : "border-gray-200"
                 }
               `}
-                  placeHolder="Select Country"
+                  placeHolder={t(`editCommunity.form.placeholders.country`)}
                   onChange={(val) => {
                     formik.setFieldValue("country", val.name);
                     formik.setFieldValue("countryId", val.id);
@@ -194,6 +199,9 @@ const EditCommunity = ({
 
               {/* State */}
               <div className="w-full flex flex-col gap-1">
+                <label htmlFor="description" className="text-sm font-medium">
+                  {t(`editCommunity.form.labels.state`)}
+                </label>
                 <StateSelect
                   countryid={formik.values.countryId || undefined}
                   containerClassName="w-full"
@@ -202,7 +210,7 @@ const EditCommunity = ({
                       ? "border-red-500"
                       : "border-gray-200"
                   }`}
-                  placeHolder="Select State"
+                  placeHolder={t(`editCommunity.form.placeholders.state`)}
                   onChange={(val) => {
                     formik.setFieldValue("state", val.name);
                     formik.setFieldValue("stateId", val.id);
@@ -221,6 +229,9 @@ const EditCommunity = ({
             {/* City & Zip */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 my-3.5">
               <div className="w-full flex flex-col gap-1">
+                <label htmlFor="description" className="text-sm font-medium">
+                  {t(`editCommunity.form.labels.city`)}
+                </label>
                 <CitySelect
                   countryid={formik.values.countryId || undefined}
                   stateid={formik.values.stateId || undefined}
@@ -230,7 +241,7 @@ const EditCommunity = ({
                       ? "border-red-500"
                       : "border-gray-200"
                   }`}
-                  placeHolder="Select City"
+                  placeHolder={t(`editCommunity.form.placeholders.city`)}
                   onChange={(val) => formik.setFieldValue("city", val.name)}
                   defaultValue={
                     formik.values.city ? { name: formik.values.city } : null
@@ -244,13 +255,13 @@ const EditCommunity = ({
               <TextField
                 type="text"
                 name="zipcode"
-                placeholder="Enter zip code"
+                placeholder={t(`editCommunity.form.placeholders.zipcode`)}
                 value={formik.values.zipcode}
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
                 error={formik.errors.zipcode}
                 touched={formik.touched.zipcode}
-                label=""
+                label={t(`editCommunity.form.labels.zipcode`)}
               />
             </div>
 
@@ -258,17 +269,21 @@ const EditCommunity = ({
             <TextField
               type="text"
               name="location"
-              placeholder="Suite / Apartment / Street"
+              placeholder={t(`editCommunity.form.placeholders.location`)}
               value={formik.values.location}
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
               error={formik.errors.location}
               touched={formik.touched.location}
-              label=""
+              label={t(`editCommunity.form.labels.location`)}
             />
 
             <div className="w-full">
-              <Button type={`submit`} isLoading={loading} title={"Save"} />
+              <Button
+                type={`submit`}
+                isLoading={loading}
+                title={t(`editCommunity.form.buttons.save`)}
+              />
             </div>
           </div>
         </form>

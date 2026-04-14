@@ -96,7 +96,7 @@ const CommunitiesPage = () => {
         <div className="w-full lg:max-w-1/2 flex flex-wrap mt-5 lg:mt-0 justify-end gap-4">
           {/* Search input */}
           <div className="w-full md:max-w-[252px]">
-            <SearchField t={t} />
+            <SearchField />
           </div>
 
           {/* Add new community button */}

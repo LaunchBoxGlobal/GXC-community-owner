@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 
 const Pagination = ({ pagination, page }) => {
@@ -34,6 +35,8 @@ const Pagination = ({ pagination, page }) => {
 
   const visiblePages = getVisiblePages();
 
+  const { t } = useTranslation("transactionHistory");
+
   return (
     <div className="w-full relative overflow-hidden">
       {pagination && pagination.totalPages > 1 && (
@@ -53,7 +56,7 @@ const Pagination = ({ pagination, page }) => {
                     : "text-gray-600 hover:bg-[var(--button-bg)] hover:text-white"
                 }`}
               >
-                Previous
+                {t(`Previous`)}
               </button>
             </li>
 
@@ -85,7 +88,7 @@ const Pagination = ({ pagination, page }) => {
                     : "text-gray-600 hover:bg-[var(--button-bg)] hover:text-white"
                 }`}
               >
-                Next
+                {t(`Next`)}
               </button>
             </li>
           </ul>

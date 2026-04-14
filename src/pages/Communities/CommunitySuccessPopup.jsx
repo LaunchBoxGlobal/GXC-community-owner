@@ -1,5 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
+import { useTranslation } from "react-i18next";
 
 const CommunitySuccessPopup = ({
   showPopup,
@@ -7,6 +8,7 @@ const CommunitySuccessPopup = ({
   setShowSuccessPopup,
 }) => {
   const navigate = useNavigate();
+  const { t } = useTranslation("communities");
 
   const handleNavigate = () => {
     const slug = Cookies.get("slug");
@@ -39,18 +41,17 @@ const CommunitySuccessPopup = ({
               />
             </div>
             <h3 className="font-semibold text-[20px] lg:text-[24px] leading-[1.3] mt-7">
-              Community Created Successfully
+              {t(`Community Created Successfully`)}
             </h3>
             <p className="text-[var(--secondary-color)] mb-5 mt-2">
-              Your community has been created successfully
+              {t(`Your community has been created successfully`)}
             </p>
             <button
               type="button"
               onClick={() => handleNavigate()}
-              // to={`/`}
               className="bg-[var(--button-bg)] text-white rounded-[8px] font-medium text-center h-[49px] block py-[14px] w-full"
             >
-              View Community Details
+              {t(`View Community Details`)}
             </button>
           </div>
         </div>

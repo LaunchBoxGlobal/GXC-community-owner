@@ -4,6 +4,7 @@ import NotificationsPage from "../../pages/Settings/NotificationsPage";
 import ChangePasswordPage from "../../pages/Settings/ChangePasswordPage";
 import DeleteAccountPage from "../../pages/Settings/DeleteAccountPage";
 import SupportPage from "../../pages/Settings/SupportPage";
+import { useTranslation } from "react-i18next";
 
 const settingPages = [
   {
@@ -28,6 +29,7 @@ const settingPages = [
 const SettingsLayout = () => {
   const location = useLocation();
   const { settingsTab } = useParams();
+  const { t } = useTranslation("settings");
 
   useEffect(() => {
     document.title = "Settings - giveXchange";
@@ -48,9 +50,11 @@ const SettingsLayout = () => {
 
   return (
     <div className="w-full p-5 rounded-[10px] bg-white custom-shadow">
-      <h1 className="text-[32px] font-semibold leading-none">Settings</h1>
+      <h1 className="text-[32px] font-semibold leading-none">
+        {t(`Settings`)}
+      </h1>
       <p className="text-[#565656] text-lg leading-none mt-4">
-        Manage your account and preferences.
+        {t(`Manage your account and preferences.`)}
       </p>
       <div className="w-full min-h-screen flex flex-col lg:flex-row items-start lg:justify-between bg-white rounded-[12px] mt-6 custom-shadow">
         <div className="w-full lg:w-[25%] lg:min-h-screen border-r pt-5 overflow-hidden">
@@ -66,7 +70,7 @@ const SettingsLayout = () => {
                         : " transition-all duration-300 group lg:border-l-[4px] border-[#fff]"
                     } whitespace-nowrap`}
                   >
-                    <span className="">{link?.title}</span>
+                    <span className="">{t(link?.title)}</span>
                   </Link>
                 </li>
               );

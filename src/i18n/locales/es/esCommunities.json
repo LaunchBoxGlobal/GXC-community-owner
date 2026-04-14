@@ -14,7 +14,12 @@
             "inviteMembers": "Invitar miembros",
             "activeMembers": "Miembros activos",
             "blockedMembers": "Miembros bloqueados",
-            "createStripeAccount": "Crear cuenta de Stripe"
+            "createStripeAccount": "Crear cuenta de Stripe",
+            "no": "No",
+            "yes": "Sí",
+            "blockMember": "Bloquear miembro",
+            "copyLink": "Copiar enlace",
+            "linkCopied": "Enlace copiado"
         },
         "search": "Buscar",
         "noCommunitiesFound": "No se encontraron comunidades para el término de búsqueda",
@@ -96,9 +101,68 @@
         "slug": "Slug",
         "description": "Descripción",
         "address": "Dirección",
-        "communityHasBeenSuspended": "Esta comunidad ha sido suspendida por el administrador."
+        "communityHasBeenSuspended": "Esta comunidad ha sido suspendida por el administrador.",
+        "No products found for the search term": "No se encontraron productos para el término de búsqueda",
+        "No products have been added in this community.": "No se han agregado productos en esta comunidad.",
+        "No members found in this community.": "No se encontraron miembros en esta comunidad.",
+        "No members found for the search term": "No se encontraron miembros para el término de búsqueda",
+        "Member Blocked Successfully": "Miembro bloqueado con éxito",
+        "The selected member has been blocked.": "El miembro seleccionado ha sido bloqueado.",
+        "Member Removed Successfully": "Miembro eliminado con éxito",
+        "The member has been removed.": "El miembro ha sido eliminado.",
+        "Remove member": "Eliminar miembro",
+        "Are you sure you want to remove this member from the community?": "¿Estás seguro de que deseas eliminar a este miembro de la comunidad?",
+        "Are you sure you want to block this member?": "¿Estás seguro de que deseas bloquear a este miembro?",
+        "When you block a member, they’ll be removed from the community. To let them rejoin using an invite link, you’ll need to unblock them in the Blocked Members tab.": "Cuando bloqueas a un miembro, será eliminado de la comunidad. Para permitirle volver a unirse mediante un enlace de invitación, deberás desbloquearlo en la pestaña de miembros bloqueados."
     },
     "errors": {
-        "somethingWentWrong": "Algo salió mal."
-    }
+        "somethingWentWrong": "Algo salió mal.",
+        "CommunityID is not defined": "El ID de la comunidad no está definido",
+        "User ID is not defined": "El ID del usuario no está definido"
+    },
+    "editCommunity": {
+        "form": {
+            "labels": {
+                "communityName": "Nombre de la comunidad",
+                "communitySlug": "Slug de la comunidad",
+                "communityDescription": "Descripción de la comunidad",
+                "country": "País",
+                "state": "Estado",
+                "city": "Ciudad",
+                "zipcode": "Código postal",
+                "location": "Dirección de la comunidad"
+            },
+            "placeholders": {
+                "communityName": "Nombre de la comunidad",
+                "urlSlug": "Slug de URL",
+                "communityDescription": "Descripción de la comunidad",
+                "location": "Suite / Apartamento / Calle",
+                "zipcode": "Ingrese el código postal",
+                "city": "Seleccione la ciudad",
+                "Select State": "Seleccione el estado",
+                "country": "Seleccione el país"
+            },
+            "buttons": {
+                "save": "Guardar"
+            }
+        }
+    },
+    "search": "Buscar",
+    "Community Created Successfully": "Comunidad creada con éxito",
+    "Your community has been created successfully": "Tu comunidad ha sido creada con éxito",
+    "View Community Details": "Ver detalles de la comunidad",
+    "Something went wrong while fetching images.": "Algo salió mal al obtener las imágenes.",
+    "Member unbanned successfully!": "¡Miembro desbloqueado con éxito!",
+    "Unblock": "Desbloquear",
+    "Remove Member": "Eliminar miembro",
+    "Block Member": "Bloquear miembro",
+    "Go Back": "Volver",
+    "Product Details": "Detalles del producto",
+    "Description": "Descripción",
+    "Pickup Address": "Dirección de recogida",
+    "Community Pickup": "Recogida comunitaria",
+    "Pickup / Community Pickup": "Recogida / Recogida comunitaria",
+    "Address": "Dirección",
+    "City": "Ciudad",
+    "State": "Estado"
 }

@@ -6,9 +6,11 @@ import "swiper/css/navigation";
 import "swiper/css/thumbs";
 import "./swiper.css";
 import { FreeMode, Navigation, Thumbs } from "swiper/modules";
+import { useTranslation } from "react-i18next";
 
 export default function Gallery({ product }) {
   const [thumbsSwiper, setThumbsSwiper] = useState(null);
+  const { t } = useTranslation("communities");
 
   return (
     <>
@@ -35,7 +37,7 @@ export default function Gallery({ product }) {
           </>
         ) : (
           <div className="">
-            <p>Something went wrong while fetching images.</p>
+            <p>{t(`Something went wrong while fetching images.`)}</p>
           </div>
         )}
       </Swiper>
@@ -60,7 +62,7 @@ export default function Gallery({ product }) {
           </>
         ) : (
           <div className="">
-            <p>Something went wrong while fetching images.</p>
+            <p>{t(`Something went wrong while fetching images.`)}</p>
           </div>
         )}
       </Swiper>

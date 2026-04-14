@@ -4,12 +4,15 @@ import PageLoader from "../../components/Loader/PageLoader";
 import Pagination from "../../components/Common/Pagination";
 import SearchField from "../../components/Common/SearchField";
 import { useGetReportsQuery } from "../../services/reportsApi/reportsApi";
+import { useTranslation } from "react-i18next";
 
 const ReportsPage = () => {
   const [searchParams] = useSearchParams();
   const LIMIT = 10;
   const page = Number(searchParams.get("page")) || 1;
   const search = searchParams.get("search") || "";
+
+  const { t } = useTranslation("reports");
 
   const {
     data: reportsRes,
@@ -25,7 +28,7 @@ const ReportsPage = () => {
     {
       refetchOnFocus: true,
       refetchOnReconnect: true,
-    }
+    },
   );
 
   const reports = reportsRes?.data?.reports || [];
@@ -35,7 +38,7 @@ const ReportsPage = () => {
     return (
       <div className="w-full min-h-[80vh] relative flex items-center justify-center bg-white rounded-[12px] custom-shadow">
         <p className="text-gray-500 text-sm">
-          {error?.data?.message || "Something went wrong."}
+          {error?.data?.message || t("Something went wrong.")}
         </p>
       </div>
     );
@@ -44,7 +47,7 @@ const ReportsPage = () => {
   return (
     <div className="w-full relative bg-white p-5 lg:p-7 rounded-[12px] min-h-[80vh] lg:rounded-[24px] custom-shadow">
       <div className="w-full relative flex items-center justify-between gap-5 flex-wrap">
-        <h2 className="page-heading">Reports</h2>
+        <h2 className="page-heading">{t(`Reports`)}</h2>
 
         <div className="w-full md:max-w-[252px]">
           <SearchField />

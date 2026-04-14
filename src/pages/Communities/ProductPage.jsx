@@ -2,18 +2,20 @@ import Gallery from "./Gallery";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import PageLoader from "../../components/Loader/PageLoader";
 import { useGetProductByIdQuery } from "../../services/productsApi/productsApi";
+import { useTranslation } from "react-i18next";
 
 const ProductPage = () => {
   const [searchParams] = useSearchParams();
   const productId = searchParams.get("productId");
   const navigate = useNavigate();
+  const { t } = useTranslation("communities");
 
   const { data, error, isError, isLoading } = useGetProductByIdQuery(
     productId,
     {
       skip: !productId,
       refetchOnReConnect: true,
-    }
+    },
   );
 
   const productDetails = data?.data?.product || null;
@@ -30,7 +32,7 @@ const ProductPage = () => {
     return (
       <div className="w-full bg-white custom-shadow rounded-[10px] p-7 mt-5 min-h-[70vh] flex flex-col items-center justify-center text-center">
         <p className="text-red-500 font-medium text-lg mb-4">
-          {error?.data?.message || "Something went wrong."}
+          {error?.data?.message || t("communitiesPage.somethingWentWrong.")}
         </p>
       </div>
     );
@@ -40,13 +42,13 @@ const ProductPage = () => {
     return (
       <div className="w-full bg-white custom-shadow rounded-[10px] p-7 mt-5 min-h-[70vh] flex flex-col items-center justify-center text-center">
         <p className="text-red-500 font-medium text-lg mb-4">
-          Something went wrong.
+          {t("communitiesPage.somethingWentWrong.")}
         </p>
         <button
           onClick={() => navigate(-1)}
           className="px-4 py-2 bg-[var(--button-bg)] text-white rounded-md hover:opacity-90"
         >
-          Go Back
+          {t(`Go Back`)}
         </button>
       </div>
     );
@@ -54,7 +56,7 @@ const ProductPage = () => {
 
   return (
     <div className="w-full bg-white custom-shadow rounded-[10px] p-7 mt-5">
-      <h2 className="page-heading">Product Details</h2>
+      <h2 className="page-heading">{t(`Product Details`)}</h2>
 
       <div className="w-full mt-6 grid grid-cols-1 lg:grid-cols-2 gap-5 bg-white custom-shadow rounded-[10px] p-5 min-h-[65vh]">
         {/* Gallery Section */}
@@ -73,8 +75,8 @@ const ProductPage = () => {
                 {productDetails?.deliveryMethod === "pickup"
                   ? "Pickup"
                   : productDetails?.deliveryMethod === "delivery"
-                  ? "Community Pickup"
-                  : "Pickup / Community Pickup"}
+                    ? t("Community Pickup")
+                    : t("Pickup / Community Pickup")}
               </p>
             </div>
             <p className="text-[24px] font-semibold leading-none text-[var(--button-bg)]">
@@ -85,7 +87,7 @@ const ProductPage = () => {
           <div className="w-full border my-5" />
 
           <div className="w-full space-y-3">
-            <p className="text-sm font-semibold">Description</p>
+            <p className="text-sm font-semibold">{t(`Description`)}</p>
             <p className="text-sm font-normal leading-[1.3] text-gray-700">
               {productDetails?.description || "No description provided."}
             </p>
@@ -95,17 +97,17 @@ const ProductPage = () => {
             <>
               <div className="w-full border my-5" />
               <div className="w-full space-y-3">
-                <p className="text-sm font-semibold">Pickup Address</p>
+                <p className="text-sm font-semibold">{t(`Pickup Address`)}</p>
                 <p className="text-sm font-normal leading-[1.3]">
-                  <span className="font-medium">Address: </span>
+                  <span className="font-medium">{t(`Address`)}: </span>
                   {productDetails?.pickupAddress?.address}
                 </p>
                 <p className="text-sm font-normal leading-[1.3]">
-                  <span className="font-medium">City: </span>
+                  <span className="font-medium">{t(`City`)}: </span>
                   {productDetails?.pickupAddress?.city}
                 </p>
                 <p className="text-sm font-normal leading-[1.3]">
-                  <span className="font-medium">State: </span>
+                  <span className="font-medium">{t(`State`)}: </span>
                   {productDetails?.pickupAddress?.state}
                 </p>
               </div>

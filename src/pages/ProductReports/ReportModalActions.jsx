@@ -2,10 +2,12 @@ import { useState } from "react";
 import Loader from "../../components/Loader/Loader";
 import { enqueueSnackbar } from "notistack";
 import { useUpdateReportStatusMutation } from "../../services/reportedProductsApi/reportedProductsApi";
+import { useTranslation } from "react-i18next";
 
 const ReportModalActions = ({ report, refetch }) => {
   const [isPending, setIsPending] = useState(false);
   const [actionType, setActionType] = useState(null);
+  const { t } = useTranslation("reportedProducts");
 
   const [updateReportStatus] = useUpdateReportStatusMutation();
 
@@ -19,14 +21,14 @@ const ReportModalActions = ({ report, refetch }) => {
         status,
       }).unwrap();
 
-      enqueueSnackbar(res?.message || "Report updated successfully.", {
+      enqueueSnackbar(res?.message || t("Report updated successfully."), {
         variant: "success",
       });
 
       // Keeping this EXACTLY as you requested
       refetch();
     } catch (error) {
-      enqueueSnackbar(error?.data?.message || "Something went wrong.", {
+      enqueueSnackbar(error?.data?.message || t("Something went wrong."), {
         variant: "error",
       });
     } finally {
@@ -46,7 +48,7 @@ const ReportModalActions = ({ report, refetch }) => {
             {isPending && actionType === "rejected" ? (
               <Loader />
             ) : (
-              "Mark As Rejected"
+              t("Mark As Rejected")
             )}
           </button>
 
@@ -58,7 +60,7 @@ const ReportModalActions = ({ report, refetch }) => {
             {isPending && actionType === "resolved" ? (
               <Loader />
             ) : (
-              "Mark As Resolved"
+              t("Mark As Resolved")
             )}
           </button>
         </div>

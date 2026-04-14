@@ -5,9 +5,10 @@ export const appBugReportInitialValues = {
   images: [],
 };
 
-export const appBugReportValidationSchema = Yup.object({
-  description: Yup.string()
-    .min(10, "Description must be 10 characters or more")
-    .max(1500, "Description must be 1500 characters or less")
-    .required("Description is required"),
-});
+export const appBugReportValidationSchema = (t) =>
+  Yup.object({
+    description: Yup.string()
+      .min(10, t(`minDescription`))
+      .max(1500, t(`maxDescription`))
+      .required(t(`descriptionRequired`)),
+  });
