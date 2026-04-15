@@ -204,12 +204,15 @@ const SignUpForm = () => {
             placeholder={t(`signupPage.form.placeholders.communityUrl`)}
             value={formik.values.urlSlug}
             onChange={formik.handleChange}
-            onBlur={async () => {
-              const error = await validateSlug(formik.values.urlSlug);
-              if (error) {
-                formik.setFieldError("urlSlug", error);
-              }
-            }}
+            onBlur={
+              //   async () => {
+              //   const error = await validateSlug(formik.values.urlSlug);
+              //   if (error) {
+              //     formik.setFieldError("urlSlug", error);
+              //   }
+              // }
+              formik.handleBlur
+            }
             error={formik.errors.urlSlug}
             touched={formik.touched.urlSlug}
             label={t(`signupPage.form.labels.customUrl`)}
