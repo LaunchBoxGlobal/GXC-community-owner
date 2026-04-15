@@ -74,6 +74,7 @@ i18n
       "common",
       "profile",
     ],
+    supportedLngs: ["en", "es"],
     defaultNS: "auth",
     interpolation: {
       escapeValue: false,

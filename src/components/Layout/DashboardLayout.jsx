@@ -6,6 +6,7 @@ import useOnlineSatus from "../../hooks/useOnlineStatus";
 import { useGetMyProfileQuery } from "../../services/userApi/userApi";
 import { useDispatch, useSelector } from "react-redux";
 import { setUser } from "../../features/userSlice/userSlice";
+import LanguageSwitcher from "../../LanguageSwticher";
 
 const DashboardLayout = ({ pages }) => {
   const sidebarRef = useRef(null);
@@ -55,7 +56,7 @@ const DashboardLayout = ({ pages }) => {
 
       <div className="w-full relative lg:w-[calc(100%-15rem)] xl:w-[calc(100%-18rem)] h-full  overflow-y-auto overflow-x-hidden p-5">
         <div
-          className={`sticky top-0 left-0 w-full h-[94px] bg-[#fff] custom-shadow flex items-center justify-between lg:justify-end px-4 z-20 rounded-[10px]`}
+          className={`sticky top-0 left-0 w-full h-[94px] bg-[#fff] custom-shadow flex items-center justify-between lg:justify-end px-4 gap-x-4 z-20 rounded-[10px]`}
         >
           <button
             onClick={() => setisOpen((prev) => !prev)}
@@ -64,30 +65,34 @@ const DashboardLayout = ({ pages }) => {
             <HiOutlineMenuAlt2 className="text-2xl" />
           </button>
 
-          <button
-            type="button"
-            onClick={handleNavigateToProfile}
-            className="flex gap-3 items-center py-4 font-normal text-gray-900"
-          >
-            <p className="font-semibold text-gray-700 leading-tight">
-              {user?.fullName}
-            </p>
-            <div>
-              {user?.profilePicture ? (
-                <img
-                  className="h-[54px] min-w-[54px] max-w-[54px] rounded-full object-cover object-center"
-                  src={user?.profilePictureUrl}
-                  alt=""
-                />
-              ) : (
-                <img
-                  className="h-[54px] min-w-[54px] max-w-[54px] rounded-full object-cover object-center"
-                  src={"/profile-icon.png"}
-                  alt=""
-                />
-              )}
-            </div>
-          </button>
+          <div className="w-full flex items-center justify-end gap-3">
+            <LanguageSwitcher />
+
+            <button
+              type="button"
+              onClick={handleNavigateToProfile}
+              className="flex gap-3 items-center py-4 font-normal text-gray-900"
+            >
+              <p className="font-semibold text-gray-700 leading-tight hidden md:block">
+                {user?.fullName}
+              </p>
+              <div>
+                {user?.profilePicture ? (
+                  <img
+                    className="h-[34px] w-[34px] lg:h-[54px] lg:min-w-[54px] max-w-[54px] rounded-full object-cover object-center"
+                    src={user?.profilePictureUrl}
+                    alt=""
+                  />
+                ) : (
+                  <img
+                    className="h-[39px] w-[39px] lg:h-[54px] lg:min-w-[54px] max-w-[54px] rounded-full object-cover object-center"
+                    src={"/profile-icon.png"}
+                    alt=""
+                  />
+                )}
+              </div>
+            </button>
+          </div>
         </div>
         {isOnline ? (
           <div className="w-full pt-6 text-black">{pages}</div>

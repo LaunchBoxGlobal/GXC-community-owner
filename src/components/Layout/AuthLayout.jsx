@@ -1,4 +1,5 @@
 import { useLocation } from "react-router-dom";
+import LanguageSwitcher from "../../LanguageSwticher";
 
 const AuthLayout = ({ children }) => {
   const location = useLocation();
@@ -45,7 +46,10 @@ const AuthLayout = ({ children }) => {
           />
         )}
       </div>
-      <div className="w-full h-full py-12 flex items-center justify-center">
+      <div className="w-full h-full py-12 flex flex-col items-center justify-center relative">
+        <div className="absolute top-5 right-5 z-50">
+          <LanguageSwitcher />
+        </div>
         {children}
       </div>
     </main>
