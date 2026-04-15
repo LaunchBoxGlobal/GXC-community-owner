@@ -3,6 +3,7 @@ import Cookies from "js-cookie";
 import { BASE_URL } from "../data/baseUrl";
 import { enqueueSnackbar } from "notistack";
 import { handleLogout } from "../utils/handleLogout";
+import i18next from "i18next";
 
 let isErrorToastActive = false;
 let lastToastTime = 0;
@@ -27,7 +28,10 @@ const rawBaseQuery = fetchBaseQuery({
   baseUrl: BASE_URL,
   prepareHeaders: (headers) => {
     const token = Cookies.get("ownerToken");
-    if (token) headers.set("Authorization", `Bearer ${token}`);
+    if (token) {
+      headers.set("Authorization", `Bearer ${token}`);
+    }
+    headers.set("Accept-Language", i18next.language || "en");
     return headers;
   },
 });
