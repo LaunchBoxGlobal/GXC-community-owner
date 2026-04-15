@@ -58,7 +58,7 @@ const CopyCommunityLinkPopup = ({ isOpen, onClose, t }) => {
             <button
               type="button"
               onClick={handleCopyLink}
-              className="bg-[var(--button-bg)] text-white rounded-[8px] font-medium h-full max-w-[110px] px-3 whitespace-nowrap"
+              className="bg-[var(--button-bg)] text-white rounded-[8px] font-medium h-full max-w-[120px] px-3 whitespace-nowrap"
             >
               {copied ? t(`buttons.linkCopied`) : t(`buttons.copyLink`)}
             </button>
