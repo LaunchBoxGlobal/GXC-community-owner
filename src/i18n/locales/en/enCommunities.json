@@ -113,7 +113,7 @@
         "Remove member": "Remove member",
         "Are you sure you want to remove this member from the community?": "Are you sure you want to remove this member from the community?",
         "Are you sure you want to block this member?": "Are you sure you want to block this member?",
-        "When you block a member, they’ll be removed from the community. To let them rejoin using an invite link, you’ll need to unblock them in the Blocked Members tab.": "When you block a member, they’ll be removed from the community. To let them rejoin using an invite link, you’ll need to unblock them in the Blocked Members tab."
+        "When you block a member,": "When you block a member, they’ll be removed from the community. To let them rejoin using an invite link, you’ll need to unblock them in the Blocked Members tab."
     },
     "errors": {
         "somethingWentWrong": "Something went wrong.",

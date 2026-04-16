@@ -113,7 +113,7 @@
         "Remove member": "Eliminar miembro",
         "Are you sure you want to remove this member from the community?": "¿Estás seguro de que deseas eliminar a este miembro de la comunidad?",
         "Are you sure you want to block this member?": "¿Estás seguro de que deseas bloquear a este miembro?",
-        "When you block a member, they’ll be removed from the community. To let them rejoin using an invite link, you’ll need to unblock them in the Blocked Members tab.": "Cuando bloqueas a un miembro, será eliminado de la comunidad. Para permitirle volver a unirse mediante un enlace de invitación, deberás desbloquearlo en la pestaña de miembros bloqueados."
+        "When you block a member,": "Cuando bloqueas a un miembro, será eliminado de la comunidad. Para permitirle volver a unirse mediante un enlace de invitación, deberás desbloquearlo en la pestaña de miembros bloqueados."
     },
     "errors": {
         "somethingWentWrong": "Algo salió mal.",

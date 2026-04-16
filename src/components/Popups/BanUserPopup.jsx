@@ -2,6 +2,7 @@ import { enqueueSnackbar } from "notistack";
 import Loader from "../Loader/Loader";
 import { useBanUserMutation } from "../../services/userApi/userApi";
 import { t } from "i18next";
+import { useTranslation } from "react-i18next";
 
 const BanUserPopup = ({
   showPopup,
@@ -13,6 +14,7 @@ const BanUserPopup = ({
   refetch,
 }) => {
   const [banUser, { isLoading }] = useBanUserMutation();
+  const { t } = useTranslation("communities");
 
   const handleBlockUser = async () => {
     if (!communityId) {
@@ -73,15 +75,13 @@ const BanUserPopup = ({
             />
           </div>
           <h2 className="text-[24px] font-semibold leading-[1.3] text-center">
-            {t(`communitiesPage.buttons.Block member`)}
+            {t(`communitiesPage.buttons.blockMember`)}
           </h2>
           <p className="text-[var(--secondary-color)] text-center leading-[1.3]">
             {t(`communityPage.Are you sure you want to block this member?`)}
           </p>
           <p className="text-[var(--secondary-color)] text-center leading-[1.3]">
-            {t(`communityPage.When you block a member, they’ll be removed from the community. To
-            let them rejoin using an invite link, you’ll need to unblock them in
-            the Blocked Members tab.`)}
+            {t(`communityPage.When you block a member,`)}
           </p>
           <div className="w-full grid grid-cols-2 gap-2 mt-2">
             <button

@@ -132,7 +132,9 @@ const MemberCard = ({
                 alt="remove-member-button-icon"
                 className="w-[24px] h-[24px]"
               />
-              <span className="text-lg font-medium">{t(`Remove Member`)}</span>
+              <span className="text-base font-medium">
+                {t(`Remove Member`)}
+              </span>
             </button>
 
             <div className="w-full border" />
@@ -150,7 +152,7 @@ const MemberCard = ({
                 alt="block-member-icon"
                 className="w-[24px] h-[24px]"
               />
-              <span className="text-lg font-medium">{t(`Block Member`)}</span>
+              <span className="text-base font-medium">{t(`Block Member`)}</span>
             </button>
           </div>
         )}

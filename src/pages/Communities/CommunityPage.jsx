@@ -16,6 +16,7 @@ const CommunityPage = () => {
   const [showCopyLinkPopup, setShowCopyLinkPopup] = useState(false);
   const { slug } = useParams();
   const [showEditCommunityPopup, setShowEditCommunityPopup] = useState(false);
+
   const { t } = useTranslation("communities");
 
   const allowedTabs = ["products", "members"];
