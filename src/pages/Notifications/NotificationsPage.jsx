@@ -5,6 +5,7 @@ import { useGetNotificationsQuery } from "../../services/notificationsApi/notifi
 import { useSearchParams } from "react-router-dom";
 import Pagination from "../../components/Common/Pagination";
 import { useTranslation } from "react-i18next";
+import i18next from "i18next";
 
 const NotificationsPage = () => {
   const LIMIT = 15;
@@ -12,7 +13,7 @@ const NotificationsPage = () => {
   const page = Number(searchParams.get("page")) || 1;
   const { t } = useTranslation("notifications");
 
-  const { data, error, isError, isLoading } = useGetNotificationsQuery(
+  const { data, error, isError, isLoading, refetch } = useGetNotificationsQuery(
     {
       page: page,
       limit: LIMIT,
@@ -28,7 +29,8 @@ const NotificationsPage = () => {
 
   useEffect(() => {
     document.title = `${t(`Notifications`)} - giveXchange`;
-  }, []);
+    refetch();
+  }, [page, i18next.language]);
 
   if (error || isError) {
     return (
