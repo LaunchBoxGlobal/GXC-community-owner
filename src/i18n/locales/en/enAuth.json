@@ -13,7 +13,8 @@
         "save": "Save",
         "continue": "Continue",
         "copyLink": "Copy Link",
-        "linkCopied": "Link Copied!"
+        "linkCopied": "Link Copied!",
+        "close": "Close"
     },
     "loginPage": {
         "welcomeBack": "Welcome Back",

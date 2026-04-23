@@ -13,7 +13,8 @@
         "save": "Ahorrar",
         "continue": "Continuar",
         "copyLink": "Copiar enlace",
-        "linkCopied": "¡Enlace copiado!"
+        "linkCopied": "¡Enlace copiado!",
+        "close": "Cerca"
     },
     "loginPage": {
         "welcomeBack": "Bienvenido de nuevo",

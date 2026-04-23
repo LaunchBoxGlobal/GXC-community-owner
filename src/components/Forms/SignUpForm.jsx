@@ -44,7 +44,7 @@ const SignUpForm = () => {
   const formik = useFormik({
     initialValues: signUpInitialValues,
     validationSchema: signupValidationSchema(t),
-    validateOnChange: false,
+    validateOnChange: true,
     validateOnBlur: true,
     onSubmit: async (values, { resetForm }) => {
       // if (slugError) {

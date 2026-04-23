@@ -44,25 +44,38 @@ const CopyCommunityLinkPopup = ({ isOpen, onClose, t }) => {
             />
           </div>
 
-          <h1 className="font-semibold text-[32px] leading-[1.3] mt-7 mb-2">
+          <h1 className="font-semibold text-[32px] leading-[1.3] mt-4 mb-2">
             {t(`yourCommunityCreated`)}
           </h1>
 
           <p className="text-[#565656] leading-[1.2]">{t(`membersCanJoin`)}</p>
 
           <div className="w-full h-[50px] p-1 bg-[#f5f5f5] rounded-[12px] flex items-center justify-between pl-4 mt-5">
-            <p className="text-[#565656] overflow-hidden text-ellipsis text-start leading-none">
+            <p className="text-[#565656] overflow-hidden text-ellipsis text-start leading-none pb-1">
               {/* www.thegiveXchange.com/community/{slug} */}
               invite.app.thegivexchange.com/{slug}
             </p>
           </div>
-          <button
-            type="button"
-            onClick={handleCopyLink}
-            className="bg-[var(--button-bg)] text-white rounded-[8px] font-medium max-w-[140px] h-[48px] mt-4 px-4 whitespace-nowrap"
-          >
-            {copied ? t(`buttons.linkCopied`) : t(`buttons.copyLink`)}
-          </button>
+          <div className="w-full grid grid-cols-2 gap-3 mt-5">
+            <button
+              type="button"
+              className="bg-[var(--button-bg)] text-white rounded-[8px] font-medium h-[48px] px-4 whitespace-nowrap"
+              onClick={() => {
+                onClose();
+                Cookies.remove("slug");
+              }}
+            >
+              {t(`buttons.close`)}
+            </button>
+
+            <button
+              type="button"
+              onClick={handleCopyLink}
+              className="bg-[var(--button-bg)] text-white rounded-[8px] font-medium h-[48px] px-4 whitespace-nowrap"
+            >
+              {copied ? t(`buttons.linkCopied`) : t(`buttons.copyLink`)}
+            </button>
+          </div>
         </div>
       </div>
     </div>
