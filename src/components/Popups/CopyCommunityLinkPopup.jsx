@@ -52,17 +52,17 @@ const CopyCommunityLinkPopup = ({ isOpen, onClose, t }) => {
 
           <div className="w-full h-[50px] p-1 bg-[#f5f5f5] rounded-[12px] flex items-center justify-between pl-4 mt-5">
             <p className="text-[#565656] overflow-hidden text-ellipsis text-start leading-none">
-              www.thegiveXchange.com/community/{slug}
+              {/* www.thegiveXchange.com/community/{slug} */}
+              invite.app.thegivexchange.com/{slug}
             </p>
-
-            <button
-              type="button"
-              onClick={handleCopyLink}
-              className="bg-[var(--button-bg)] text-white rounded-[8px] font-medium h-full max-w-[120px] px-3 whitespace-nowrap"
-            >
-              {copied ? t(`buttons.linkCopied`) : t(`buttons.copyLink`)}
-            </button>
           </div>
+          <button
+            type="button"
+            onClick={handleCopyLink}
+            className="bg-[var(--button-bg)] text-white rounded-[8px] font-medium max-w-[140px] h-[48px] mt-4 px-4 whitespace-nowrap"
+          >
+            {copied ? t(`buttons.linkCopied`) : t(`buttons.copyLink`)}
+          </button>
         </div>
       </div>
     </div>

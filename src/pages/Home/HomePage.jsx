@@ -33,20 +33,20 @@ const HomePage = () => {
       } else if (status === "pending") {
         setShowConfirmationModal(true);
       } else {
-        enqueueSnackbar("Something went wrong. Try again.", {
-          variant: "error",
-        });
+        // enqueueSnackbar("Something went wrong. Try again.", {
+        //   variant: "error",
+        // });
       }
     } catch (error) {
       if (error?.status === 404) setShowConfirmationModal(true);
-      enqueueSnackbar(
-        error?.response?.data?.message ||
-          error?.data?.message ||
-          "Something went wrong.",
-        {
-          variant: "error",
-        },
-      );
+      // enqueueSnackbar(
+      //   error?.response?.data?.message ||
+      //     error?.data?.message ||
+      //     "Something went wrong.",
+      //   {
+      //     variant: "error",
+      //   },
+      // );
     }
   };
 
