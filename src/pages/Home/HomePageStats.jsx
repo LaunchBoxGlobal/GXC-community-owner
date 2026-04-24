@@ -1,5 +1,6 @@
 import Loader from "../../components/Loader/Loader";
 import { useGetDashboardStatsQuery } from "../../services/dashboardApi/dashboardApi";
+import formatAmount from "../../utils/formatAmount";
 
 export const DASHBOARD_STATS = [
   {
@@ -37,7 +38,9 @@ const HomePageStats = ({ t }) => {
     data: statsRes,
     isLoading: fetchingStats,
     error: statsError,
-  } = useGetDashboardStatsQuery();
+  } = useGetDashboardStatsQuery(undefined, {
+    refetchOnMountOrArgChange: true,
+  });
 
   const stats = statsRes?.data?.overview || [];
 
@@ -70,7 +73,7 @@ const HomePageStats = ({ t }) => {
                         : st?.title === "Active Links"
                           ? stats?.activeLinks
                           : st?.title === "Total Earnings"
-                            ? stats?.totalEarnings
+                            ? `$${formatAmount(stats?.totalEarnings)}`
                             : 0}
                   </p>
                 </div>
