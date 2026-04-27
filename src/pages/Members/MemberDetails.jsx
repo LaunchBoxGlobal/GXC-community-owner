@@ -5,21 +5,24 @@ import PageLoader from "../../components/Loader/PageLoader";
 import ProductCard from "../../components/Common/ProductCard";
 import SuspendUuserButton from "./SuspendUuserButton";
 import { useGetMemberQuery } from "../../services/userApi/userApi";
+import { useLangQuery } from "../../hooks/useLangQuery";
+import { useTranslation } from "react-i18next";
 
 const MemberDetails = () => {
   const params = useParams();
-
+  const { t } = useTranslation("communities");
   const communityId = params?.communityId;
   const userId = params?.userId;
 
-  const { data, error, isError, isLoading, refetch } = useGetMemberQuery(
+  const { data, error, isError, isLoading, refetch } = useLangQuery(
+    useGetMemberQuery,
     { communityId, userId },
     {
       skip: !userId,
       refetchOnReconnect: true,
       refetchOnMountOrArgChange: true,
       refetchOnFocus: true,
-    }
+    },
   );
 
   const member = data?.data || null;
@@ -49,7 +52,7 @@ const MemberDetails = () => {
   if (!member) {
     return (
       <div className="w-full bg-white custom-shadow rounded-[10px] p-7 mt-5 min-h-[70vh] flex items-center justify-center">
-        <p className="text-gray-500">No member details found.</p>
+        <p className="text-gray-500">{t(`No member details found.`)}</p>
       </div>
     );
   }
@@ -57,7 +60,7 @@ const MemberDetails = () => {
   return (
     <div className="w-full bg-white custom-shadow rounded-lg md:rounded-xl lg:rounded-[27px] p-7 min-h-screen">
       <h2 className="text-[24px] lg:text-[32px] font-semibold leading-none">
-        User Details
+        {t(`User Details`)}
       </h2>
       <div className="w-full bg-white custom-shadow rounded-lg md:rounded-xl lg:rounded-[24px] p-7 mt-5 flex items-center justify-between flex-wrap gap-6 lg:gap-0">
         <div className="w-full lg:w-[70%] flex items-center gap-2">
@@ -127,7 +130,9 @@ const MemberDetails = () => {
       {member && member?.productsListed?.length > 0 ? (
         <div className="w-full mt-10">
           <div className="w-full">
-            <h2 className="page-heading">Products</h2>
+            <h2 className="page-heading">
+              {t(`communitiesPage.buttons.products`)}
+            </h2>
 
             <div className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5 mt-6">
               {member?.productsListed?.map((product, index) => {
@@ -139,11 +144,13 @@ const MemberDetails = () => {
       ) : (
         <div className="w-full mt-10">
           <div className="w-full">
-            <h2 className="page-heading">Products</h2>
+            <h2 className="page-heading">
+              {t(`communitiesPage.buttons.products`)}
+            </h2>
 
             <div className="w-full text-center pt-20">
               <p className="text-sm font-medium text-gray-700">
-                No products found!
+                {t(`No products found!`)}
               </p>
             </div>
           </div>

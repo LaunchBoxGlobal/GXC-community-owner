@@ -1,7 +1,7 @@
 import { IoClose } from "react-icons/io5";
 import TextField from "../../components/Common/TextField";
 import { useFormik } from "formik";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Button from "../../components/Common/Button";
 import Cookies from "js-cookie";
 import { enqueueSnackbar } from "notistack";
@@ -19,6 +19,8 @@ import {
   useLazyCheckSlugAvailabilityQuery,
   useAddCommunityMutation,
 } from "../../services/communityApi/communityApi";
+import { useCallback, useRef } from "react";
+import { generateSlug } from "../../utils/generateSlug";
 
 const AddCommunity = ({
   showPopup,
@@ -29,6 +31,8 @@ const AddCommunity = ({
   t,
 }) => {
   const [slugError, setSlugError] = useState(null);
+  const debounceTimer = useRef(null);
+  const [baseSlug, setBaseSlug] = useState("");
 
   const [addCommunity, { isLoading: loading }] = useAddCommunityMutation();
   const [checkSlugAvailability] = useLazyCheckSlugAvailabilityQuery();
@@ -53,8 +57,15 @@ const AddCommunity = ({
     }
   };
 
+  const debouncedSlugCheck = useCallback((slug) => {
+    clearTimeout(debounceTimer.current);
+    debounceTimer.current = setTimeout(() => {
+      handleCheckSlugAvailability(slug);
+    }, 600); // waits 600ms after user stops typing
+  }, []);
+
   const formik = useFormik({
-    enableReinitialize: true,
+    validateOnBlur: true,
     initialValues: communityInitialValue,
     validationSchema: communitySchema(t),
     onSubmit: async (values, { resetForm }) => {
@@ -94,6 +105,69 @@ const AddCommunity = ({
     },
   });
 
+  const handleChange = async (e) => {
+    const { name, value } = e.target;
+
+    formik.setFieldValue(name, value);
+
+    // mark current field as touched
+    formik.setFieldTouched(name, true, false);
+
+    // validate only this field
+    await formik.validateField(name);
+  };
+
+  // Create a reusable close handler
+  const handleClose = () => {
+    formik.resetForm();
+    setSlugError(null);
+    setBaseSlug("");
+    setShowAddCommunityPopup(false);
+  };
+
+  // Auto-generate slug from community name
+  useEffect(() => {
+    if (!formik.values.name) return;
+    if (formik.touched.urlSlug) return;
+
+    const slug = generateSlug(formik.values.name);
+    setBaseSlug(slug);
+    formik.setFieldValue("urlSlug", slug);
+  }, [formik.values.name]);
+
+  // Check availability of the auto-generated slug
+  useEffect(() => {
+    if (!formik.values.urlSlug) return;
+    if (!baseSlug) return;
+
+    const timer = setTimeout(async () => {
+      try {
+        const res = await checkSlugAvailability(baseSlug).unwrap();
+
+        if (!res?.data?.available) {
+          setSlugError(`"${baseSlug}" is already taken`);
+
+          for (let i = 1; i <= 5; i++) {
+            const suggestion = `${baseSlug}-${i}`;
+            const retry = await checkSlugAvailability(suggestion).unwrap();
+
+            if (retry?.data?.available) {
+              setSlugError(null);
+              formik.setFieldValue("urlSlug", suggestion);
+              return;
+            }
+          }
+        } else {
+          setSlugError(null);
+        }
+      } catch {
+        setSlugError(t(`communitiesPage.addCommunity.slugValidation.error`));
+      }
+    }, 600);
+
+    return () => clearTimeout(timer);
+  }, [baseSlug]);
+
   return (
     showPopup && (
       <div className="fixed inset-0 z-50 bg-[rgba(0,0,0,0.4)] flex items-center justify-center p-3 sm:p-5">
@@ -109,7 +183,10 @@ const AddCommunity = ({
 
             <button
               type="button"
-              onClick={() => setShowAddCommunityPopup(false)}
+              onClick={() => {
+                handleClose();
+                setShowAddCommunityPopup(false);
+              }}
               className="w-[22px] h-[22px] border border-[#989898] rounded flex items-center justify-center"
             >
               <IoClose className="w-full h-full" />
@@ -125,7 +202,7 @@ const AddCommunity = ({
               name="name"
               placeholder={t("communitiesPage.addCommunity.placeholders.name")}
               value={formik.values.name}
-              onChange={formik.handleChange}
+              onChange={handleChange}
               onBlur={formik.handleBlur}
               error={formik.errors.name}
               touched={formik.touched.name}
@@ -137,7 +214,15 @@ const AddCommunity = ({
               name="urlSlug"
               placeholder={t("communitiesPage.addCommunity.placeholders.slug")}
               value={formik.values.urlSlug}
-              onChange={formik.handleChange}
+              // onChange={(e) => {
+              //   formik.handleChange(e);
+              //   debouncedSlugCheck(e.target.value);
+              // }}
+              onChange={(e) => {
+                formik.handleChange(e);
+                setBaseSlug(e.target.value); // ← keeps availability check in sync
+                debouncedSlugCheck(e.target.value);
+              }}
               onBlur={(e) => {
                 formik.handleBlur(e);
                 handleCheckSlugAvailability(e.target.value);
@@ -152,7 +237,7 @@ const AddCommunity = ({
               <textarea
                 name="description"
                 id="description"
-                onChange={formik.handleChange}
+                onChange={handleChange}
                 onBlur={formik.handleBlur}
                 value={formik.values.description}
                 placeholder={t(
@@ -268,7 +353,7 @@ const AddCommunity = ({
                 "communitiesPage.addCommunity.placeholders.zipcode",
               )}
               value={formik.values.zipcode}
-              onChange={formik.handleChange}
+              onChange={handleChange}
               onBlur={formik.handleBlur}
               error={formik.errors.zipcode}
               touched={formik.touched.zipcode}
@@ -284,7 +369,7 @@ const AddCommunity = ({
               "communitiesPage.addCommunity.placeholders.location",
             )}
             value={formik.values.location}
-            onChange={formik.handleChange}
+            onChange={handleChange}
             onBlur={formik.handleBlur}
             error={formik.errors.location}
             touched={formik.touched.location}

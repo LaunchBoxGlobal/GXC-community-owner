@@ -19,7 +19,9 @@
             "yes": "Yes",
             "blockMember": "Block member",
             "copyLink": "Copy Link",
-            "linkCopied": "Link Copied"
+            "linkCopied": "Link Copied",
+            "Suspend": "Suspend",
+            "Unsuspend": "Unsuspend"
         },
         "search": "Search",
         "noCommunitiesFound": "No communities found for the search term",
@@ -164,5 +166,8 @@
     "Pickup / Community Pickup": "Pickup / Community Pickup",
     "Address": "Address",
     "City": "City",
-    "State": "State"
+    "State": "State",
+    "User Details": "User Details",
+    "No products found!": "No products found!",
+    "No member details found.": "No member details found."
 }

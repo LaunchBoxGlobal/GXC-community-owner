@@ -28,19 +28,9 @@ const TextField = ({
         onChange={onChange}
         disabled={disabled}
         onBlur={onBlur}
-        className={`w-full border h-[49px] px-[15px] py-[14px] rounded-[8px] outline-none bg-[var(--secondary-bg)]
-          ${
-            (error || touched) && error
-              ? "border-red-500"
-              : "border-[var(--secondary-bg)]"
-          } disabled:bg-gray-50 disabled:cursor-not-allowed`}
+        className={`w-full border h-[49px] px-[15px] py-[14px] rounded-[8px] outline-none bg-[var(--secondary-bg)] ${touched && error ? "border-red-500" : "border-[var(--secondary-bg)]"} disabled:bg-gray-50 disabled:cursor-not-allowed`}
       />
-
-      {(touched || error) && error && (
-        <p className="text-red-500 text-xs">{error}</p>
-      )}
-
-      {/* {error && touched && <p className="text-red-500 text-xs">{error}</p>} */}
+      {touched && error && <p className="text-red-500 text-xs">{error}</p>}
     </div>
   );
 };

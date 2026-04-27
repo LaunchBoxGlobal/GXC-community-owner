@@ -96,7 +96,7 @@ const VerifyOtpForAccountDeletionModal = ({ onClose, showModal }) => {
   const handleVerify = async () => {
     const otpCode = otp.join("");
     if (otpCode.length < 6) {
-      enqueueSnackbar("Please enter a 6-digit OTP", { variant: "error" });
+      enqueueSnackbar(t("Please enter a 6-digit OTP"), { variant: "error" });
       return;
     }
 

@@ -42,14 +42,11 @@ const SignUpForm = () => {
   }, []);
 
   const formik = useFormik({
+    validateOnChange: false,
+    validateOnBlur: true,
     initialValues: signUpInitialValues,
     validationSchema: signupValidationSchema(t),
-    validateOnChange: true,
-    validateOnBlur: true,
     onSubmit: async (values, { resetForm }) => {
-      // if (slugError) {
-      //   return;
-      // }
       try {
         const formData = new FormData();
         formData.append("firstName", values.firstName.trim());
@@ -87,6 +84,18 @@ const SignUpForm = () => {
       }
     },
   });
+
+  const handleChange = async (e) => {
+    const { name, value } = e.target;
+
+    formik.setFieldValue(name, value);
+
+    // Mark ONLY this field as touched while typing
+    formik.setFieldTouched(name, true, false);
+
+    // Validate ONLY this field
+    await formik.validateField(name);
+  };
 
   useEffect(() => {
     if (!formik.values.communityName) return;
@@ -155,7 +164,7 @@ const SignUpForm = () => {
             name="firstName"
             placeholder={t(`signupPage.form.placeholders.firstName`)}
             value={formik.values.firstName}
-            onChange={formik.handleChange}
+            onChange={handleChange}
             onBlur={formik.handleBlur}
             error={formik.errors.firstName}
             touched={formik.touched.firstName}
@@ -166,7 +175,7 @@ const SignUpForm = () => {
             name="lastName"
             placeholder={t(`signupPage.form.placeholders.lastName`)}
             value={formik.values.lastName}
-            onChange={formik.handleChange}
+            onChange={handleChange}
             onBlur={formik.handleBlur}
             error={formik.errors.lastName}
             touched={formik.touched.lastName}
@@ -179,7 +188,7 @@ const SignUpForm = () => {
           name="email"
           placeholder={t(`signupPage.form.placeholders.email`)}
           value={formik.values.email}
-          onChange={formik.handleChange}
+          onChange={handleChange}
           onBlur={formik.handleBlur}
           error={formik.errors.email}
           touched={formik.touched.email}
@@ -192,7 +201,7 @@ const SignUpForm = () => {
             name="communityName"
             placeholder={t(`signupPage.form.placeholders.communityName`)}
             value={formik.values.communityName}
-            onChange={formik.handleChange}
+            onChange={handleChange}
             onBlur={formik.handleBlur}
             error={formik.errors.communityName}
             touched={formik.touched.communityName}
@@ -203,7 +212,7 @@ const SignUpForm = () => {
             name="urlSlug"
             placeholder={t(`signupPage.form.placeholders.communityUrl`)}
             value={formik.values.urlSlug}
-            onChange={formik.handleChange}
+            onChange={handleChange}
             onBlur={
               //   async () => {
               //   const error = await validateSlug(formik.values.urlSlug);
@@ -226,7 +235,7 @@ const SignUpForm = () => {
           <textarea
             name="description"
             id="description"
-            onChange={formik.handleChange}
+            onChange={handleChange}
             onBlur={formik.handleBlur}
             value={formik.values.description}
             placeholder={t(`signupPage.form.placeholders.communityDescription`)}
@@ -236,12 +245,11 @@ const SignUpForm = () => {
                 : "border-[var(--secondary-bg)]"
             }`}
           />
-          {(formik.touched.description || formik.errors.description) &&
-          formik.errors.description ? (
+          {formik.touched.description && formik.errors.description && (
             <div className="text-red-500 text-sm">
               {formik.errors.description}
             </div>
-          ) : null}
+          )}
         </div>
 
         {/* Country, State, City, Zip */}
@@ -338,7 +346,7 @@ const SignUpForm = () => {
             name="zipcode"
             placeholder={t(`signupPage.form.placeholders.communityZipcode`)}
             value={formik.values.zipcode}
-            onChange={formik.handleChange}
+            onChange={handleChange}
             onBlur={formik.handleBlur}
             error={formik.errors.zipcode}
             touched={formik.touched.zipcode}
@@ -351,7 +359,7 @@ const SignUpForm = () => {
           name="location"
           placeholder={t(`signupPage.form.placeholders.suiteApartment`)}
           value={formik.values.location}
-          onChange={formik.handleChange}
+          onChange={handleChange}
           onBlur={formik.handleBlur}
           error={formik.errors.location}
           touched={formik.touched.location}
@@ -362,7 +370,7 @@ const SignUpForm = () => {
           name="password"
           placeholder={t(`signupPage.form.placeholders.password`)}
           value={formik.values.password}
-          onChange={formik.handleChange}
+          onChange={handleChange}
           onBlur={formik.handleBlur}
           error={formik.errors.password}
           touched={formik.touched.password}
@@ -372,7 +380,7 @@ const SignUpForm = () => {
           name="confirmPassword"
           placeholder={t(`signupPage.form.placeholders.password`)}
           value={formik.values.confirmPassword}
-          onChange={formik.handleChange}
+          onChange={handleChange}
           onBlur={formik.handleBlur}
           error={formik.errors.confirmPassword}
           touched={formik.touched.confirmPassword}

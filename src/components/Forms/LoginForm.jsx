@@ -19,7 +19,6 @@ import { useTranslation } from "react-i18next";
 const LoginForm = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-
   const { t } = useTranslation("auth");
 
   const [login, { isLoading }] = useLoginMutation();
@@ -30,10 +29,10 @@ const LoginForm = () => {
   }, []);
 
   const formik = useFormik({
+    validateOnBlur: true,
+    validateOnChange: false,
     initialValues: loginInitialValues,
     validationSchema: loginSchema(t),
-    validateOnChange: true,
-    validateOnBlur: true,
     onSubmit: async (values, { resetForm }) => {
       try {
         const response = await login({
@@ -94,6 +93,18 @@ const LoginForm = () => {
     },
   });
 
+  const handleChange = async (e) => {
+    const { name, value } = e.target;
+
+    formik.setFieldValue(name, value);
+
+    // mark current field as touched
+    formik.setFieldTouched(name, true, false);
+
+    // validate only this field
+    await formik.validateField(name);
+  };
+
   return (
     <form
       onSubmit={formik.handleSubmit}
@@ -119,7 +130,7 @@ const LoginForm = () => {
           name="email"
           placeholder="johndoe@gmail.com"
           value={formik.values.email}
-          onChange={formik.handleChange}
+          onChange={handleChange}
           onBlur={formik.handleBlur}
           error={formik.errors.email}
           touched={formik.touched.email}
@@ -130,7 +141,7 @@ const LoginForm = () => {
           name={`password`}
           placeholder={t(`loginPage.form.labels.password`)}
           value={formik.values.password}
-          onChange={formik.handleChange}
+          onChange={handleChange}
           onBlur={formik.handleBlur}
           error={formik.errors.password}
           touched={formik.touched.password}

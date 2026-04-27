@@ -46,6 +46,10 @@ const ReportingPage = () => {
     },
   });
 
+  useEffect(() => {
+    formik.validateForm();
+  }, [t]);
+
   return (
     <div className="w-full">
       <form
