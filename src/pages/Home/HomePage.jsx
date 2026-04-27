@@ -63,7 +63,7 @@ const HomePage = () => {
         <h2 className="text-[24px] lg:text-[32px] font-semibold">
           {t(`dashboardPage.recentCommunities`)}
         </h2>
-        <CommunitiesList limit={12} />
+        <CommunitiesList limit={12} t={t} />
       </div>
 
       {!isLoading && (

@@ -3,13 +3,15 @@ import CommunityCard from "../../components/Common/CommunityCard";
 import Pagination from "../../components/Common/Pagination";
 import { useGetMyCommunitiesQuery } from "../../services/communityApi/communityApi";
 import Loader from "../../components/Loader/Loader";
+import { useLangQuery } from "../../hooks/useLangQuery";
 
 const CommunitiesList = ({ limit, t }) => {
   const [searchParams] = useSearchParams();
   const page = Number(searchParams.get("page")) || 1;
   const searchTerm = searchParams.get("search") || "";
 
-  const { data: communitiesRes, isLoading } = useGetMyCommunitiesQuery(
+  const { data: communitiesRes, isLoading } = useLangQuery(
+    useGetMyCommunitiesQuery,
     {
       page: searchTerm ? 1 : page,
       limit,

@@ -45,7 +45,7 @@ export const communityApi = createApi({
     }),
 
     getCommunity: builder.query({
-      query: (slug) => ({
+      query: ({ slug }) => ({
         url: `/communities/${slug}/details`,
       }),
       providesTags: (result) => [

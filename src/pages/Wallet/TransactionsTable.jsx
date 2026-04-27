@@ -1,6 +1,7 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
+import formatAmount from "../../utils/formatAmount";
 
 const TransactionsTable = ({ transactions }) => {
   const { t } = useTranslation("transactionHistory");
@@ -103,7 +104,10 @@ const TransactionsTable = ({ transactions }) => {
                     </div>
                   </td>
                   <td className="px-6 py-4 border-b text-sm">
-                    ${transaction?.transaction?.communityOwner?.amount}
+                    $
+                    {formatAmount(
+                      transaction?.transaction?.communityOwner?.amount,
+                    )}
                   </td>
                   <td className="px-6 py-4 border-b text-sm">
                     <span className="bg-green-100 text-green-500 px-2 py-1 rounded-full text-xs font-medium">

@@ -3,6 +3,7 @@ import TransactionHistory from "./TransactionHistory";
 import { useGetRevenueQuery } from "../../services/transactionHistoryApi/transactionHistoryApi";
 import Loader from "../../components/Loader/Loader";
 import { useTranslation } from "react-i18next";
+import formatAmount from "../../utils/formatAmount";
 
 const WalletPage = () => {
   const [userBalance, setUserBalance] = useState({ balanceAmount: 0 });
@@ -29,10 +30,8 @@ const WalletPage = () => {
             {t(`Total Revenue`)}
           </h3>
           <p className="text-[var(--button-bg)] text-[28px] lg:text-[40px] font-bold">
-            {data
-              ? data?.data?.balanceAmount > 0
-                ? `$${data?.data?.balanceAmount.toFixed(2)}`
-                : `$${data?.data?.balanceAmount}`
+            {data && data?.data?.balanceAmount > 0
+              ? `$${formatAmount(data?.data?.balanceAmount.toFixed(2))}`
               : `$0`}
           </p>
         </div>

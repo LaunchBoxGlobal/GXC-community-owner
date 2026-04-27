@@ -9,6 +9,8 @@ import CommunityHeader from "./CommunityHeader";
 import CommunityTabs from "./CommunityTabs";
 import { useGetCommunityQuery } from "../../services/communityApi/communityApi";
 import { useTranslation } from "react-i18next";
+import i18next from "i18next";
+import { useLangQuery } from "../../hooks/useLangQuery";
 
 const CommunityPage = () => {
   const [searchParams] = useSearchParams();
@@ -25,8 +27,9 @@ const CommunityPage = () => {
     : "products";
 
   // get community details by slug
-  const { data, error, isError, isLoading, refetch } = useGetCommunityQuery(
-    slug,
+  const { data, error, isError, isLoading, refetch } = useLangQuery(
+    useGetCommunityQuery,
+    { slug },
     {
       skip: !slug,
       refetchOnMountOrArgChange: true,

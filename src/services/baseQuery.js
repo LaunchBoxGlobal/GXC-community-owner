@@ -41,7 +41,6 @@ export const baseQuery = async (args, api, extraOptions) => {
 
   if (result?.error) {
     const status = result.error?.status;
-    console.log(result);
 
     switch (status) {
       case 401:

@@ -139,6 +139,7 @@ const CommunityHeader = ({
           {community?.community?.slug && (
             <p className="text-base text-[var(--secondary-color)] leading-[1.3] mt-2 break-words">
               <span className="font-semibold">{t(`communityPage.slug`)}: </span>
+              invite.app.thegivexchange.com/
               {community?.community?.slug}
             </p>
           )}
