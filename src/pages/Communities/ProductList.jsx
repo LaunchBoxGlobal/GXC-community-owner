@@ -3,6 +3,7 @@ import { useSearchParams } from "react-router-dom";
 import Loader from "../../components/Loader/Loader";
 import SearchField from "../../components/Common/SearchField";
 import { useGetCommunityProductsQuery } from "../../services/communityApi/communityApi";
+import { useLangQuery } from "../../hooks/useLangQuery";
 
 const ProductList = ({ community, t }) => {
   const limit = 10;
@@ -12,7 +13,8 @@ const ProductList = ({ community, t }) => {
 
   const communityId = community?.id;
 
-  const { data, isError, error, isLoading } = useGetCommunityProductsQuery(
+  const { data, isError, error, isLoading } = useLangQuery(
+    useGetCommunityProductsQuery,
     {
       page,
       limit,
@@ -21,6 +23,8 @@ const ProductList = ({ community, t }) => {
     },
     {
       skip: !communityId,
+      refetchOnMountOrArgChange: true,
+      refetchOnReconnect: true,
     },
   );
 

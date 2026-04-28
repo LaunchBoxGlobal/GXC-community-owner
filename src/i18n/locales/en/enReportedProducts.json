@@ -29,5 +29,8 @@
     "Invalid seller or community": "Invalid seller or community",
     "Remove": "Remove",
     "Block": "Block",
-    "Unblock": "Unblock"
+    "Unblock": "Unblock",
+    "pending": "Pending",
+    "resolved": "Resolved",
+    "rejected": "Rejected"
 }

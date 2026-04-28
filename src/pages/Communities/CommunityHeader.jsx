@@ -136,14 +136,14 @@ const CommunityHeader = ({
       <div className="w-full bg-white custom-shadow rounded-lg md:rounded-xl lg:rounded-[24px] p-7 mt-5 flex flex-wrap overflow-hidden items-center justify-between gap-y-5">
         <div className="w-full lg:max-w-[70%]">
           <h2 className="page-heading">{community?.community?.name}</h2>
-          {community?.community?.slug && (
+          {!isCommunitySuspended && community?.community?.slug && (
             <p className="text-base text-[var(--secondary-color)] leading-[1.3] mt-2 break-words">
               <span className="font-semibold">{t(`communityPage.slug`)}: </span>
               invite.app.thegivexchange.com/
               {community?.community?.slug}
             </p>
           )}
-          {community?.community?.description && (
+          {!isCommunitySuspended && community?.community?.description && (
             <p className="text-base text-[var(--secondary-color)] leading-[1.3] mt-2 break-words">
               <span className="font-semibold">
                 {t(`communityPage.description`)}:{" "}
@@ -151,8 +151,7 @@ const CommunityHeader = ({
               {community?.community?.description}
             </p>
           )}
-
-          {community?.community?.address && (
+          {!isCommunitySuspended && community?.community?.address && (
             <p className="text-base text-[var(--secondary-color)] leading-[1.3] mt-2 break-words">
               <span className="font-semibold">
                 {t(`communityPage.address`)}:{" "}

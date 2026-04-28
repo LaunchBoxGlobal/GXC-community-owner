@@ -29,5 +29,8 @@
     "Invalid seller or community": "Vendedor o comunidad inválidos",
     "Remove": "Eliminar",
     "Block": "Bloquear",
-    "Unblock": "Desbloquear"
+    "Unblock": "Desbloquear",
+    "pending": "Pendiente",
+    "resolved": "Resuelto",
+    "rejected": "Rechazado"
 }

@@ -87,6 +87,7 @@ const ReportList = ({ reports, fetchReports }) => {
                       <p className="">{report?.reporter?.name}</p>
                     </div>
                   </td>
+
                   <td className="px-6 py-3">
                     <div className="inline-flex items-center gap-2">
                       <img
@@ -103,7 +104,9 @@ const ReportList = ({ reports, fetchReports }) => {
                       <p className="">{report?.seller?.name}</p>
                     </div>
                   </td>
+
                   <td className="px-6 py-3">{report?.title}</td>
+
                   <td class={`px-6 py-3`}>
                     <span
                       class={`px-2 py-1 rounded-full text-xs font-medium ${
@@ -116,8 +119,7 @@ const ReportList = ({ reports, fetchReports }) => {
                               : "text-gray-500"
                       }`}
                     >
-                      {report?.status.charAt(0).toUpperCase() +
-                        report?.status.slice(1)}
+                      {t(report?.status)}
                     </span>
                   </td>
                   <td className="px-6 py-3">{formatDate(report?.createdAt)}</td>

@@ -6,6 +6,7 @@ import Pagination from "../../components/Common/Pagination";
 import SearchField from "../../components/Common/SearchField";
 import { useGetReportedProductsQuery } from "../../services/reportedProductsApi/reportedProductsApi";
 import { useTranslation } from "react-i18next";
+import { useLangQuery } from "../../hooks/useLangQuery";
 
 const ProductReportsPage = () => {
   const [searchParams] = useSearchParams();
@@ -14,7 +15,8 @@ const ProductReportsPage = () => {
   const search = searchParams.get("search") || "";
   const { t } = useTranslation("reportedProducts");
 
-  const { data, error, isError, isLoading } = useGetReportedProductsQuery(
+  const { data, error, isError, isLoading } = useLangQuery(
+    useGetReportedProductsQuery,
     {
       page,
       limit: LIMIT,

@@ -111,10 +111,7 @@ const TransactionsTable = ({ transactions }) => {
                   </td>
                   <td className="px-6 py-4 border-b text-sm">
                     <span className="bg-green-100 text-green-500 px-2 py-1 rounded-full text-xs font-medium">
-                      {transaction?.order?.paymentStatus
-                        .charAt(0)
-                        .toUpperCase() +
-                        transaction?.order?.paymentStatus.slice(1)}
+                      {t(`Completed`)}
                     </span>
                   </td>
                 </tr>

@@ -72,7 +72,7 @@ const CommunityPage = () => {
 
       {isCommunitySuspended ? (
         <div className=" min-h-[80vh] bg-white custom-shadow rounded-[12px] flex items-center justify-center mt-6">
-          <p className="text-sm"></p>
+          <p className="text-sm">{t(`This community has been suspended.`)}</p>
         </div>
       ) : (
         <>

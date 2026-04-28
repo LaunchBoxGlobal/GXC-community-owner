@@ -5,6 +5,7 @@ import Pagination from "../../components/Common/Pagination";
 import SearchField from "../../components/Common/SearchField";
 import { useGetReportsQuery } from "../../services/reportsApi/reportsApi";
 import { useTranslation } from "react-i18next";
+import { useLangQuery } from "../../hooks/useLangQuery";
 
 const ReportsPage = () => {
   const [searchParams] = useSearchParams();
@@ -19,7 +20,8 @@ const ReportsPage = () => {
     error,
     isError,
     isLoading,
-  } = useGetReportsQuery(
+  } = useLangQuery(
+    useGetReportsQuery,
     {
       page,
       limit: search ? 1 : LIMIT,
