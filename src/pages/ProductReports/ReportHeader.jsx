@@ -43,7 +43,7 @@ const ReportHeader = ({ report, handleToggleReportDetailsModal }) => {
                     : "text-gray-500"
             }`}
           >
-            {report?.status.charAt(0).toUpperCase() + report?.status.slice(1)}
+            {t(report?.status)}
           </p>
         </div>
       </div>

@@ -18,6 +18,9 @@ const ReportDetailsModal = ({
 
   const { data, isLoading, isError, refetch } = useGetReportByIdQuery(
     reportDetails?.id,
+    {
+      refetchOnMountOrArgChange: true,
+    },
   );
 
   const report = data?.data || null;
