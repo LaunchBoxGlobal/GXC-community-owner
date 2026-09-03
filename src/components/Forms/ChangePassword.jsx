@@ -80,6 +80,7 @@ const ChangePassword = () => {
       <PasswordUpdateSuccessModal
         showPopup={showPopup}
         handleTogglePopup={handleTogglePopup}
+        t={t}
       />
       <form
         onSubmit={formik.handleSubmit}

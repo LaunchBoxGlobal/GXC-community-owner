@@ -108,7 +108,7 @@ const CompleteProfileForm = () => {
     <>
       <form
         onSubmit={formik.handleSubmit}
-        className="w-full max-w-[500px] flex flex-col items-start gap-4"
+        className="w-full max-w-[500px] flex flex-col items-start gap-4 my-20"
       >
         {/* Heading */}
         <div className="w-full text-center space-y-3">
@@ -176,7 +176,7 @@ const CompleteProfileForm = () => {
             <PhoneNumberField
               type="text"
               name="phoneNumber"
-              placeholder="+000 0000 00"
+              placeholder="000 0000 00"
               value={formik.values.phoneNumber}
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
@@ -205,8 +205,8 @@ const CompleteProfileForm = () => {
                   inputClassName={`w-full border h-[39px] px-[15px] rounded-[8px] outline-none disabled:cursor-not-allowed 
         ${
           formik.touched.country && formik.errors.country
-            ? "border-red-500"
-            : "border-gray-200"
+            ? "!border-red-500"
+            : "!border-gray-200"
         }
       `}
                   placeHolder="Select Country"
@@ -234,15 +234,26 @@ const CompleteProfileForm = () => {
                 inputClassName={`w-full border h-[39px] px-[15px] rounded-[8px] outline-none 
         ${
           formik.touched.state && formik.errors.state
-            ? "border-red-500"
-            : "border-gray-200"
+            ? "!border-red-500"
+            : "!border-gray-200"
         }
       `}
                 placeHolder={t("completeProfile.form.placeholders.state")}
                 onChange={(val) => {
-                  formik.setFieldValue("state", val.name);
-                  formik.setFieldValue("stateId", val.id);
-                  formik.setFieldValue("city", "");
+                  // Apply state + stateId + reset city in ONE atomic update and
+                  // validate once, so the "state required" error clears reliably.
+                  // (Three separate setFieldValue calls each validate against a
+                  // stale snapshot, which is what left the error stuck.)
+                  formik.setValues(
+                    (prev) => ({
+                      ...prev,
+                      state: val.name,
+                      stateId: val.id,
+                      city: "",
+                    }),
+                    true,
+                  );
+                  formik.setFieldTouched("state", true, false);
                 }}
               />
               {formik.touched.state && formik.errors.state && (
@@ -263,12 +274,16 @@ const CompleteProfileForm = () => {
                 inputClassName={`w-full border h-[39px] px-[15px] rounded-[8px] outline-none 
         ${
           formik.touched.city && formik.errors.city
-            ? "border-red-500"
-            : "border-gray-200"
+            ? "!border-red-500"
+            : "!border-gray-200"
         }
       `}
                 placeHolder={t("completeProfile.form.placeholders.city")}
-                onChange={(val) => formik.setFieldValue("city", val.name)}
+                onChange={(val) => {
+                  // Single field: setFieldValue validates on change (validateOnChange).
+                  formik.setFieldValue("city", val.name, true);
+                  formik.setFieldTouched("city", true, false);
+                }}
               />
               {formik.touched.city && formik.errors.city && (
                 <p className="text-red-500 text-xs">{formik.errors.city}</p>

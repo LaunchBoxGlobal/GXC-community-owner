@@ -73,9 +73,9 @@ export const baseQuery = async (args, api, extraOptions) => {
         break;
 
       case 404:
-        showSingleToast(result?.error?.data?.message || "Resource not found.", {
-          variant: "error",
-        });
+        // showSingleToast(result?.error?.data?.message || "Resource not found.", {
+        //   variant: "error",
+        // });
         break;
 
       case 500:

@@ -11,7 +11,7 @@ const PhoneNumberField = ({
   touched,
   label,
 }) => {
-  const selectedCountry = "US"; // 🔒 LOCKED to United States
+  const selectedCountry = "US";
   const callingCode = getCountryCallingCode(selectedCountry);
 
   const handleNumberChange = (e) => {
@@ -43,7 +43,6 @@ const PhoneNumberField = ({
           error && touched ? "border-red-500" : "border-[#f5f5f5]"
         }`}
       >
-        {/* Country code selector but fully disabled */}
         <select
           value={selectedCountry}
           disabled={true}

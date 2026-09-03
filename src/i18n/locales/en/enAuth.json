@@ -129,7 +129,7 @@
                 "location": {
                     "required": "Please enter your location",
                     "min": "Address cannot be less than 1 character",
-                    "max": "Address cannot be more than 30 characters",
+                    "max": "Address cannot be more than 60 characters",
                     "trim": "Address cannot start or end with spaces"
                 },
                 "zipcode": {

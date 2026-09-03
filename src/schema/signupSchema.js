@@ -12,11 +12,11 @@ export const signUpInitialValues = {
   urlSlug: "",
   location: "",
   zipcode: "",
-  city: "",
-  state: "",
   country: "United States",
   countryId: 233,
+  state: "",
   stateId: "",
+  city: "",
 };
 
 export const signupValidationSchema = (t) =>
@@ -79,7 +79,7 @@ export const signupValidationSchema = (t) =>
     location: Yup.string()
       .trim(t(`signupPage.form.errors.location.trim`))
       .min(1, t(`signupPage.form.errors.location.min`))
-      .max(30, t(`signupPage.form.errors.location.max`))
+      .max(60, t(`signupPage.form.errors.location.max`))
       .required(t(`signupPage.form.errors.location.required`)),
 
     zipcode: Yup.string()

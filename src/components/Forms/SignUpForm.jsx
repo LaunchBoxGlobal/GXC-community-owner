@@ -269,12 +269,7 @@ const SignUpForm = () => {
                 disabled={true}
                 containerClassName="w-full"
                 inputClassName={`w-full border h-[39px] px-[15px] rounded-[8px] outline-none disabled:cursor-not-allowed 
-        ${
-          formik.touched.country && formik.errors.country
-            ? "border-red-500"
-            : "border-gray-200"
-        }
-      `}
+                  ${formik.touched.country && formik.errors.country ? "!border-red-500" : "!border-gray-200"}`}
                 placeHolder="Select Country"
                 onChange={(val) => {
                   formik.setFieldValue("country", val.name);
@@ -297,18 +292,16 @@ const SignUpForm = () => {
             <StateSelect
               countryid={formik.values.countryId || 0}
               containerClassName="w-full"
-              inputClassName={`w-full border h-[39px] px-[15px] rounded-[8px] outline-none 
-        ${
-          formik.touched.state && formik.errors.state
-            ? "border-red-500"
-            : "border-gray-200"
-        }
-      `}
+              inputClassName={`w-full border h-[39px] px-[15px] rounded-[8px] outline-none ${formik.touched.state && formik.errors.state ? "!border-red-500" : "!border-gray-200"}`}
               placeHolder={t(`signupPage.form.placeholders.communityState`)}
-              onChange={(val) => {
-                formik.setFieldValue("state", val.name);
+              onChange={async (val) => {
+                // Set the value first, then mark touched and revalidate this
+                // field so a stale "required" error clears immediately on select.
+                await formik.setFieldValue("state", val.name);
                 formik.setFieldValue("stateId", val.id);
                 formik.setFieldValue("city", "");
+                formik.setFieldTouched("state", true, false);
+                await formik.validateField("state");
               }}
             />
             {formik.touched.state && formik.errors.state && (
@@ -326,15 +319,14 @@ const SignUpForm = () => {
               countryid={formik.values.countryId || 0}
               stateid={formik.values.stateId || 0}
               containerClassName="w-full"
-              inputClassName={`w-full border h-[39px] px-[15px] rounded-[8px] outline-none 
-        ${
-          formik.touched.city && formik.errors.city
-            ? "border-red-500"
-            : "border-gray-200"
-        }
-      `}
+              inputClassName={`w-full border h-[39px] px-[15px] rounded-[8px] outline-none ${formik.touched.city && formik.errors.city ? "!border-red-500" : "!border-gray-200"}`}
               placeHolder={t(`signupPage.form.placeholders.communityCity`)}
-              onChange={(val) => formik.setFieldValue("city", val.name)}
+              onChange={async (val) => {
+                // Same pattern as State: value -> touched -> validate.
+                await formik.setFieldValue("city", val.name);
+                formik.setFieldTouched("city", true, false);
+                await formik.validateField("city");
+              }}
             />
             {formik.touched.city && formik.errors.city && (
               <p className="text-red-500 text-xs">{formik.errors.city}</p>

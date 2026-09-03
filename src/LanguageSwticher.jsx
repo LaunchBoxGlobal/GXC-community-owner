@@ -1,13 +1,15 @@
-import axios from "axios";
 import i18n from "i18next";
 import { useState, useEffect } from "react";
+import { IoIosArrowDown } from "react-icons/io";
+import axios from "axios";
 import { BASE_URL } from "./data/baseUrl";
 import { getToken } from "./utils/getToken";
 import { handleApiError } from "./utils/handleApiError";
 import { useNavigate } from "react-router-dom";
 
-const LanguageSwitcher = () => {
+const LanguageSwitcher = ({ className, isScrolled }) => {
   const [language, setLanguage] = useState(i18n.language || "en");
+  const navigate = useNavigate();
 
   useEffect(() => {
     i18n.changeLanguage(language);
@@ -40,41 +42,19 @@ const LanguageSwitcher = () => {
       <select
         value={language}
         onChange={(e) => setLanguage(e.target.value)}
-        className="
-          appearance-none
-          bg-white
-          border border-gray-300
-          text-gray-700
-          py-1 lg:py-2 pl-2 lg:pl-3 pr-7 lg:pr-10
-          rounded-lg
-          shadow-sm
-          focus:outline-none
-          focus:ring-2 focus:ring-blue-950
-          focus:border-blue-950
-          text-sm
-          cursor-pointer
-        "
+        className={className}
       >
-        <option value="en">English</option>
-        <option value="es">Spanish</option>
+        <option value="en" className="text-black">
+          English
+        </option>
+        <option value="es" className="text-black">
+          Spanish
+        </option>
       </select>
 
-      {/* Custom dropdown arrow */}
-      <div className="pointer-events-none absolute inset-y-0 right-3 flex items-center text-gray-500">
-        <svg
-          className="w-4 h-4"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2"
-          viewBox="0 0 24 24"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            d="M19 9l-7 7-7-7"
-          />
-        </svg>
-      </div>
+      <IoIosArrowDown
+        className={`pointer-events-none absolute top-1/2 -translate-y-1/2 right-2 ${isScrolled ? "text-gray-400" : "text-gray-100"} `}
+      />
     </div>
   );
 };

@@ -15,6 +15,7 @@ import { loginInitialValues, loginSchema } from "../../schema/loginSchema";
 import { useDispatch } from "react-redux";
 import { setUser } from "../../features/userSlice/userSlice";
 import { useTranslation } from "react-i18next";
+import LanguageSwitcher from "../../LanguageSwticher";
 
 const LoginForm = () => {
   const navigate = useNavigate();
@@ -106,6 +107,19 @@ const LoginForm = () => {
   };
 
   return (
+    // <main className="w-full min-h-screen relative grid grid-cols-1 lg:grid-cols-2">
+    //   <div className="w-full h-full bg-transparent hidden lg:block p-4">
+    //     <img
+    //       src="/login-page-mockup.png"
+    //       alt="login page mockup"
+    //       className="w-full h-auto object-contain rounded-[20px]"
+    //     />
+    //   </div>
+
+    //   <div className="w-full h-full flex flex-col items-center justify-center relative">
+    //     <div className="absolute top-5 right-5 z-50">
+    //       <LanguageSwitcher />
+    //     </div>
     <form
       onSubmit={formik.handleSubmit}
       className="w-full max-w-[350px] flex flex-col items-start gap-4"
@@ -128,7 +142,7 @@ const LoginForm = () => {
         <TextField
           type="text"
           name="email"
-          placeholder="johndoe@gmail.com"
+          placeholder={t(`loginPage.form.labels.email`)}
           value={formik.values.email}
           onChange={handleChange}
           onBlur={formik.handleBlur}
@@ -183,6 +197,8 @@ const LoginForm = () => {
         </div>
       </div>
     </form>
+    //   </div>
+    // </main>
   );
 };
 

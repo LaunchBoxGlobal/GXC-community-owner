@@ -67,12 +67,12 @@ const CommunitiesPage = () => {
       }
     } catch (error) {
       if (error?.status === 404) setShowConfirmationModal(true);
-      enqueueSnackbar(
-        error?.data?.message || t(`communitiesPage.somethingWentWrong`),
-        {
-          variant: "error",
-        },
-      );
+      // enqueueSnackbar(
+      //   error?.data?.message || t(`communitiesPage.somethingWentWrong`),
+      //   {
+      //     variant: "error",
+      //   },
+      // );
     }
   };
 

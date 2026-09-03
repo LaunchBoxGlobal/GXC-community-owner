@@ -238,7 +238,7 @@ const EditProfile = ({ togglePopup, showPopup, fetchUserProfile }) => {
               <PhoneNumberField
                 type="text"
                 name="phoneNumber"
-                placeholder="+000 0000 00"
+                placeholder="000 0000 00"
                 value={formik.values.phoneNumber}
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
@@ -263,8 +263,8 @@ const EditProfile = ({ togglePopup, showPopup, fetchUserProfile }) => {
                       containerClassName="w-full"
                       inputClassName={`w-full border h-[39px] px-[15px] rounded-[8px] outline-none bg-[var(--secondary-bg)] ${
                         formik.touched.country && formik.errors.country
-                          ? "border-red-500"
-                          : "border-gray-200"
+                          ? "!border-red-500"
+                          : "!border-gray-200"
                       } disabled:cursor-not-allowed`}
                       placeHolder={t(
                         "completeProfile.form.placeholders.country",
@@ -292,14 +292,26 @@ const EditProfile = ({ togglePopup, showPopup, fetchUserProfile }) => {
                     containerClassName="w-full"
                     inputClassName={`w-full border h-[39px] px-[15px] rounded-[8px] outline-none bg-[var(--secondary-bg)] ${
                       formik.touched.state && formik.errors.state
-                        ? "border-red-500"
-                        : "border-gray-200"
+                        ? "!border-red-500"
+                        : "!border-gray-200"
                     }`}
                     placeHolder={t("completeProfile.form.placeholders.state")}
                     onChange={(val) => {
-                      formik.setFieldValue("state", val.name);
-                      formik.setFieldValue("stateId", val.id);
-                      formik.setFieldValue("city", "");
+                      // Apply state + stateId + reset city in ONE atomic update
+                      // and validate once, so the "state required" error clears
+                      // immediately. Three separate setFieldValue calls each
+                      // validate against a stale snapshot (state still ""), which
+                      // is what left the error stuck.
+                      formik.setValues(
+                        (prev) => ({
+                          ...prev,
+                          state: val.name,
+                          stateId: val.id,
+                          city: "",
+                        }),
+                        true,
+                      );
+                      formik.setFieldTouched("state", true, false);
                     }}
                     defaultValue={
                       formik.values.state ? { name: formik.values.state } : null
@@ -322,11 +334,15 @@ const EditProfile = ({ togglePopup, showPopup, fetchUserProfile }) => {
                   containerClassName="w-full"
                   inputClassName={`w-full border h-[39px] px-[15px] rounded-[8px] outline-none bg-[var(--secondary-bg)] ${
                     formik.touched.city && formik.errors.city
-                      ? "border-red-500"
-                      : "border-gray-200"
+                      ? "!border-red-500"
+                      : "!border-gray-200"
                   }`}
                   placeHolder={t("completeProfile.form.placeholders.city")}
-                  onChange={(val) => formik.setFieldValue("city", val.name)}
+                  onChange={(val) => {
+                    // Single field: setFieldValue validates on change.
+                    formik.setFieldValue("city", val.name, true);
+                    formik.setFieldTouched("city", true, false);
+                  }}
                   defaultValue={
                     formik.values.city ? { name: formik.values.city } : null
                   }

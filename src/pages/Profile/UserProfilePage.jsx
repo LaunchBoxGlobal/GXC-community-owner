@@ -23,7 +23,7 @@ const UserProfilePage = () => {
 
   useEffect(() => {
     if (data?.data?.user) {
-      dispatch(setUser(user));
+      dispatch(setUser(data?.data?.user));
     }
   }, [data]);
 
