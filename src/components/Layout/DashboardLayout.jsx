@@ -66,7 +66,7 @@ const DashboardLayout = ({ pages }) => {
           </button>
 
           <div className="w-full flex items-center justify-end gap-3">
-            <LanguageSwitcher />
+            {/* <LanguageSwitcher /> */}
 
             <button
               type="button"
